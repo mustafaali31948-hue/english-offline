@@ -1,0 +1,539 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>إنجليزي بدون نت</title>
+<style>
+:root{--bg:#0f1720;--card:#18232f;--card2:#1f2e3d;--tx:#eaf1f7;--mut:#93a4b5;--ac:#34d399;--ac2:#fbbf24;--bad:#f87171;--bd:#2a3b4d}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:var(--bg);color:var(--tx);font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Noto Naskh Arabic",sans-serif;font-size:17px;line-height:1.6}
+#app{max-width:560px;margin:0 auto;padding:14px 14px 80px}
+h1{font-size:22px;margin:0}
+h2{font-size:18px;margin:22px 0 8px}
+.hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.chip{background:var(--card2);border:1px solid var(--bd);border-radius:20px;padding:4px 12px;font-size:15px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:14px;margin-bottom:12px}
+.hero{border-color:var(--ac)}
+.focus{padding:18px}
+.big{font-size:21px;font-weight:600;margin:8px 0}
+.mut{color:var(--mut)}
+.sm{font-size:14px}
+.btn{display:block;width:100%;background:var(--card2);color:var(--tx);border:1px solid var(--bd);border-radius:14px;padding:13px;font-size:17px;margin:8px 0;cursor:pointer;font-family:inherit}
+.btn:disabled{opacity:.4}
+.btn.pri{background:var(--ac);color:#06281c;border-color:var(--ac);font-weight:700}
+.btn.bad{background:#3a1f22;border-color:var(--bad);color:#ffd6d6}
+.btn.ghost{background:transparent}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.en{direction:ltr;text-align:left;unicode-bidi:isolate}
+.card.focus .en.big{text-align:center}
+.pr{color:var(--ac2);font-size:17px;margin:4px 0}
+.ar{color:var(--tx)}
+.sc{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:12px;margin-bottom:10px}
+.sc .en{font-size:20px;font-weight:600}
+.sc .r{display:flex;gap:8px;margin-top:6px}
+.ib{background:var(--card2);color:var(--tx);border:1px solid var(--bd);border-radius:12px;padding:8px 16px;font-size:18px;cursor:pointer}
+.tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:12px}
+.tab{background:var(--card);color:var(--mut);border:1px solid var(--bd);border-radius:10px;padding:8px 2px;font-size:14px;font-family:inherit}
+.tab.on{background:var(--ac);color:#06281c;font-weight:700;border-color:var(--ac)}
+.top{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.top button{background:var(--card2);color:var(--tx);border:1px solid var(--bd);border-radius:10px;padding:6px 12px;font-size:16px}
+.top div{font-weight:700;font-size:17px}
+.prog{color:var(--mut);font-size:14px;margin-bottom:6px;text-align:center}
+.bar{height:10px;background:var(--card2);border-radius:6px;overflow:hidden;margin:6px 0}
+.bar i{display:block;height:100%;background:var(--ac)}
+.u{display:flex;justify-content:space-between;align-items:center;background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:10px 12px;margin-bottom:8px;cursor:pointer}
+.u.done{border-color:var(--ac)}
+.slot,.pool{min-height:54px;display:flex;flex-wrap:wrap;gap:8px;padding:10px;border-radius:12px;margin:10px 0}
+.slot{background:var(--card2);border:1px dashed var(--mut)}
+.chip.w{background:var(--card2);color:var(--tx);border:1px solid var(--bd);border-radius:10px;padding:8px 12px;font-size:18px}
+.slot .chip.w{background:#173a30;border-color:var(--ac)}
+.ok{color:var(--ac);font-weight:700;margin:8px 0}
+.no{color:var(--bad);font-weight:700;margin:8px 0}
+.pair{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:6px 0}
+.pair button{background:var(--card2);color:var(--tx);border:1px solid var(--bd);border-radius:12px;padding:10px;font-size:17px}
+.pair small{display:block;color:var(--ac2);font-size:15px}
+#toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:#000c;color:#fff;padding:10px 16px;border-radius:12px;font-size:15px;display:none;z-index:9;max-width:90%;text-align:center}
+input[type=range]{width:100%}
+ol{padding-right:20px}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div id="toast"></div>
+<script>
+/* ===== المحتوى: [الإنجليزي، المعنى، النطق بالحروف العربية] =====
+   پ = P ، ڤ = V ، ق = G (زي ما بنقولها في لهجتنا) ، ث = th في think ، ذ = th في this */
+const UNITS=[
+{id:1,t:"التحيات والتعريف بنفسك",tip:"أول وحدة: كيف تسلّم وتعرّف نفسك. غيّر الاسم والبلد والمدينة لتكون عنك أنت.",s:[
+["Hello.","مرحباً.","هَلُو"],
+["Good morning.","صباح الخير.","قُود مُورنِنق"],
+["How are you?","كيف حالك؟","هَاو آر يُو؟"],
+["I'm fine, thank you.","أنا بخير، شكراً.","آيم فاين، ثانك يُو"],
+["And you?","وأنت؟","آند يُو؟"],
+["My name is Ahmed.","اسمي أحمد.","ماي نيم إز أحمد"],
+["Nice to meet you.","تشرفت بمعرفتك.","نايس تو ميت يُو"],
+["I am from Sudan.","أنا من السودان.","آي آم فروم سُودان"],
+["I live in Riyadh.","أنا أسكن في الرياض.","آي لِڤ إن ريَاد"],
+["See you later.","أراك لاحقاً.","سي يُو لَيتر"]]},
+{id:2,t:"كلمات النجاة",tip:"الجمل اللي تنقذك في أي موقف لما ما تفهم. احفظها قبل أي حاجة تانية.",s:[
+["Yes, please.","نعم، من فضلك.","يَس، پليز"],
+["No, thank you.","لا، شكراً.","نُو، ثانك يُو"],
+["Excuse me.","لو سمحت (لجذب الانتباه).","إكسكيوز مي"],
+["Sorry.","آسف.","سُوري"],
+["I don't understand.","أنا لا أفهم.","آي دُونت أندرستاند"],
+["Please speak slowly.","من فضلك تكلم ببطء.","پليز سپيك سلُولي"],
+["Can you repeat that?","هل تستطيع أن تعيد ذلك؟","كان يُو ريپيت ذات؟"],
+["What does this mean?","ماذا يعني هذا؟","وات دَز ذِس مين؟"],
+["How do you say this in English?","كيف تقول هذا بالإنجليزي؟","هَاو دُو يُو سَي ذِس إن إنقلِش؟"],
+["I'm learning English.","أنا أتعلم الإنجليزية.","آيم لِرنِنق إنقلِش"]]},
+{id:3,t:"الأرقام والوقت والأيام",tip:"جمل يومية فيها أرقام ووقت. انتبه: five بالڤ (أسنان على الشفة)، مو بالف.",s:[
+["What time is it?","كم الساعة؟","وات تايم إز إت؟"],
+["It's three o'clock.","الساعة الثالثة.","إتس ثري أوكلُوك"],
+["See you at five.","نتقابل الساعة الخامسة.","سي يُو أت فايڤ"],
+["Today is Thursday.","اليوم الخميس.","تُودَي إز ثِرزدَي"],
+["I'll come tomorrow.","سآتي غداً.","آيل كَم تومورُو"],
+["How much is this?","بكم هذا؟","هَاو ماتش إز ذِس؟"],
+["It's twenty riyals.","سعره عشرون ريالاً.","إتس تُوِنتي ريالز"],
+["I have two brothers.","عندي أخوان.","آي هاڤ تو بَرذرز"],
+["I work every day.","أعمل كل يوم.","آي وُورك إڤري دَي"],
+["Wait five minutes.","انتظر خمس دقائق.","ويت فايڤ مِنِتس"]]},
+{id:4,t:"الأماكن والاتجاهات",tip:"للسؤال عن الطريق وفهم الإجابة. ركّز على الكلمات: left يسار، right يمين، straight على طول.",s:[
+["Where is the bathroom?","أين الحمّام؟","وير إز ذا باثروم؟"],
+["Where is the office?","أين المكتب؟","وير إز ذي أُفِس؟"],
+["Go straight.","امشِ على طول.","قُو ستريت"],
+["Turn left.","انعطف يساراً.","تيرن لِفت"],
+["Turn right.","انعطف يميناً.","تيرن رايت"],
+["It's near here.","إنه قريب من هنا.","إتس نير هير"],
+["It's far from here.","إنه بعيد من هنا.","إتس فار فروم هير"],
+["How can I get to the airport?","كيف أصل إلى المطار؟","هَاو كان آي قِت تو ذي إيرپُورت؟"],
+["I'm lost.","أنا تائه.","آيم لُوست"],
+["Can you show me on the map?","هل تستطيع أن تريني على الخريطة؟","كان يُو شُو مي أون ذا ماپ؟"]]},
+{id:5,t:"الشغل: إعطاء التعليمات للعمال",tip:"جمل قصيرة وواضحة تستخدمها مع العمال. القاعدة: جملة قصيرة، نطق بطيء، وبعدها اسأل Do you understand?",s:[
+["Come here, please.","تعال هنا من فضلك.","كَم هير، پليز"],
+["Wait here.","انتظر هنا.","ويت هير"],
+["Start the work.","ابدأ العمل.","ستارت ذا وُورك"],
+["Do you understand?","هل فهمت؟","دُو يُو أندرستاند؟"],
+["Show me.","أرني.","شُو مي"],
+["Be careful.","احذر.","بي كيرفُل"],
+["Wear your helmet.","ارتدِ خوذتك.","وير يُور هِلمِت"],
+["Finish this by five o'clock.","أنهِ هذا قبل الساعة الخامسة.","فِنِش ذِس باي فايڤ أوكلُوك"],
+["Is it ready?","هل هو جاهز؟","إز إت ريدي؟"],
+["Good job.","أحسنت.","قُود جُوب"]]},
+{id:6,t:"الشغل: المشاكل والتقارير",tip:"لما يحصل خلل أو تحتاج تتابع شغل. جمل مهمة في أي موقع عمل.",s:[
+["What is the problem?","ما المشكلة؟","وات إز ذا پرُوبلِم؟"],
+["The machine is not working.","الماكينة لا تعمل.","ذا مَشين إز نُوت وُورْكِنق"],
+["We need more time.","نحتاج وقتاً أكثر.","وي نيد مور تايم"],
+["I will check it now.","سأفحصه الآن.","آي ويل تشِك إت ناو"],
+["Please tell me what happened.","من فضلك أخبرني ماذا حدث.","پليز تِل مي وات هاپِند"],
+["This is not correct.","هذا غير صحيح.","ذِس إز نُوت كُورِكت"],
+["Do it again, please.","أعد ذلك مرة أخرى من فضلك.","دُو إت أقِن، پليز"],
+["Who is responsible for this?","من المسؤول عن هذا؟","هُو إز ريسپُونسِبل فور ذِس؟"],
+["I will send you the report today.","سأرسل لك التقرير اليوم.","آي ويل سِند يُو ذا ريپُورت تُودَي"],
+["We finished the job.","أنهينا العمل.","وي فِنِشت ذا جُوب"]]},
+{id:7,t:"التسوق والأكل",tip:"لما تشتري أو تطلب أكل. اللي بيفرق معاك: السعر والخصم والحساب.",s:[
+["I want to buy this.","أريد شراء هذا.","آي وانت تو باي ذِس"],
+["Do you have a smaller size?","هل عندك مقاس أصغر؟","دُو يُو هاڤ أ سمُولر سايز؟"],
+["Can I pay by card?","هل أستطيع الدفع بالبطاقة؟","كان آي پَي باي كارد؟"],
+["That's too expensive.","هذا غالٍ جداً.","ذاتس تو إكسپِنسِڤ"],
+["Can you give me a discount?","هل تعطيني خصماً؟","كان يُو قِڤ مي أ ديسكاونت؟"],
+["I'm hungry.","أنا جائع.","آيم هَنقري"],
+["I would like some water, please.","أريد ماءً من فضلك.","آي وُد لايك سَم وُوتر، پليز"],
+["What do you recommend?","ماذا تنصح؟","وات دُو يُو ريكُمِند؟"],
+["The bill, please.","الحساب من فضلك.","ذا بِل، پليز"],
+["It was delicious.","كان لذيذاً.","إت وَز ديلِشِس"]]},
+{id:8,t:"الهاتف والرسائل",tip:"المكالمات أصعب من الكلام وجهاً لوجه. هذه الجمل تساعدك تتحكم في المكالمة.",s:[
+["Hello, who is speaking?","ألو، من المتحدث؟","هَلُو، هُو إز سپيكِنق؟"],
+["I can't hear you.","لا أسمعك.","آي كانت هير يُو"],
+["Can you call me back?","هل تستطيع أن تتصل بي لاحقاً؟","كان يُو كول مي باك؟"],
+["I'll send you a message.","سأرسل لك رسالة.","آيل سِند يُو أ مِسِج"],
+["What is your phone number?","ما رقم هاتفك؟","وات إز يُور فُون نَمبر؟"],
+["I'm on my way.","أنا في الطريق.","آيم أون ماي وَي"],
+["I'll be there in ten minutes.","سأصل خلال عشر دقائق.","آيل بي ذير إن تِن مِنِتس"],
+["Sorry, I'm late.","آسف، تأخرت.","سُوري، آيم لَيت"],
+["Please send me the location.","من فضلك أرسل لي الموقع.","پليز سِند مي ذا لُوكيشِن"],
+["The internet is slow today.","الإنترنت بطيء اليوم.","ذي إنترنِت إز سلُو تُودَي"]]},
+{id:9,t:"المقابلة (1): عن نفسي",tip:"بداية أي مقابلة. غيّر العمر والتخصص لما يناسبك قبل ما تحفظ.",s:[
+["Thank you for seeing me.","شكراً على استقبالك لي.","ثانك يُو فور سيينق مي"],
+["Let me introduce myself.","دعني أعرّف بنفسي.","لِت مي إنترُدْيُوس مايسِلف"],
+["I'm twenty-five years old.","عمري خمس وعشرون سنة.","آيم تُوِنتي فايڤ يِرز أولد"],
+["I graduated from university.","تخرجت من الجامعة.","آي قراجُوِيتِد فروم يُونِڤِرسِتي"],
+["I studied computer science.","درست علوم الحاسوب.","آي ستَدِد كُمپيوتر ساينس"],
+["I'm looking for a job.","أبحث عن عمل.","آيم لُوكِنق فور أ جُوب"],
+["I'm very interested in this position.","أنا مهتم جداً بهذه الوظيفة.","آيم ڤِري إنترستِد إن ذِس پُزِشِن"],
+["I'm a hard worker.","أنا مجتهد في العمل.","آيم أ هارد وُورْكر"],
+["I learn quickly.","أتعلم بسرعة.","آي لِرن كويكلي"],
+["I can start immediately.","أستطيع أن أبدأ فوراً.","آي كان ستارت إمِيدِيتلي"]]},
+{id:10,t:"المقابلة (2): الخبرة والراتب",tip:"الأسئلة اللي تتكرر في كل مقابلة. جاوب بجملة قصيرة وواضحة، لا تحاول تطول.",s:[
+["I have two years of experience.","عندي خبرة سنتين.","آي هاڤ تو يِرز أڤ إكسپيريانس"],
+["In my last job, I managed a small team.","في عملي السابق أدرت فريقاً صغيراً.","إن ماي لاست جُوب، آي مَنِجد أ سمُول تيم"],
+["My strength is communication.","نقطة قوتي هي التواصل.","ماي ستْرِنث إز كُمْيُونِكيشِن"],
+["I can work under pressure.","أستطيع العمل تحت الضغط.","آي كان وُورك أندر پريشر"],
+["I work well in a team.","أعمل جيداً ضمن فريق.","آي وُورك ويل إن أ تيم"],
+["I speak Arabic and I'm improving my English.","أتكلم العربية وأحسّن إنجليزيتي.","آي سپيك أرابِك آند آيم إمپروڤِنق ماي إنقلِش"],
+["What are the working hours?","ما ساعات العمل؟","وات آر ذا وُورْكِنق آورز؟"],
+["What is the salary for this position?","كم راتب هذه الوظيفة؟","وات إز ذا سالري فور ذِس پُزِشِن؟"],
+["When can I expect your answer?","متى أتوقع ردكم؟","ون كان آي إكسپِكت يُور آنسر؟"],
+["Thank you for your time.","شكراً على وقتك.","ثانك يُو فور يُور تايم"]]},
+{id:11,t:"الاجتماعات وإبداء الرأي",tip:"عشان تدخل النقاش وما تسكت. هذه الجمل تفتح لك الباب تتكلم.",s:[
+["Let's start the meeting.","لنبدأ الاجتماع.","لِتس ستارت ذا ميتِنق"],
+["I agree with you.","أتفق معك.","آي أقري ويذ يُو"],
+["I disagree.","لا أتفق.","آي ديسأقري"],
+["In my opinion, this is a good idea.","في رأيي، هذه فكرة جيدة.","إن ماي أپِنيِن، ذِس إز أ قُود آيديا"],
+["Can I say something?","هل أستطيع أن أقول شيئاً؟","كان آي سَي سَمثِنق؟"],
+["Let me explain.","دعني أشرح.","لِت مي إكسپلين"],
+["That's a good question.","هذا سؤال جيد.","ذاتس أ قُود كويسْتشِن"],
+["We need to make a decision.","نحتاج إلى اتخاذ قرار.","وي نيد تو ميك أ ديسِجِن"],
+["What do you think?","ما رأيك؟","وات دُو يُو ثِنك؟"],
+["Let's talk about it tomorrow.","لنتحدث عنه غداً.","لِتس توك أباوت إت تومورُو"]]},
+{id:12,t:"التقنية والذكاء الاصطناعي والبيانات",tip:"مصطلحات شغلك وتعلمك. تقدر تضيف لاحقاً مصطلحاتك الخاصة.",s:[
+["I use AI tools every day.","أستخدم أدوات الذكاء الاصطناعي كل يوم.","آي يُوز إي آي تولز إڤري دَي"],
+["This tool saves a lot of time.","هذه الأداة توفر الكثير من الوقت.","ذِس تول سَيڤز أ لُوت أڤ تايم"],
+["I'm learning data analysis.","أتعلم تحليل البيانات.","آيم لِرنِنق ديتا أنَلِسِس"],
+["Can you share the file with me?","هل تستطيع أن تشارك الملف معي؟","كان يُو شير ذا فايل ويذ مي؟"],
+["The data is not clean.","البيانات غير نظيفة.","ذا ديتا إز نُوت كلين"],
+["We can automate this task.","نستطيع أتمتة هذه المهمة.","وي كان أُوتُومِيت ذِس تاسك"],
+["The app is working now.","التطبيق يعمل الآن.","ذي آپ إز وُورْكِنق ناو"],
+["I found a bug in the code.","وجدت خطأً في الكود.","آي فاوند أ باق إن ذا كُود"],
+["Please update the application.","من فضلك حدّث التطبيق.","پليز أپديت ذي أپلِكيشِن"],
+["I built this app myself.","بنيت هذا التطبيق بنفسي.","آي بِلت ذِس آپ مايسِلف"]]}
+];
+
+const SOUNDS=[
+{t:"P مقابل B",tip:"الـ P: انفخ هواء من الشفتين بدون اهتزاز في الحلق. حط ورقة قدام فمك، لازم تتحرك مع P ولا تتحرك مع B.",p:[["pen","پِن","Ben","بِن"],["park","پارك","bark","بارك"],["pay","پَي","bay","بَي"],["pig","پِق","big","بِق"],["cap","كاپ","cab","كاب"]]},
+{t:"V مقابل F",tip:"الـ V: أسنانك العليا على شفتك السفلى مع اهتزاز في الحلق (ڤ). الـ F نفس الوضع بدون اهتزاز.",p:[["van","ڤان","fan","فان"],["very","ڤِري","ferry","فِري"],["vine","ڤاين","fine","فاين"],["leave","لِيڤ","leaf","لِيف"],["save","سَيڤ","safe","سَيف"]]},
+{t:"حرف TH",tip:"اللسان يطلع شوية بين الأسنان. think وthree = ث (بدون اهتزاز). this وthat = ذ (مع اهتزاز).",p:[["think","ثِنك","sink","سِنك"],["three","ثري","tree","تري"],["thank","ثانك","tank","تانك"],["this","ذِس","that","ذات"],["brother","بَرذر","mother","مَذر"]]},
+{t:"صوت قصير وصوت طويل",tip:"الصوت الطويل ممدود وأقوى، والقصير سريع. تغيير المد يغيّر الكلمة كلها.",p:[["ship","شِپ","sheep","شِيپ"],["sit","سِت","seat","سِيت"],["full","فُل","fool","فُول"],["bit","بِت","beat","بِيت"]]},
+{t:"نهاية ng",tip:"ng تطلع من الأنف: sing = سِنق. القاف خفيفة جداً وما تتشدد.",p:[["sing","سِنق","sin","سِن"],["thing","ثِنق","thin","ثِن"],["long","لونق","lawn","لون"]]},
+{t:"CH و SH و J",tip:"ch = تش ، sh = ش ، j = ج. انتبه للفرق بينها.",p:[["chip","تشِپ","ship","شِپ"],["cheap","تشِيپ","jeep","جِيپ"],["chair","تشير","share","شير"]]},
+{t:"حرف R",tip:"الـ R الإنجليزي ما فيه رنين (ما تضرب اللسان زي الراء العربية). اللسان يرجع للخلف ولا يلمس سقف الفم. الـ L يلمس اللسان خلف الأسنان.",p:[["right","رايت","light","لايت"],["road","رُود","load","لُود"],["read","رِيد","lead","لِيد"]]}
+];
+
+/* ===== وحدات إضافية: التخصص والحياة ===== */
+UNITS.push(
+{id:13,t:"أتمتة الأعمال: Make وn8n",tip:"مصطلحات الأتمتة. أسماء الأدوات تنطق كما هي: Make = ميك، n8n = إن إيت إن.",s:[
+["I build automations with Make and n8n.","أبني أتمتة باستخدام Make وn8n.","آي بِلد أُوتُومِيشنز ويذ مَيك آند إن إيت إن"],
+["A workflow starts with a trigger.","سير العمل يبدأ بمُحفِّز (Trigger).","أ وُورْكفلُو ستارتس ويذ أ تريقر"],
+["Each step is called a node.","كل خطوة تُسمّى عقدة (Node).","إيتش ستيپ إز كولد أ نُود"],
+["The webhook receives the data.","الـ Webhook يستقبل البيانات.","ذا ويب‑هُوك ريسيڤز ذا ديتا"],
+["I connect the app using an API key.","أربط التطبيق باستخدام مفتاح API.","آي كَنِكت ذي آپ يُوزِنق أن إي پي آي كي"],
+["The scenario failed because of an error.","السيناريو فشل بسبب خطأ.","ذا سِنَاريُو فَيلد بيكُوز أڤ أن إيرر"],
+["Let's test the workflow before we activate it.","لنختبر سير العمل قبل أن نفعّله.","لِتس تِست ذا وُورْكفلُو بِفُور وي أكتِڤيت إت"],
+["It sends the data to Google Sheets automatically.","يرسل البيانات إلى Google Sheets تلقائياً.","إت سِندز ذا ديتا تو قوقل شيتس أُوتُومَتِكلي"],
+["I schedule it to run every morning.","أجدوله ليعمل كل صباح.","آي سِكِجُول إت تو رَن إڤري مُورنِنق"],
+["This automation saves me ten hours a week.","هذه الأتمتة توفر عليّ عشر ساعات في الأسبوع.","ذِس أُوتُومِيشن سَيڤز مي تِن آورز أ ويك"]]},
+{id:14,t:"Claude وتطبيقات الذكاء الاصطناعي",tip:"لغة الذكاء الاصطناعي الحديثة. Prompt = پرُومپت (الأمر اللي تكتبه للنموذج).",s:[
+["I use Claude to write and review code.","أستخدم Claude لكتابة الكود ومراجعته.","آي يُوز كلُود تو رايت آند ريڤيُو كُود"],
+["Write a clear prompt.","اكتب أمراً (Prompt) واضحاً.","رايت أ كلير پرُومپت"],
+["The model gave me a wrong answer.","النموذج أعطاني إجابة خاطئة.","ذا مُودِل قَيڤ مي أ رونق آنسر"],
+["Can you give the model more context?","هل تستطيع إعطاء النموذج سياقاً أكثر؟","كان يُو قِڤ ذا مُودِل مور كُونتِكست؟"],
+["An AI agent can do tasks for you.","وكيل الذكاء الاصطناعي يستطيع تنفيذ مهام عنك.","أن إي آي إيجِنت كان دُو تاسكس فور يُو"],
+["This chatbot answers customer questions.","هذا الشات‑بوت يجيب عن أسئلة العملاء.","ذِس تشات‑بُوت آنسِرز كَستمر كويسْتشِنز"],
+["I upload a file and ask a question about it.","أرفع ملفاً وأسأل عنه.","آي أپلُود أ فايل آند آسك أ كويسْتشِن أباوت إت"],
+["Always check the answer, because AI can make mistakes.","دائماً تحقق من الإجابة، لأن الذكاء الاصطناعي قد يخطئ.","أُولويز تشِك ذي آنسر، بيكُوز إي آي كان ميك مِستيكس"],
+["I'm building an app without writing the code myself.","أبني تطبيقاً بدون كتابة الكود بنفسي.","آيم بِلدِنق أن آپ ويذاوت رايتِنق ذا كُود مايسِلف"],
+["Which AI tool do you recommend for data analysis?","أي أداة ذكاء اصطناعي تنصح بها لتحليل البيانات؟","ويتش إي آي تول دُو يُو ريكُمِند فور ديتا أنَلِسِس؟"]]},
+{id:15,t:"المحاسبة وتحليل البيانات",tip:"لغة المحاسب والمحلل. Revenue = الإيرادات، Expenses = المصروفات، Budget = الميزانية.",s:[
+["I studied accounting at university.","درست المحاسبة في الجامعة.","آي ستَدِد أكاونتِنق أت يُونِڤِرسِتي"],
+["I prepare the monthly financial report.","أُعدّ التقرير المالي الشهري.","آي پريپير ذا مَنثلي فايِنانشِل ريپُورت"],
+["This invoice has not been paid yet.","هذه الفاتورة لم تُدفع بعد.","ذِس إنڤويس هاز نُوت بِن پَيد يِت"],
+["The balance does not match the report.","الرصيد لا يطابق التقرير.","ذا بالَنس دَز نُوت ماتش ذا ريپُورت"],
+["Revenue increased by ten percent.","زادت الإيرادات بنسبة عشرة بالمئة.","ريڤِنيُو إنكريست باي تِن پِرسِنت"],
+["Our expenses are higher than the budget.","مصروفاتنا أعلى من الميزانية.","آور إكسپِنسِز آر هايِر ذان ذا بَدجِت"],
+["I clean the data before the analysis.","أنظّف البيانات قبل التحليل.","آي كلين ذا ديتا بِفُور ذي أنَلِسِس"],
+["Let me show you the chart.","دعني أريك الرسم البياني.","لِت مي شُو يُو ذا تشارت"],
+["There are duplicate rows in the sheet.","في الشيت صفوف مكررة.","ذير آر دُوپلِكِت رُوز إن ذا شيت"],
+["The numbers show a clear trend.","الأرقام تُظهر اتجاهاً واضحاً.","ذا نَمبرز شُو أ كلير ترِند"]]},
+{id:16,t:"التأمين الطبي",tip:"للمستشفى والتأمين. Co-payment = المبلغ اللي تدفعه أنت، Claim = مطالبة تعويض.",s:[
+["Do you accept my insurance?","هل تقبلون تأميني؟","دُو يُو أكسِپت ماي إنشُورنس؟"],
+["I have medical insurance through my company.","عندي تأمين طبي عن طريق شركتي.","آي هاڤ مِديكِل إنشُورنس ثرُو ماي كَمپَني"],
+["What does my policy cover?","ماذا تغطي وثيقتي (بوليصتي)؟","وات دَز ماي پُولِسي كَڤر؟"],
+["Is this treatment covered?","هل هذا العلاج مغطّى؟","إز ذِس تريتمِنت كَڤرد؟"],
+["I need pre-approval for this procedure.","أحتاج موافقة مسبقة لهذا الإجراء.","آي نيد پري‑أپروڤل فور ذِس پرُوسِيجر"],
+["How much is the co-payment?","كم مبلغ التحمّل (الذي أدفعه)؟","هَاو ماتش إز ذا كُو‑پَيمِنت؟"],
+["I'd like to file a claim.","أريد تقديم مطالبة تعويض.","آيد لايك تو فايل أ كلَيم"],
+["Which hospitals are in my network?","أي المستشفيات ضمن شبكتي؟","ويتش هُسپِتَلز آر إن ماي نِتوُورك؟"],
+["I have an appointment with the doctor today.","عندي موعد مع الطبيب اليوم.","آي هاڤ أن أپُوينتمِنت ويذ ذا دُكتر تُودَي"],
+["My insurance card expires next month.","بطاقة تأميني تنتهي الشهر القادم.","ماي إنشُورنس كارد إكسپايرز نِكست مَنث"]]},
+{id:17,t:"إدارة المناديب",tip:"مصطلحات الشغل مع المناديب. Target = الهدف، Commission = العمولة، Delivery = التوصيل.",s:[
+["What is your target for today?","ما هدفك لليوم؟","وات إز يُور تارقِت فور تُودَي؟"],
+["How many orders did you deliver?","كم طلباً وصّلت؟","هَاو مِني أوردرز ديد يُو ديليڤر؟"],
+["You delivered thirty orders today.","وصّلت ثلاثين طلباً اليوم.","يُو ديليڤرد ثِرتي أوردرز تُودَي"],
+["Your commission will be paid on Sunday.","عمولتك ستُدفع يوم الأحد.","يُور كَمِشن ويل بي پَيد أون سَندي"],
+["The customer is not answering the phone.","العميل لا يرد على الهاتف.","ذا كَستمر إز نُوت آنسِرِنق ذا فُون"],
+["Please confirm the delivery in the app.","من فضلك أكّد التوصيل في التطبيق.","پليز كُنفِيرم ذا ديليڤري إن ذي آپ"],
+["Return the parcel to the warehouse.","أرجع الطرد إلى المستودع.","ريتيرن ذا پارسِل تو ذا وير‑هاوس"],
+["Collect the cash from the customer.","استلم المبلغ نقداً من العميل.","كَلِكت ذا كاش فروم ذا كَستمر"],
+["You were late for three deliveries this week.","تأخرت في ثلاث توصيلات هذا الأسبوع.","يُو وِر لَيت فور ثري ديليڤريز ذِس ويك"],
+["Your performance is excellent this month.","أداؤك ممتاز هذا الشهر.","يُور پرفُورمنس إز إكسِلِنت ذِس مَنث"]]},
+{id:18,t:"النقاشات الجادة والسياسة (بأدب)",tip:"جمل تساعدك تناقش وتختلف باحترام وتخرج من النقاش بذوق. استخدمها في أي موضوع، مو بس السياسة.",s:[
+["What do you think about the news today?","ما رأيك في أخبار اليوم؟","وات دُو يُو ثِنك أباوت ذا نيوز تُودَي؟"],
+["I see your point, but I see it differently.","أفهم وجهة نظرك لكني أراها بشكل مختلف.","آي سي يُور پُوينت، بَت آي سي إت ديفِرنتلي"],
+["Some people believe this, and others don't.","بعض الناس يؤمنون بهذا وآخرون لا.","سَم پيپِل بِليڤ ذِس، آند أذِرز دُونت"],
+["That is an interesting point of view.","هذه وجهة نظر مثيرة للاهتمام.","ذات إز أن إنترستِنق پُوينت أڤ ڤيُو"],
+["Can you give me an example?","هل تعطيني مثالاً؟","كان يُو قِڤ مي أن إقزَمپِل؟"],
+["I think the government should invest more in education.","أعتقد أن الحكومة يجب أن تستثمر أكثر في التعليم.","آي ثِنك ذا قَڤرنمِنت شُود إنڤِست مور إن إجُوكيشِن"],
+["Politics is a sensitive topic.","السياسة موضوع حساس.","پُولِتِكس إز أ سِنسِتِڤ تُوپِك"],
+["I respect your opinion, even if I disagree.","أحترم رأيك حتى لو اختلفت معك.","آي ريسپِكت يُور أپِنيِن، إيڤن إف آي ديسأقري"],
+["Let's change the subject.","لنغيّر الموضوع.","لِتس تشَينج ذا سَبجِكت"],
+["I would rather not talk about politics.","أفضّل ألا أتحدث عن السياسة.","آي وُد رَذر نُوت توك أباوت پُولِتِكس"]]},
+{id:19,t:"المزاج اليومي والمشاعر",tip:"كيف تعبّر عن حالتك. بدل ما تقول fine دائماً، استخدم جملة تعبّر عن اللي حاسّ به فعلاً.",s:[
+["How are you feeling today?","كيف تشعر اليوم؟","هَاو آر يُو فِيلِنق تُودَي؟"],
+["I'm in a good mood today.","مزاجي رائق اليوم.","آيم إن أ قُود مُود تُودَي"],
+["I'm tired.","أنا متعب.","آيم تايرد"],
+["I didn't sleep well last night.","ما نمت جيداً البارحة.","آي ديدِنت سليپ ويل لاست نايت"],
+["I'm a little stressed.","أنا متوتر قليلاً.","آيم أ لِتِل ستْرِست"],
+["I'm so happy to see you.","سعيد جداً برؤيتك.","آيم سُو هابي تو سي يُو"],
+["I'm bored.","أنا زهقان.","آيم بُورد"],
+["I need some rest.","أحتاج بعض الراحة.","آي نيد سَم ريست"],
+["Don't worry, everything will be fine.","لا تقلق، كل شيء سيكون بخير.","دُونت وُوري، إڤريثِنق ويل بي فاين"],
+["I feel much better now.","أشعر بتحسن كبير الآن.","آي فيل ماتش بِتر ناو"]]},
+{id:20,t:"محادثات يومية متنوعة",tip:"فتح المواضيع مع الناس. القاعدة: اسأل سؤال، ثم علّق على الإجابة بجملة قصيرة.",s:[
+["What did you do over the weekend?","ماذا فعلت في عطلة نهاية الأسبوع؟","وات ديد يُو دُو أُوڤر ذا ويكِند؟"],
+["I went to see my family.","ذهبت لأزور عائلتي.","آي وِنت تو سي ماي فاميلي"],
+["Have you eaten yet?","هل أكلت بعد؟","هاڤ يُو إيتِن يِت؟"],
+["What do you do for work?","ماذا تعمل؟","وات دُو يُو دُو فور وُورك؟"],
+["Do you like football?","هل تحب كرة القدم؟","دُو يُو لايك فُوتبول؟"],
+["Which team do you support?","أي فريق تشجّع؟","ويتش تيم دُو يُو سَپُورت؟"],
+["How long have you lived here?","كم لك تسكن هنا؟","هَاو لونق هاڤ يُو لِڤد هير؟"],
+["Let's have coffee sometime.","لنشرب قهوة في وقت ما.","لِتس هاڤ كُفي سَمتايم"],
+["That sounds great!","هذا يبدو رائعاً!","ذات ساوندز قريت!"],
+["Really? Tell me more.","حقاً؟ أخبرني أكثر.","ريلي؟ تِل مي مور"]]}
+);
+UNITS[0].h="الأساسيات";UNITS[12].h="تخصصك وشغلك";UNITS[17].h="الحياة والنقاش";
+
+/* ===== قاموس الكلمات (للمفردات) ===== */
+const VOCAB=[
+{id:1,t:"الألوان",w:[
+["red","أحمر","ريد"],["blue","أزرق","بلُو"],["green","أخضر","قرين"],["yellow","أصفر","يِلُو"],["black","أسود","بلاك"],["white","أبيض","وايت"],["gray","رمادي","قرَي"],["brown","بني","براون"],["orange","برتقالي","أُورِنج"],["pink","وردي","پِنك"],["purple","بنفسجي","پيربِل"],["gold","ذهبي","قُولد"],["silver","فضي","سِلڤر"],["dark","غامق","دارك"],["light","فاتح","لايت"]]},
+{id:2,t:"الأرقام",w:[
+["zero","صفر","زيرُو"],["one","واحد","وَن"],["two","اثنان","تُو"],["three","ثلاثة","ثري"],["four","أربعة","فُور"],["five","خمسة","فايڤ"],["six","ستة","سِكس"],["seven","سبعة","سَڤِن"],["eight","ثمانية","إيت"],["nine","تسعة","ناين"],["ten","عشرة","تِن"],["eleven","أحد عشر","إلِڤِن"],["twelve","اثنا عشر","تْوِلڤ"],["twenty","عشرون","تُوِنتي"],["thirty","ثلاثون","ثِرتي"],["forty","أربعون","فُورتي"],["fifty","خمسون","فِفتي"],["sixty","ستون","سِكستي"],["seventy","سبعون","سَڤِنتي"],["eighty","ثمانون","إيتي"],["ninety","تسعون","نايْنتي"],["hundred","مئة","هَندرِد"],["thousand","ألف","ثاوزِند"],["million","مليون","مِلْيِن"]]},
+{id:3,t:"العائلة",w:[
+["family","العائلة","فامِلي"],["father","الأب","فاذر"],["mother","الأم","مَذر"],["parents","الوالدان","پيرِنتس"],["brother","أخ","بَرذر"],["sister","أخت","سِستر"],["son","ابن","سَن"],["daughter","ابنة","دُوتر"],["husband","زوج","هَزبِند"],["wife","زوجة","وايف"],["grandfather","جد","قراند‑فاذر"],["grandmother","جدة","قراند‑مَذر"],["uncle","عم / خال","أنكِل"],["aunt","عمة / خالة","آنت"],["cousin","ابن العم / الخال","كَزِن"],["baby","طفل رضيع","بيبي"],["friend","صديق","فرِند"],["neighbor","جار","نيبر"]]},
+{id:4,t:"البيت",w:[
+["house","بيت","هاوس"],["room","غرفة","روم"],["bedroom","غرفة نوم","بِدروم"],["kitchen","مطبخ","كِتشِن"],["bathroom","حمّام","باثروم"],["living room","صالة","لِڤِنق روم"],["door","باب","دُور"],["window","نافذة","ويندُو"],["key","مفتاح","كي"],["roof","سقف / سطح","روف"],["floor","أرضية","فلُور"],["wall","جدار","وُول"],["stairs","درج","ستيرز"],["table","طاولة","تَيبِل"],["chair","كرسي","تشير"],["bed","سرير","بِد"],["sofa","كنبة","سُوفا"],["lamp","مصباح","لامپ"],["fridge","ثلاجة","فِرِج"],["washing machine","غسالة","وُوشِنق مَشين"],["air conditioner","مكيّف","إير كُندِشِنر"],["fan","مروحة","فان"],["electricity","كهرباء","إلِكترِسِتي"],["water","ماء","وُوتر"]]},
+{id:5,t:"السيارة",w:[
+["car","سيارة","كار"],["key","مفتاح","كي"],["engine","محرك","إنجِن"],["tire","إطار","تاير"],["wheel","عجلة","ويل"],["brake","فرامل","بريك"],["battery","بطارية","باترِي"],["oil","زيت","أويل"],["fuel","وقود","فيُول"],["gas station","محطة بنزين","قاس ستيشِن"],["steering wheel","مقود","ستيرِنق ويل"],["seat belt","حزام أمان","سيت بِلت"],["mirror","مرآة","ميرر"],["headlight","كشاف أمامي","هِدلايت"],["horn","منبّه","هُورن"],["gear","قير","قِير"],["air conditioning","تكييف","إير كُندِشِنِنق"],["spare tire","إطار احتياطي","سپير تاير"],["license","رخصة","لايسِنس"],["insurance","تأمين","إنشُورنس"],["accident","حادث","أكسِدِنت"],["traffic","زحمة سير","تْرافِك"],["parking","موقف","پاركِنق"],["speed","سرعة","سپيد"]]},
+{id:6,t:"الكوفي والمطعم",w:[
+["coffee","قهوة","كُفي"],["tea","شاي","تي"],["milk","حليب","مِلك"],["sugar","سكر","شُقر"],["water","ماء","وُوتر"],["cup","كوب","كَپ"],["small","صغير","سمُول"],["medium","وسط","ميديِم"],["large","كبير","لارج"],["hot","ساخن","هُت"],["cold","بارد","كُولد"],["ice","ثلج","آيس"],["latte","لاتيه","لاتيه"],["cappuccino","كابتشينو","كاپُوتشِينُو"],["espresso","إسبريسو","إسپرِسُو"],["cake","كيك","كيك"],["sandwich","ساندوتش","سانْدوِتش"],["menu","قائمة الطعام","مِنيُو"],["order","طلب","أُوردر"],["bill","الحساب","بِل"],["takeaway","سفري","تَيك‑أوَي"],["table for two","طاولة لشخصين","تَيبِل فور تُو"]]},
+{id:7,t:"الصيانة",w:[
+["repair","إصلاح","ريپير"],["broken","مكسور / خربان","بروكِن"],["fix","يصلّح","فِكس"],["replace","يستبدل","ريپلِيس"],["leak","تسريب","ليك"],["pipe","أنبوب","پايپ"],["plumber","سبّاك","پلَمر"],["electrician","كهربائي","إلِكترِشِن"],["wire","سلك","وايِر"],["switch","مفتاح كهرباء","سوِتش"],["paint","دهان","پَينت"],["screw","برغي","سكرُو"],["screwdriver","مفك","سكرُو‑درايڤر"],["hammer","مطرقة","هامر"],["drill","مثقاب","دريل"],["tools","أدوات","تولز"],["ladder","سلّم","لادر"],["crack","شرخ","كراك"],["tank","خزان","تانك"],["maintenance","صيانة","مَينتِنَنس"],["technician","فني","تِكنِشِن"],["not working","لا يعمل","نُوت وُورْكِنق"]]}
+];
+
+/* ===== الحالة والتخزين ===== */
+const DEF={done:{},cards:{},streak:0,last:-1,rate:0.9};
+function load(){try{return Object.assign({},DEF,JSON.parse(localStorage.getItem('eng1')||'{}'))}catch(e){return Object.assign({},DEF)}}
+let S=load();
+function save(){try{localStorage.setItem('eng1',JSON.stringify(S))}catch(e){}}
+const today=()=>Math.floor((Date.now()-new Date().getTimezoneOffset()*60000)/864e5);
+function touch(){const t=today();if(S.last===t)return;S.streak=(S.last===t-1)?S.streak+1:1;S.last=t;save()}
+const $=s=>document.querySelector(s);
+const app=$('#app');
+function toast(m){const t=$('#toast');t.textContent=m;t.style.display='block';clearTimeout(toast.h);toast.h=setTimeout(()=>t.style.display='none',2600)}
+function shuf(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+
+const ALL=[];UNITS.forEach(u=>u.s.forEach((x,i)=>ALL.push({u:u.id,i,en:x[0],ar:x[1],pr:x[2],id:u.id+'-'+i,k:ALL.length})));
+VOCAB.forEach(c=>c.w.forEach((x,i)=>ALL.push({u:'v'+c.id,i,en:x[0],ar:x[1],pr:x[2],id:'v'+c.id+'-'+i,k:ALL.length})));
+const byUnit=id=>ALL.filter(c=>c.u===id);
+const IV=[0,1,2,4,8,16,30];
+function rate(id,ok){const c=S.cards[id]||{b:0,d:0};c.b=ok?Math.min(c.b+1,6):1;c.d=today()+IV[c.b];S.cards[id]=c;touch();save()}
+const dueCards=()=>ALL.filter(c=>S.cards[c.id]&&S.cards[c.id].d<=today());
+
+/* ===== الصوت ===== */
+let voices=[];
+function loadVoices(){try{voices=speechSynthesis.getVoices().filter(v=>/^en/i.test(v.lang))}catch(e){voices=[]}}
+if('speechSynthesis' in window){loadVoices();speechSynthesis.onvoiceschanged=loadVoices}
+function pickVoice(){return voices.find(v=>/en[-_]US/i.test(v.lang)&&v.localService)||voices.find(v=>/en[-_](US|GB)/i.test(v.lang)&&v.localService)||voices.find(v=>/en[-_]US/i.test(v.lang))||voices[0]||null}
+function say(text,slow,cb){
+ if(!('speechSynthesis' in window)){toast('جهازك ما يدعم الصوت');return}
+ try{speechSynthesis.cancel();
+  setTimeout(()=>{const u=new SpeechSynthesisUtterance(text);u.lang='en-US';const v=pickVoice();if(v){u.voice=v;u.lang=v.lang}
+   u.rate=slow?0.55:S.rate;if(cb){u.onend=cb;u.onerror=cb}
+   speechSynthesis.speak(u)},60)
+ }catch(e){toast('تعذّر تشغيل الصوت')}
+}
+const playK=(k,s)=>say(ALL[k].en,!!s);
+
+/* ===== التنقل ===== */
+let V={n:'home'};
+function go(n,o){V=Object.assign({n},o||{});try{speechSynthesis.cancel()}catch(e){}render();window.scrollTo(0,0)}
+function render(){({home,unit,sounds,voice,review,vocab,vcat})[V.n]()}
+const topbar=(t,back)=>`<div class="top"><button onclick="go('${back}')">→</button><div>${t}</div></div>`;
+
+/* ===== الرئيسية ===== */
+function home(){
+ const t=today(),due=dueCards().length,next=UNITS.find(u=>!S.done[u.id]);
+ const dn=UNITS.filter(u=>S.done[u.id]).length,pct=Math.round(dn/UNITS.length*100);
+ const st=S.last>=t-1?S.streak:0;
+ app.innerHTML=`
+ <div class="hd"><h1>إنجليزي بدون نت</h1><div class="chip">🔥 ${st} يوم</div></div>
+ <div class="card hero">
+  <div class="mut sm">جلسة اليوم (حوالي ساعة)</div>
+  ${next?`<div class="big">الوحدة ${next.id}: ${next.t}</div>
+  <button class="btn pri" onclick="go('unit',{id:${next.id},step:0})">ابدأ الجلسة ▶</button>`:`<div class="big">خلصت كل الوحدات 🎉 راجع الجمل يومياً</div>`}
+  ${due?`<button class="btn" onclick="go('review')">مراجعة اليوم (${due} جملة)</button>`:`<div class="mut sm">ما في جمل للمراجعة الآن</div>`}
+ </div>
+ <div class="card sm"><b>ترتيب الساعة:</b>
+  <ol><li>استمع للجمل (10 د)</li><li>ردّد كل جملة 3 مرات بصوت عالي (20 د)</li><li>ركّب الجمل (10 د)</li><li>انطق من المعنى (10 د)</li><li>مراجعة الجمل القديمة (10 د)</li></ol>
+  القاعدة الذهبية: <b>قُل الجملة بصوتك</b> ولا تكتفِ بالقراءة. الكلام يطلع بالكلام.</div>
+ <div class="mut sm">تقدمك: ${dn} من ${UNITS.length} وحدات</div><div class="bar"><i style="width:${pct}%"></i></div>
+ <h2>الوحدات</h2>
+ ${UNITS.map(u=>`${u.h?`<h2>${u.h}</h2>`:''}<div class="u ${S.done[u.id]?'done':''}" onclick="go('unit',{id:${u.id},step:0})"><span>${u.id}. ${u.t}</span><span>${S.done[u.id]?'✅':'◀'}</span></div>`).join('')}
+ <button class="btn pri" style="margin-top:14px" onclick="go('vocab')">📚 قاموس الكلمات (ألوان، أرقام، بيت، سيارة...)</button>
+ <div class="row2"><button class="btn" onclick="go('sounds')">🔊 معمل الأصوات</button><button class="btn" onclick="go('voice')">⚙️ إعداد الصوت</button></div>
+ <div class="card sm"><b>دليل النطق بالحروف العربية:</b><br>پ = P (مثل pen) &nbsp;•&nbsp; ڤ = V (مثل very) &nbsp;•&nbsp; ق = G (مثل good، زي ما بنقولها في لهجتنا) &nbsp;•&nbsp; ث = th في think &nbsp;•&nbsp; ذ = th في this.<br>النطق المكتوب تقريبي. اعتمد على الصوت دائماً.</div>`;
+}
+
+/* ===== الوحدة ===== */
+const STEPS=['١ استمع','٢ ردّد','٣ ركّب','٤ انطق'];
+function unit(){
+ const u=UNITS.find(x=>x.id===V.id);
+ app.innerHTML=`${topbar(u.id+'. '+u.t,'home')}<div class="tabs">${STEPS.map((s,i)=>`<button class="tab ${i===V.step?'on':''}" onclick="go('unit',{id:${u.id},step:${i}})">${s}</button>`).join('')}</div><div id="body"></div>`;
+ [stepListen,stepRepeat,stepBuild,stepSpeak][V.step](u);
+}
+const cardHTML=c=>`<div class="sc"><div class="en" lang="en">${c.en}</div><div class="pr">${c.pr}</div><div class="ar">${c.ar}</div><div class="r"><button class="ib" onclick="playK(${c.k})">▶</button><button class="ib" onclick="playK(${c.k},1)">🐢</button></div></div>`;
+function stepListen(u){
+ $('#body').innerHTML=`<div class="card sm">💡 ${u.tip}</div>${byUnit(u.id).map(cardHTML).join('')}<button class="btn pri" onclick="go('unit',{id:${u.id},step:1})">التالي: ردّد ←</button>`;
+}
+
+/* ردّد */
+let R={};
+function stepRepeat(u){R={cs:byUnit(u.id),i:0,n:0,rec:false,url:null};drawRepeat(true)}
+function drawRepeat(auto){
+ const c=R.cs[R.i];
+ $('#body').innerHTML=`<div class="prog">${R.i+1} / ${R.cs.length}</div>
+ <div class="card focus"><div class="en big" lang="en">${c.en}</div><div class="pr" style="text-align:center">${c.pr}</div><div class="ar" style="text-align:center">${c.ar}</div>
+ <div class="row2"><button class="btn" onclick="playK(${c.k})">▶ استمع</button><button class="btn" onclick="playK(${c.k},1)">🐢 بطيء</button></div>
+ <div class="mut sm" style="text-align:center">استمع ثم قلها بصوت عالي 3 مرات</div>
+ <button class="btn pri" onclick="repN()">قلتها ✓ (${R.n}/3)</button>
+ <div class="row2"><button class="btn" id="recb" onclick="toggleRec()">${R.rec?'⏹ إيقاف':'🎙 سجّل صوتي'}</button><button class="btn" onclick="cmpRec(${c.k})" ${R.url?'':'disabled'}>🔁 قارن</button></div></div>
+ <button class="btn ghost" onclick="repNext()">تخطّي ←</button>`;
+ if(auto)setTimeout(()=>playK(c.k),300);
+}
+function repN(){R.n++;if(R.n>=3){touch();repNext()}else drawRepeat(false)}
+function repNext(){R.i++;R.n=0;R.url=null;if(R.i>=R.cs.length)go('unit',{id:V.id,step:2});else drawRepeat(true)}
+let mr=null,mst=null,mch=[];
+async function toggleRec(){
+ if(R.rec&&mr){mr.stop();return}
+ try{
+  mst=await navigator.mediaDevices.getUserMedia({audio:true});
+  mr=new MediaRecorder(mst);mch=[];
+  mr.ondataavailable=e=>mch.push(e.data);
+  mr.onstop=()=>{R.url=URL.createObjectURL(new Blob(mch,{type:mr.mimeType||'audio/webm'}));mst.getTracks().forEach(t=>t.stop());R.rec=false;drawRepeat(false)};
+  mr.start();R.rec=true;drawRepeat(false);
+ }catch(e){R.rec=false;toast('التسجيل غير متاح. افتح الملف بكروم واسمح للميكروفون.')}
+}
+function cmpRec(k){if(!R.url)return;say(ALL[k].en,false,()=>{try{new Audio(R.url).play()}catch(e){}})}
+
+/* ركّب */
+let B={};
+function stepBuild(u){B={cs:shuf(byUnit(u.id)),i:0};drawBuild()}
+function drawBuild(){
+ if(B.i>=B.cs.length){go('unit',{id:V.id,step:3});return}
+ const c=B.cs[B.i];
+ let p=shuf(c.en.split(' ').map((w,j)=>({w,j})));
+ if(p.length>1){let g=0;while(p.map(x=>x.w).join(' ')===c.en&&g++<10)p=shuf(p)}
+ B.pool=p;B.pl=[];B.tries=0;paintBuild();
+}
+function paintBuild(){
+ const c=B.cs[B.i];
+ $('#body').innerHTML=`<div class="prog">${B.i+1} / ${B.cs.length}</div>
+ <div class="card focus"><div class="mut sm">رتّب الجملة الإنجليزية لهذا المعنى:</div><div class="ar big">${c.ar}</div>
+ <div class="slot en" lang="en">${B.pl.map((x,n)=>`<button class="chip w" onclick="unplace(${n})">${x.w}</button>`).join('')}</div>
+ <div class="pool en" lang="en">${B.pool.map((x,n)=>`<button class="chip w" onclick="place(${n})">${x.w}</button>`).join('')}</div>
+ <div id="fb"></div></div><button class="btn ghost" onclick="B.i++;drawBuild()">تخطّي ←</button>`;
+}
+function place(n){const x=B.pool.splice(n,1)[0];B.pl.push(x);paintBuild();if(!B.pool.length)checkBuild()}
+function unplace(n){B.pool.push(B.pl.splice(n,1)[0]);paintBuild()}
+function checkBuild(){
+ const c=B.cs[B.i],a=B.pl.map(x=>x.w).join(' ');
+ if(a===c.en){$('#fb').innerHTML=`<div class="ok">✓ صح!</div><div class="pr">${c.pr}</div><button class="btn pri" onclick="B.i++;drawBuild()">التالية ←</button>`;say(c.en);touch()}
+ else{B.tries++;$('#fb').innerHTML=`<div class="no">✗ مو مضبوطة، جرّب تاني</div><button class="btn" onclick="retryBuild()">إعادة</button>${B.tries>=2?`<div class="mut sm">الإجابة: <span class="en" lang="en">${c.en}</span></div>`:''}`}
+}
+function retryBuild(){B.pool=shuf(B.pool.concat(B.pl));B.pl=[];paintBuild()}
+
+/* انطق + مراجعة (نفس المحرك) */
+let Q={};
+function runSpeak(cs,done){Q={q:cs.slice(),i:0,done,rev:false,again:{}};drawSpeak()}
+function drawSpeak(){
+ if(Q.i>=Q.q.length){Q.done();return}
+ const c=Q.q[Q.i];
+ $('#body').innerHTML=`<div class="prog">${Q.i+1} / ${Q.q.length}</div>
+ <div class="card focus"><div class="mut sm">قُل هذه الجملة بالإنجليزي بصوت عالي، قبل ما تكشف:</div><div class="ar big">${c.ar}</div>
+ ${Q.rev?`<div class="en big" lang="en">${c.en}</div><div class="pr" style="text-align:center">${c.pr}</div>
+ <div class="row2"><button class="btn" onclick="playK(${c.k})">▶</button><button class="btn" onclick="playK(${c.k},1)">🐢</button></div>
+ <div class="mut sm" style="text-align:center">هل قلتها صح؟</div>
+ <div class="row2"><button class="btn pri" onclick="rateQ(1)">✓ قلتها</button><button class="btn bad" onclick="rateQ(0)">✗ ما قدرت</button></div>`
+ :`<button class="btn pri" onclick="Q.rev=true;drawSpeak();playK(${c.k})">اكشف الجملة</button>`}</div>`;
+}
+function rateQ(ok){const c=Q.q[Q.i];rate(c.id,ok);if(!ok&&!Q.again[c.id]){Q.again[c.id]=1;Q.q.push(c)}Q.i++;Q.rev=false;drawSpeak()}
+function stepSpeak(u){runSpeak(shuf(byUnit(u.id)),()=>{S.done[u.id]=true;touch();save();
+ const nx=UNITS.find(x=>!S.done[x.id]);
+ $('#body').innerHTML=`<div class="card hero"><div class="big">🎉 خلصت الوحدة ${u.id}</div><div>الجمل دي دخلت في المراجعة الذكية. بترجع لك في الوقت المناسب.</div>
+ ${nx?`<button class="btn pri" onclick="go('unit',{id:${nx.id},step:0})">الوحدة التالية ▶</button>`:''}<button class="btn" onclick="go('home')">الرئيسية</button></div>`})}
+function review(){
+ app.innerHTML=`${topbar('مراجعة اليوم','home')}<div id="body"></div>`;
+ const cs=dueCards();
+ if(!cs.length){$('#body').innerHTML=`<div class="card">ما في جمل للمراجعة الآن 👍<br>ارجع بكرة.</div><button class="btn" onclick="go('home')">الرئيسية</button>`;return}
+ runSpeak(shuf(cs),()=>{$('#body').innerHTML=`<div class="card hero"><div class="big">✅ خلصت مراجعة اليوم</div></div><button class="btn pri" onclick="go('home')">الرئيسية</button>`});
+}
+
+/* ===== قاموس الكلمات ===== */
+function vocab(){
+ app.innerHTML=`${topbar('قاموس الكلمات','home')}<div class="card sm">كلمات مرتبة حسب الموضوع. اضغط ▶ للصوت، ثم اضغط «اختبرني» لتقول الكلمة من المعنى.</div>
+ ${VOCAB.map((c,i)=>`<div class="u" onclick="go('vcat',{i:${i}})"><span>${c.t} <span class="mut sm">(${c.w.length})</span></span><span>◀</span></div>`).join('')}`;
+}
+function vcat(){
+ const c=VOCAB[V.i],cs=ALL.filter(x=>x.u==='v'+c.id);
+ app.innerHTML=`${topbar(c.t,'vocab')}<div id="body"><button class="btn pri" onclick="vquiz()">🎯 اختبرني (انطق من المعنى)</button>
+ ${cs.map(x=>`<div class="sc"><div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><div><div class="en" lang="en">${x.en}</div><div class="pr">${x.pr}</div><div class="ar">${x.ar}</div></div><button class="ib" onclick="playK(${x.k})">▶</button></div></div>`).join('')}</div>`;
+}
+function vquiz(){
+ const c=VOCAB[V.i],cs=ALL.filter(x=>x.u==='v'+c.id);
+ runSpeak(shuf(cs),()=>{$('#body').innerHTML=`<div class="card hero"><div class="big">✅ خلصت اختبار ${c.t}</div><div>الكلمات اللي ما قدرت عليها بترجع لك في المراجعة.</div></div><button class="btn pri" onclick="go('vcat',{i:${V.i}})">رجوع للقائمة</button>`});
+}
+
+/* ===== معمل الأصوات ===== */
+function sounds(){
+ app.innerHTML=`${topbar('معمل الأصوات','home')}
+ <div class="card sm">الأصوات اللي ما موجودة بالعربي هي أكبر سبب لسوء الفهم. اضغط على كل كلمة، استمع وكرّرها.</div>
+ ${SOUNDS.map((g,gi)=>`<div class="card"><b>${g.t}</b><div class="sm mut" style="margin:6px 0">${g.tip}</div>
+ ${g.p.map((p,pi)=>`<div class="pair en" lang="en"><button onclick="sayS(${gi},${pi},0)">${p[0]}<small>${p[1]}</small></button><button onclick="sayS(${gi},${pi},2)">${p[2]}<small>${p[3]}</small></button></div>`).join('')}</div>`).join('')}`;
+}
+function sayS(g,p,i){say(SOUNDS[g].p[p][i],true)}
+
+/* ===== إعداد الصوت ===== */
+function voice(){
+ const v=pickVoice();
+ app.innerHTML=`${topbar('إعداد الصوت','home')}
+ <div class="card"><div>حالة الصوت: ${('speechSynthesis' in window)?(voices.length?`✅ تم العثور على ${voices.length} صوت إنجليزي`:'⚠️ ما لقينا صوت إنجليزي'):'❌ المتصفح لا يدعم الصوت'}</div>
+ ${v?`<div class="sm mut en" lang="en">${v.name} (${v.lang}) ${v.localService?'• يعمل بدون نت':'• قد يحتاج نت'}</div>`:''}
+ <div class="row2"><button class="btn" onclick="say('Hello, my name is Sara. Nice to meet you.')">▶ تجربة</button><button class="btn" onclick="say('Hello, my name is Sara. Nice to meet you.',true)">🐢 بطيء</button></div>
+ <div class="sm mut">سرعة الصوت العادي:</div><input type="range" min="60" max="110" value="${Math.round(S.rate*100)}" oninput="S.rate=this.value/100;save()"></div>
+ <div class="card sm"><b>لو الصوت ما اشتغل أو يحتاج نت:</b><ol>
+ <li>وانت عندك نت (مرة واحدة فقط): افتح إعدادات التلفون.</li>
+ <li>ابحث عن <b>تحويل النص إلى كلام</b> (Text-to-speech).</li>
+ <li>اختر <b>Google</b> ثم <b>تثبيت بيانات الصوت</b> وحمّل <b>English (US)</b>.</li>
+ <li>ارجع هنا واضغط تجربة. بعدها يشتغل بدون نت دائماً.</li></ol>
+ افتح هذه الصفحة دائماً بمتصفح <b>Chrome</b>. وعشان ما يضيع تقدمك، لا تمسح بيانات المتصفح.</div>
+ <div class="card sm"><b>نسخة احتياطية للتقدم:</b><br>اضغط «إنشاء كود»، انسخ الكود واحفظه في واتساب لنفسك. لو ضاع تقدمك الصق الكود واضغط «استعادة».
+ <button class="btn" onclick="bkMake()">إنشاء كود</button>
+ <textarea id="bk" class="en" rows="4" style="width:100%;background:var(--card2);color:var(--tx);border:1px solid var(--bd);border-radius:12px;padding:8px;font-size:14px" placeholder="الكود يظهر هنا، أو الصق كود قديم"></textarea>
+ <div class="row2"><button class="btn" onclick="bkCopy()">نسخ</button><button class="btn pri" onclick="bkRestore()">استعادة</button></div></div>`;
+}
+/* ===== نسخة احتياطية ===== */
+function bkMake(){try{$('#bk').value='ENG1.'+btoa(unescape(encodeURIComponent(JSON.stringify(S))));toast('تم. انسخ الكود واحفظه')}catch(e){toast('تعذّر إنشاء الكود')}}
+function bkCopy(){const t=$('#bk');if(!t.value){toast('اضغط إنشاء كود أولاً');return}t.select();try{navigator.clipboard.writeText(t.value).then(()=>toast('تم النسخ'),()=>{document.execCommand('copy');toast('تم النسخ')})}catch(e){try{document.execCommand('copy');toast('تم النسخ')}catch(_){toast('انسخه يدوياً')}}}
+function bkRestore(){
+ const v=($('#bk').value||'').trim();
+ if(!v.startsWith('ENG1.')){toast('الكود غير صحيح');return}
+ try{const o=JSON.parse(decodeURIComponent(escape(atob(v.slice(5)))));
+  if(typeof o!=='object'||!o.done||!o.cards)throw 0;
+  S=Object.assign({},DEF,o);save();toast('تمت استعادة تقدمك ✅');setTimeout(()=>go('home'),900)}
+ catch(e){toast('الكود غير صحيح أو ناقص')}
+}
+if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol)){navigator.serviceWorker.register('sw.js').catch(()=>{})}
+render();
+</script>
+</body>
+</html>
