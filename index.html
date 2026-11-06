@@ -56,6 +56,11 @@ h2{font-size:18px;margin:22px 0 8px}
 #toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:#000c;color:#fff;padding:10px 16px;border-radius:12px;font-size:15px;display:none;z-index:9;max-width:90%;text-align:center}
 input[type=range]{width:100%}
 ol{padding-right:20px}
+.bub{border-radius:14px;padding:10px 12px;margin:8px 0;border:1px solid var(--bd)}
+.bub.a{background:var(--card)}.bub.y{background:#173a30;border-color:var(--ac)}
+.inp{width:100%;background:var(--card2);color:var(--tx);border:1px solid var(--bd);border-radius:12px;padding:10px;font-size:17px;font-family:inherit}
+.btn.pri:disabled,.btn.bad:disabled{opacity:1}
+summary{cursor:pointer;font-weight:700;padding:4px 0}
 </style>
 </head>
 <body>
@@ -353,8 +358,474 @@ VOCAB.push(
 ["repository","مستودع المشروع","ريپُزِتُوري"],["commit","حفظ تغييرات","كُومِت"],["branch","فرع","برانش"],["file","ملف","فايل"],["folder","مجلد","فُولدر"],["code","كود","كُود"],["bug","خطأ برمجي","باق"],["error","خطأ","إيرر"],["build","بناء","بِلد"],["release","إصدار منشور","رِيليس"],["version","إصدار","ڤِرجِن"],["public","عام","پَبلِك"],["private","خاص","پرايڤِت"],["license","رخصة","لايسِنس"],["README","ملف التعريف بالمشروع","رِيدمي"],["upload","رفع","أپلُود"],["workflow","سير عمل","وُورْكفلُو"],["deploy","نشر","ديپلُوي"],["website","موقع","ويب‑سايت"],["link","رابط","لِنك"],["username","اسم المستخدم","يُوزر‑نيم"],["token","رمز وصول","تُوكِن"],["server","خادم","سِرڤر"],["database","قاعدة بيانات","ديتا‑بيس"],["API","واجهة برمجية","إي پي آي"],["framework","إطار عمل","فريم‑وُورك"],["test","اختبار","تِست"],["log","سجل","لُوق"]]}
 );
 
+/* ===== القوالب: جملة ثابتة وتبدّل الكلمة ===== */
+const PATTERNS=[
+{id:1,en:"I want ___.",ar:"أنا أريد ___.",pr:"آي وانت ___",tip:"للطلب والرغبة. بعد want إما اسم (water) أو to + فعل (to sleep).",items:[["water","ماءً","وُوتر"],["a coffee","قهوة","أ كُفي"],["some tea","شاياً","سَم تي"],["a job","وظيفة","أ جُوب"],["a new phone","جوالاً جديداً","أ نيو فُون"],["to sleep","أن أنام","تو سليپ"],["to eat","أن آكل","تو إيت"],["to go home","أن أذهب إلى البيت","تو قُو هُوم"]]},
+{id:2,en:"I need ___.",ar:"أنا أحتاج ___.",pr:"آي نيد ___",tip:"للحاجة الضرورية. أقوى من want.",items:[["help","مساعدة","هِلپ"],["more time","وقتاً أكثر","مور تايم"],["a doctor","طبيباً","أ دُكتر"],["a taxi","تاكسي","أ تاكسي"],["your phone number","رقم هاتفك","يُور فُون نَمبر"],["to rest","أن أرتاح","تو ريست"],["to talk to you","أن أتحدث معك","تو توك تو يُو"],["some water","بعض الماء","سَم وُوتر"]]},
+{id:3,en:"Can I ___?",ar:"هل أستطيع ___؟",pr:"كان آي ___؟",tip:"لطلب الإذن بأدب. الفعل بعد I بدون to.",items:[["sit here","الجلوس هنا","سِت هير"],["ask a question","أن أسأل سؤالاً","آسك أ كويسْتشِن"],["use your phone","استخدام هاتفك","يُوز يُور فُون"],["come in","الدخول","كَم إن"],["pay by card","الدفع بالبطاقة","پَي باي كارد"],["have some water","أن آخذ ماءً","هاڤ سَم وُوتر"],["go now","أن أذهب الآن","قُو ناو"],["see the menu","أن أرى القائمة","سي ذا مِنيُو"]]},
+{id:4,en:"Where is ___?",ar:"أين ___؟",pr:"وير إز ___؟",tip:"للسؤال عن المكان. للجمع نقول Where are.",items:[["the bathroom","الحمّام","ذا باثروم"],["the bank","البنك","ذا بانك"],["the market","السوق","ذا مارْكِت"],["the hospital","المستشفى","ذا هُسپِتَل"],["the station","المحطة","ذا ستيشِن"],["my phone","جوالي","ماي فُون"],["the exit","المخرج","ذي إقزِت"],["the pharmacy","الصيدلية","ذا فارمَسي"]]},
+{id:5,en:"How much is ___?",ar:"بكم ___؟",pr:"هَاو ماتش إز ___؟",tip:"للسؤال عن السعر.",items:[["this","هذا","ذِس"],["that","ذاك","ذات"],["the bread","الخبز","ذا بِرِد"],["the ticket","التذكرة","ذا تِكِت"],["a coffee","القهوة","أ كُفي"],["the room","الغرفة","ذا روم"],["this shirt","هذا القميص","ذِس شيرت"],["the phone","الجوال","ذا فُون"]]},
+{id:6,en:"I like ___.",ar:"أنا أحب ___.",pr:"آي لايك ___",tip:"للتعبير عن الذوق. بعد like نضع اسماً أو فعلاً بـ ing.",items:[["coffee","القهوة","كُفي"],["football","كرة القدم","فُوتبول"],["my job","عملي","ماي جُوب"],["this place","هذا المكان","ذِس پليس"],["cooking","الطبخ","كُوكِنق"],["traveling","السفر","تراڤِلِنق"],["reading","القراءة","رِيدِنق"],["learning English","تعلم الإنجليزية","لِرنِنق إنقلِش"]]},
+{id:7,en:"I don't like ___.",ar:"أنا لا أحب ___.",pr:"آي دُونت لايك ___",tip:"للنفي. don't = do not.",items:[["crowds","الزحام","كراودز"],["noise","الضجيج","نُويز"],["cold weather","الجو البارد","كُولد وِذر"],["waiting","الانتظار","وَيتِنق"],["spicy food","الأكل الحار","سپايسي فُود"],["being late","التأخر","بِينق لَيت"],["traffic","زحمة السير","تْرافِك"],["lying","الكذب","لايِنق"]]},
+{id:8,en:"I'm going to ___.",ar:"أنا سوف ___.",pr:"آيم قُوينق تو ___",tip:"للخطط القريبة. بعد going to الفعل بدون تغيير.",items:[["call you tomorrow","أتصل بك غداً","كول يُو تومورُو"],["buy a car","أشتري سيارة","باي أ كار"],["study English","أدرس الإنجليزية","ستَدي إنقلِش"],["visit my family","أزور عائلتي","ڤِزِت ماي فاميلي"],["start a new job","أبدأ عملاً جديداً","ستارت أ نيو جُوب"],["travel next month","أسافر الشهر القادم","تراڤِل نِكست مَنث"],["cook dinner","أطبخ العشاء","كُوك دِنر"],["rest today","أرتاح اليوم","ريست تُودَي"]]},
+{id:9,en:"Do you have ___?",ar:"هل عندك ___؟",pr:"دُو يُو هاڤ ___؟",tip:"للسؤال عن الامتلاك أو التوفر.",items:[["a pen","قلم","أ پِن"],["a charger","شاحن","أ تشارجر"],["any questions","أي أسئلة","إني كويسْتشِنز"],["a car","سيارة","أ كار"],["time today","وقت اليوم","تايم تُودَي"],["a cheaper one","واحد أرخص","أ تشيپر وَن"],["Wi-Fi","واي فاي","وايفاي"],["change","فكّة","تشَينج"]]},
+{id:10,en:"I can ___.",ar:"أنا أستطيع ___.",pr:"آي كان ___",tip:"للقدرة. الفعل بعد can بدون to.",items:[["speak a little English","أن أتكلم قليلاً من الإنجليزية","سپيك أ لِتِل إنقلِش"],["help you","مساعدتك","هِلپ يُو"],["drive","القيادة","دْرايڤ"],["cook","الطبخ","كُوك"],["wait","الانتظار","ويت"],["come tomorrow","القدوم غداً","كَم تومورُو"],["read English","قراءة الإنجليزية","رِيد إنقلِش"],["swim","السباحة","سويم"]]},
+{id:11,en:"I can't ___.",ar:"أنا لا أستطيع ___.",pr:"آي كانت ___",tip:"can't = cannot. للتعبير عن عدم القدرة.",items:[["hear you","سماعك","هير يُو"],["find my keys","إيجاد مفاتيحي","فايند ماي كيز"],["understand","أن أفهم","أندرستاند"],["come today","القدوم اليوم","كَم تُودَي"],["sleep","النوم","سليپ"],["open the door","فتح الباب","أُوبِن ذا دُور"],["log in","تسجيل الدخول","لُوق إن"],["speak fast","أن أتكلم بسرعة","سپيك فاست"]]},
+{id:12,en:"I think ___.",ar:"أعتقد ___.",pr:"آي ثِنك ___",tip:"لإبداء الرأي. بعد think تأتي جملة كاملة.",items:[["it's a good idea","أنها فكرة جيدة","إتس أ قُود آيديا"],["you are right","أنك محق","يُو آر رايت"],["this is difficult","أن هذا صعب","ذِس إز دِفِكَلت"],["it will rain today","أنها ستمطر اليوم","إت ويل رَين تُودَي"],["he is late","أنه متأخر","هي إز لَيت"],["we should wait","أننا يجب أن ننتظر","وي شُود ويت"],["that's too expensive","أن هذا غالٍ جداً","ذاتس تو إكسپِنسِڤ"],["she is nice","أنها لطيفة","شي إز نايس"]]},
+{id:13,en:"Would you like ___?",ar:"هل تريد ___؟",pr:"وُد يُو لايك ___؟",tip:"للعرض بأدب (ضيافة).",items:[["some tea","بعض الشاي","سَم تي"],["to sit down","أن تجلس","تو سِت داون"],["to try it","أن تجربه","تو تراي إت"],["something to eat","شيئاً لتأكله","سَمثِنق تو إيت"],["more water","مزيداً من الماء","مور وُوتر"],["a cup of coffee","فنجان قهوة","أ كَپ أڤ كُفي"],["to join us","أن تنضم إلينا","تو جُوين أس"],["my number","رقمي","ماي نَمبر"]]},
+{id:14,en:"I'm looking for ___.",ar:"أنا أبحث عن ___.",pr:"آيم لُوكِنق فور ___",tip:"للبحث عن شخص أو شيء.",items:[["a job","عمل","أ جُوب"],["a restaurant","مطعم","أ ريستُورانت"],["the manager","المدير","ذا مَنِجر"],["my friend","صديقي","ماي فرِند"],["a good hotel","فندق جيد","أ قُود هُوتِل"],["a place to park","مكان للوقوف","أ پليس تو پارك"],["this address","هذا العنوان","ذِس أدرِس"],["a pharmacy","صيدلية","أ فارمَسي"]]},
+{id:15,en:"Please ___.",ar:"من فضلك ___.",pr:"پليز ___",tip:"للطلب بأدب. الفعل بعده بدون تغيير.",items:[["wait here","انتظر هنا","ويت هير"],["come with me","تعال معي","كَم ويذ مي"],["call me back","اتصل بي لاحقاً","كول مي باك"],["speak slowly","تكلم ببطء","سپيك سلُولي"],["send me the details","أرسل لي التفاصيل","سِند مي ذا ديتيلز"],["close the door","أغلق الباب","كلُوز ذا دُور"],["tell me again","أخبرني مرة أخرى","تِل مي أقِن"],["give me a minute","أعطني دقيقة","قِڤ مي أ مِنِت"]]},
+{id:16,en:"I went to ___.",ar:"أنا ذهبت إلى ___.",pr:"آي وِنت تو ___",tip:"الماضي. went هو ماضي go (فعل شاذ).",items:[["the market","السوق","ذا مارْكِت"],["work","العمل","وُورك"],["the doctor","الطبيب","ذا دُكتر"],["my friend's house","بيت صديقي","ماي فرِندز هاوس"],["the mosque","المسجد","ذا مُسك"],["the bank","البنك","ذا بانك"],["school","المدرسة","سكول"],["the airport","المطار","ذي إيرپُورت"]]}
+];
+
+/* ===== الحوارات: A = الطرف الآخر، Y = أنت ===== */
+const DIALOGS=[
+{id:1,t:"في الكوفي",sc:"أنت في كوفي وتطلب قهوة.",l:[
+["A","Hello! What would you like?","مرحباً! ماذا تريد؟","هَلُو! وات وُد يُو لايك؟"],
+["Y","I'd like a coffee, please.","أريد قهوة من فضلك.","آيد لايك أ كُفي، پليز"],
+["A","Hot or cold?","ساخنة أم باردة؟","هُت أُور كُولد؟"],
+["Y","Hot, please.","ساخنة من فضلك.","هُت، پليز"],
+["A","That's ten riyals.","الحساب عشرة ريالات.","ذاتس تِن ريالز"],
+["Y","Here you are. Thank you.","تفضل. شكراً.","هير يُو آر. ثانك يُو"]]},
+{id:2,t:"التعرف على شخص جديد",sc:"تقابل شخصاً لأول مرة. غيّر الاسم لاسمك.",l:[
+["A","Hi, I'm Sam. What's your name?","مرحباً، أنا سام. ما اسمك؟","هاي، آيم سام. وَاتس يُور نَيم؟"],
+["Y","My name is Ahmed. Nice to meet you.","اسمي أحمد. تشرفت بمعرفتك.","ماي نَيم إز أحمد. نايس تو ميت يُو"],
+["A","Where are you from?","من أين أنت؟","وير آر يُو فروم؟"],
+["Y","I'm from Sudan.","أنا من السودان.","آيم فروم سُودان"],
+["A","Do you live here?","هل تسكن هنا؟","دُو يُو لِڤ هير؟"],
+["Y","Yes, I live in Riyadh.","نعم، أسكن في الرياض.","يَس، آي لِڤ إن ريَاد"]]},
+{id:3,t:"السؤال عن الطريق",sc:"أنت تائه وتسأل أحد المارة.",l:[
+["Y","Excuse me, where is the bank?","لو سمحت، أين البنك؟","إكسكيوز مي، وير إز ذا بانك؟"],
+["A","Go straight and turn left.","امشِ على طول ثم انعطف يساراً.","قُو ستريت آند تيرن لِفت"],
+["Y","Is it far from here?","هل هو بعيد من هنا؟","إز إت فار فروم هير؟"],
+["A","No, it's five minutes on foot.","لا، خمس دقائق مشياً.","نُو، إتس فايڤ مِنِتس أون فُوت"],
+["Y","Thank you very much.","شكراً جزيلاً.","ثانك يُو ڤِري ماتش"],
+["A","You're welcome.","عفواً.","يُور وِلكَم"]]},
+{id:4,t:"في المحل",sc:"تريد شراء قميص.",l:[
+["A","Can I help you?","هل أستطيع مساعدتك؟","كان آي هِلپ يُو؟"],
+["Y","How much is this shirt?","بكم هذا القميص؟","هَاو ماتش إز ذِس شيرت؟"],
+["A","It's eighty riyals.","ثمانون ريالاً.","إتس إيتي ريالز"],
+["Y","That's expensive. Do you have a cheaper one?","هذا غالٍ. هل عندك أرخص؟","ذاتس إكسپِنسِڤ. دُو يُو هاڤ أ تشيپر وَن؟"],
+["A","Yes, this one is fifty riyals.","نعم، هذا بخمسين ريالاً.","يَس، ذِس وَن إز فِفتي ريالز"],
+["Y","Good. I'll take it.","جيد. سآخذه.","قُود. آيل تَيك إت"]]},
+{id:5,t:"مكالمة: أنا متأخر",sc:"تتصل لتقول إنك في الطريق.",l:[
+["A","Hello?","ألو؟","هَلُو؟"],
+["Y","Hi, it's Ahmed. I'm on my way.","مرحباً، أنا أحمد. أنا في الطريق.","هاي، إتس أحمد. آيم أون ماي وَي"],
+["A","Where are you now?","أين أنت الآن؟","وير آر يُو ناو؟"],
+["Y","I'm near the station. I'll be there in ten minutes.","أنا قرب المحطة. سأصل خلال عشر دقائق.","آيم نير ذا ستيشِن. آيل بي ذير إن تِن مِنِتس"],
+["A","OK, no problem.","حسناً، لا مشكلة.","أوكي، نُو پرُوبلِم"],
+["Y","Sorry for the delay.","آسف على التأخير.","سُوري فور ذا ديلَي"]]},
+{id:6,t:"عند الطبيب",sc:"تشعر بتعب وتشرح للطبيب.",l:[
+["A","What's the problem?","ما المشكلة؟","وَاتس ذا پرُوبلِم؟"],
+["Y","I have a headache and a fever.","عندي صداع وحمّى.","آي هاڤ أ هِدَيك آند أ فِيڤر"],
+["A","Since when?","منذ متى؟","سِنس ون؟"],
+["Y","Since yesterday.","منذ أمس.","سِنس يِسترَدي"],
+["A","Take this medicine twice a day.","خذ هذا الدواء مرتين في اليوم.","تَيك ذِس مِدِسِن تَوايس أ دَي"],
+["Y","Thank you, doctor.","شكراً يا دكتور.","ثانك يُو، دُكتر"]]},
+{id:7,t:"كلام مع الجار",sc:"تقابل جارك الجديد في العمارة.",l:[
+["A","Good evening! How's it going?","مساء الخير! كيف الحال؟","قُود إيڤنِنق! هاوز إت قُوينق؟"],
+["Y","Not bad, thanks. And you?","ليس سيئاً، شكراً. وأنت؟","نُوت باد، ثانكس. آند يُو؟"],
+["A","Good. Are you new in the building?","بخير. هل أنت جديد في العمارة؟","قُود. آر يُو نيو إن ذا بِلدِنق؟"],
+["Y","Yes, I moved here last week.","نعم، انتقلت هنا الأسبوع الماضي.","يَس، آي مُوڤد هير لاست ويك"],
+["A","Welcome! Let me know if you need anything.","أهلاً! أخبرني إذا احتجت أي شيء.","وِلكَم! لِت مي نُو إف يُو نيد إنيثِنق"],
+["Y","That's very kind. Thank you.","هذا لطف منك. شكراً.","ذاتس ڤِري كايند. ثانك يُو"]]},
+{id:8,t:"في التاكسي",sc:"تطلب من السائق أن يوصلك للمطار.",l:[
+["Y","Hello, can you take me to the airport?","مرحباً، هل تستطيع أن توصلني إلى المطار؟","هَلُو، كان يُو تَيك مي تو ذي إيرپُورت؟"],
+["A","Sure. Get in.","أكيد. اركب.","شُور. قِت إن"],
+["Y","How long will it take?","كم سيأخذ من الوقت؟","هَاو لونق ويل إت تَيك؟"],
+["A","About thirty minutes.","حوالي ثلاثين دقيقة.","أباوت ثِرتي مِنِتس"],
+["Y","Please drive slowly.","من فضلك قُد ببطء.","پليز دْرايڤ سلُولي"],
+["A","Don't worry. We'll be there soon.","لا تقلق. سنصل قريباً.","دُونت وُوري. ويل بي ذير سون"]]}
+];
+
+/* ===== القواعد ===== */
+const GRAMMAR=[
+{id:1,t:"الفعل to be: am / is / are",ex_ar:"لازم يكون في فعل في كل جملة إنجليزية. am / is / are معناها (يكون) وتستخدمها للتعريف والوصف والمكان.<br><b>I</b> → am &nbsp;|&nbsp; <b>he / she / it</b> → is &nbsp;|&nbsp; <b>you / we / they</b> → are<br>الاختصار: I'm, he's, she's, we're, they're.",
+ s:[["I am a student.","أنا طالب.","آي أم أ ستيُودِنت"],["She is at home.","هي في البيت.","شي إز أت هُوم"],["They are friends.","هم أصدقاء.","ذَي آر فِرِندز"],["We are ready.","نحن جاهزون.","وي آر ريدي"],["It is cold today.","الجو بارد اليوم.","إت إز كُولد تُودَي"]],
+ q:[["She ___ at home.",["is","are","am"],0,"she تأخذ is."],["They ___ friends.",["is","are","am"],1,"they تأخذ are."],["I ___ tired.",["is","are","am"],2,"I تأخذ am دائماً."],["The car ___ new.",["is","are","am"],0,"the car = it، فنستخدم is."]]},
+{id:2,t:"الأسئلة: do / does وكلمات السؤال",ex_ar:"سؤال نعم/لا: نبدأ بـ <b>Do</b> (مع I / you / we / they) أو <b>Does</b> (مع he / she / it) ثم الفاعل ثم الفعل بدون تغيير.<br>الأسئلة المفتوحة: كلمة السؤال أولاً: What (ماذا)، Where (أين)، When (متى)، Why (لماذا)، Who (من)، How (كيف).",
+ s:[["Do you like coffee?","هل تحب القهوة؟","دُو يُو لايك كُفي؟"],["Does he work here?","هل هو يعمل هنا؟","دَز هي وُورك هير؟"],["Where do you live?","أين تسكن؟","وير دُو يُو لِڤ؟"],["What does she want?","ماذا تريد هي؟","وات دَز شي وانت؟"],["Why are you late?","لماذا أنت متأخر؟","واي آر يُو لَيت؟"]],
+ q:[["___ you speak English?",["Do","Does","Are"],0,"you تأخذ Do."],["___ he live here?",["Do","Does","Is"],1,"he تأخذ Does، والفعل بعدها بدون s."],["___ do you work?",["Where","Who","Does"],0,"للسؤال عن المكان نستخدم Where."],["Why ___ you tired?",["are","do","does"],0,"tired صفة، فنستخدم to be (are)."]]},
+{id:3,t:"النفي: don't / doesn't / isn't",ex_ar:"ننفي بـ <b>don't</b> (do not) مع I / you / we / they، و<b>doesn't</b> مع he / she / it، ثم الفعل بدون تغيير.<br>ومع to be نضيف not: I am not، he isn't، they aren't.",
+ s:[["I don't understand.","أنا لا أفهم.","آي دُونت أندرستاند"],["She doesn't drink coffee.","هي لا تشرب القهوة.","شي دَزِنت دْرِنك كُفي"],["We don't have time.","ليس عندنا وقت.","وي دُونت هاڤ تايم"],["He isn't here.","هو ليس هنا.","هي إزِنت هير"],["They aren't ready.","هم غير جاهزين.","ذَي آرنت ريدي"]],
+ q:[["She ___ like tea.",["doesn't","don't","isn't"],0,"she تأخذ doesn't."],["We ___ have a car.",["doesn't","don't","aren't"],1,"we تأخذ don't."],["He ___ at home.",["isn't","doesn't","don't"],0,"at home مكان، فنستخدم isn't."],["I ___ know.",["don't","doesn't","isn't"],0,"I تأخذ don't."]]},
+{id:4,t:"المضارع البسيط (العادات والحقائق)",ex_ar:"نستخدمه للعادات والحقائق (كل يوم، دائماً). الفعل يبقى كما هو، لكن مع <b>he / she / it</b> نضيف s أو es: work → works، go → goes، watch → watches.<br>كلمات تدل عليه: always، usually، often، sometimes، never، every day.",
+ s:[["I work every day.","أعمل كل يوم.","آي وُورك إڤري دَي"],["He works at a bank.","هو يعمل في بنك.","هي وُورْكس أت أ بانك"],["She goes to school.","هي تذهب إلى المدرسة.","شي قُوز تو سكول"],["We usually eat at eight.","نأكل عادةً الساعة الثامنة.","وي يُوجُولي إيت أت إيت"],["The shop opens at nine.","المحل يفتح الساعة التاسعة.","ذا شُوپ أُوبِنز أت ناين"]],
+ q:[["He ___ every morning.",["run","runs","running"],1,"he تأخذ s: runs."],["She ___ English.",["speak","speaks","speaking"],1,"she تأخذ s: speaks."],["They ___ in Riyadh.",["live","lives","living"],0,"they بدون s."],["My brother ___ to work by car.",["go","goes","going"],1,"go تصبح goes مع he."]]},
+{id:5,t:"الماضي البسيط",ex_ar:"للأحداث اللي خلصت (أمس، الأسبوع الماضي). الأفعال المنتظمة نضيف ed: work → worked. وفي أفعال شاذة تحفظها: go → went، eat → ate، see → saw، have → had، buy → bought، make → made.<br>السؤال والنفي بـ <b>did / didn't</b> والفعل يرجع للأصل: Did you go? / I didn't go.",
+ s:[["I worked yesterday.","عملت أمس.","آي وُورْكت يِسترَدي"],["She went to the market.","هي ذهبت إلى السوق.","شي وِنت تو ذا مارْكِت"],["We ate dinner at home.","تعشينا في البيت.","وي إيت دِنر أت هُوم"],["Did you see him?","هل رأيته؟","ديد يُو سي هِم؟"],["I didn't sleep well.","لم أنم جيداً.","آي ديدِنت سليپ ويل"]],
+ q:[["Yesterday I ___ to the bank.",["go","went","goes"],1,"ماضي go هو went."],["Did you ___ him?",["see","saw","seen"],0,"بعد Did الفعل يرجع للأصل: see."],["She ___ a new phone.",["buy","buys","bought"],2,"ماضي buy هو bought."],["I ___ call him yesterday.",["didn't","don't","wasn't"],0,"النفي في الماضي: didn't + الفعل الأصلي."]]},
+{id:6,t:"المستقبل: will / going to",ex_ar:"<b>will</b> للقرارات السريعة والوعود، و<b>be going to</b> للخطط. الشكل: will + فعل بدون تغيير. نفي will: <b>won't</b>.<br>كلمات تدل عليه: tomorrow، next week، soon.",
+ s:[["I will help you.","سأساعدك.","آي ويل هِلپ يُو"],["It will rain tomorrow.","ستمطر غداً.","إت ويل رَين تومورُو"],["I'm going to study tonight.","سأذاكر الليلة.","آيم قُوينق تو ستَدي تونايت"],["We won't be late.","لن نتأخر.","وي وُونت بي لَيت"],["She is going to call you.","هي ستتصل بك.","شي إز قُوينق تو كول يُو"]],
+ q:[["I ___ call you tomorrow.",["will","did","am"],0,"للمستقبل نستخدم will."],["They are going ___ travel.",["to","will","for"],0,"بعد going نضع to."],["We ___ be late.",["won't","don't","didn't"],0,"النفي في المستقبل: won't."],["It ___ rain soon.",["will","wills","is"],0,"will لا تتغير مع أي فاعل."]]},
+{id:7,t:"الأفعال المساعدة: can / must / should",ex_ar:"بعد can / could / must / should نضع الفعل بدون to وبدون تغيير.<br><b>can</b> = أستطيع، <b>could</b> = هل يمكن (مؤدب)، <b>must</b> = لازم، <b>should</b> = ينبغي (نصيحة).<br>لا نقول: I can to swim ولا he cans.",
+ s:[["I can help you.","أستطيع مساعدتك.","آي كان هِلپ يُو"],["Could you open the door?","هل يمكنك فتح الباب؟","كُود يُو أُوبِن ذا دُور؟"],["You must wear a helmet.","لازم ترتدي خوذة.","يُو مَست وير أ هِلمِت"],["You should rest.","ينبغي أن ترتاح.","يُو شُود ريست"],["He can't swim.","هو لا يستطيع السباحة.","هي كانت سويم"]],
+ q:[["She can ___ English.",["speak","speaks","to speak"],0,"بعد can الفعل بدون تغيير."],["You ___ see a doctor. (نصيحة)",["should","can","will"],0,"should للنصيحة."],["You ___ stop at the red light. (قانون)",["must","may","can"],0,"must للإلزام."],["___ you help me, please?",["Could","Do","Are"],0,"Could للطلب المؤدب."]]},
+{id:8,t:"الضمائر وصفات الملكية",ex_ar:"الضمير للفاعل: I, you, he, she, it, we, they.<br>صفة الملكية قبل الاسم: my, your, his, her, its, our, their.<br>ضمير المفعول بعد الفعل: me, you, him, her, it, us, them.",
+ s:[["This is my phone.","هذا جوالي.","ذِس إز ماي فُون"],["Is that your car?","هل هذه سيارتك؟","إز ذات يُور كار؟"],["He loves his family.","هو يحب عائلته.","هي لَڤز هِز فاميلي"],["She called me.","هي اتصلت بي.","شي كولد مي"],["We know them.","نحن نعرفهم.","وي نُو ذِم"]],
+ q:[["This is ___ book. (أنا)",["my","me","I"],0,"قبل الاسم نستخدم my."],["She called ___. (أنا)",["me","my","I"],0,"بعد الفعل نستخدم me."],["___ are my friends. (هم)",["They","Them","Their"],0,"الفاعل: They."],["I know ___. (هو)",["him","his","he"],0,"بعد الفعل: him."]]}
+];
+
+/* ===== الكتابة: مهام يومية ===== */
+const WRITING=[
+{id:1,t:"عرّف بنفسك",task:"اكتب 4 جمل: اسمك، عمرك، من أين أنت، وماذا تحب.",en:"Hello, my name is Ahmed. I am twenty-five years old. I am from Sudan, but I live in Riyadh. I like football and coffee.",ar:"مرحباً، اسمي أحمد. عمري خمس وعشرون سنة. أنا من السودان لكني أسكن في الرياض. أحب كرة القدم والقهوة.",ck:["بدأت كل جملة بحرف كبير وختمتها بنقطة","استخدمت am / is / are صح","ذكرت 4 معلومات على الأقل"]},
+{id:2,t:"روتين يومك",task:"اكتب 5 جمل عن يومك من الصباح إلى المساء.",en:"I wake up at six o'clock. I pray and eat breakfast. I go to work at eight. I come home at five. In the evening I study English.",ar:"أستيقظ الساعة السادسة. أصلي وأفطر. أذهب إلى العمل الساعة الثامنة. أرجع البيت الساعة الخامسة. في المساء أدرس الإنجليزية.",ck:["كل الأفعال في المضارع البسيط","استخدمت at مع الساعة","رتبت الأحداث من الصباح للمساء"]},
+{id:3,t:"عائلتك",task:"اكتب 4 جمل عن أفراد عائلتك.",en:"I have a big family. My father is a teacher. My mother works at home. I have two brothers and one sister.",ar:"عندي عائلة كبيرة. أبي معلم. أمي تعمل في البيت. عندي أخوان وأخت واحدة.",ck:["استخدمت my قبل الأسماء","استخدمت has/have صح (I have, he has)","كل جملة فيها فعل"]},
+{id:4,t:"مدينتك",task:"اكتب 4 جمل عن المدينة اللي تسكن فيها.",en:"I live in Riyadh. It is a big and busy city. The weather is hot in summer. I like my neighborhood because it is quiet.",ar:"أسكن في الرياض. هي مدينة كبيرة ومزدحمة. الجو حار في الصيف. أحب حيّي لأنه هادئ.",ck:["استخدمت صفات (big, hot, quiet)","استخدمت because لذكر السبب","استخدمت in مع المدينة"]},
+{id:5,t:"ماذا فعلت أمس؟",task:"اكتب 5 جمل بالماضي عمّا فعلته أمس.",en:"Yesterday I woke up early. I went to the market and bought some food. Then I visited my friend. We ate dinner together. I went to bed at eleven.",ar:"أمس استيقظت مبكراً. ذهبت إلى السوق واشتريت طعاماً. ثم زرت صديقي. تعشينا معاً. نمت الساعة الحادية عشرة.",ck:["كل الأفعال في الماضي (went, bought, ate)","استخدمت Then لترتيب الأحداث","لم أستخدم فعلاً مضارعاً بالغلط"]},
+{id:6,t:"خططك للأسبوع القادم",task:"اكتب 4 جمل عن خططك القادمة.",en:"Next week I am going to start a new course. I will study English every day. On Friday I am going to visit my family. I hope I will learn a lot.",ar:"الأسبوع القادم سأبدأ دورة جديدة. سأدرس الإنجليزية كل يوم. يوم الجمعة سأزور عائلتي. آمل أن أتعلم الكثير.",ck:["استخدمت going to مرة على الأقل","استخدمت will مرة على الأقل","استخدمت كلمة زمن (next week / on Friday)"]},
+{id:7,t:"رسالة طلب أكل",task:"اكتب رسالة قصيرة لمطعم تطلب فيها وجبة.",en:"Hello, I would like to order two sandwiches and one coffee, please. Please deliver to my address. How much is it? Thank you.",ar:"مرحباً، أريد طلب ساندوتشين وقهوة واحدة من فضلك. من فضلك وصّلها إلى عنواني. كم الحساب؟ شكراً.",ck:["بدأت بتحية","استخدمت I would like و please","ختمت بشكراً"]},
+{id:8,t:"دعوة صديق",task:"اكتب رسالة تدعو فيها صديقك للعشاء.",en:"Hi Ali, are you free on Friday? I want to invite you to dinner at my house. Can you come at eight? Let me know. See you soon.",ar:"مرحباً علي، هل أنت متفرغ يوم الجمعة؟ أريد دعوتك للعشاء في بيتي. هل تستطيع القدوم الساعة الثامنة؟ أخبرني. أراك قريباً.",ck:["سألت سؤالاً واحداً على الأقل","حددت اليوم والوقت","ختمت بجملة ودّية"]},
+{id:9,t:"طلب إجازة",task:"اكتب رسالة لمديرك تطلب فيها يوم إجازة.",en:"Dear manager, I need a day off on Sunday because I have a doctor appointment. I will finish my work before I leave. Thank you for your understanding.",ar:"عزيزي المدير، أحتاج إجازة يوم الأحد لأن عندي موعداً عند الطبيب. سأنهي عملي قبل أن أغادر. شكراً لتفهمك.",ck:["بدأت بتحية رسمية (Dear...)","ذكرت السبب بـ because","وعدت بإنهاء العمل (will)"]},
+{id:10,t:"صديقك المقرّب",task:"اكتب 5 جمل تصف فيها صديقك.",en:"My best friend is Omar. He is tall and kind. He works at a bank. We play football every weekend. He always helps me.",ar:"أعز أصدقائي عمر. هو طويل ولطيف. يعمل في بنك. نلعب كرة القدم كل نهاية أسبوع. هو دائماً يساعدني.",ck:["أضفت s مع he (works, helps)","استخدمت صفتين على الأقل","استخدمت always أو every"]},
+{id:11,t:"رأيك في تعلم الإنجليزية",task:"اكتب 4 جمل: لماذا تتعلم الإنجليزية وما شعورك؟",en:"I think learning English is important. It helps me in my work and in my life. It is difficult, but I practice every day. I want to speak with confidence.",ar:"أعتقد أن تعلم الإنجليزية مهم. تساعدني في عملي وحياتي. هي صعبة لكني أتمرن كل يوم. أريد أن أتكلم بثقة.",ck:["استخدمت I think","استخدمت but لربط فكرتين متعاكستين","ذكرت هدفاً بـ I want to"]},
+{id:12,t:"شكوى مؤدبة",task:"اكتب رسالة تشتكي فيها بأدب من منتج لا يعمل.",en:"Hello, I bought this phone yesterday, but it is not working. I think there is a problem with the battery. Can I exchange it or get my money back? Thank you.",ar:"مرحباً، اشتريت هذا الجوال أمس لكنه لا يعمل. أعتقد أن هناك مشكلة في البطارية. هل أستطيع استبداله أو استرجاع مالي؟ شكراً.",ck:["ذكرت المشكلة بوضوح","طلبت حلاً بسؤال مؤدب (Can I...?)","ختمت بشكراً"]}
+];
+
+/* ===== القاموس الذكي: [كلمة، المعنى الأشهر، النطق، النوع، مثال، ترجمة المثال] ===== */
+const DICT=[
+/* أفعال */
+["go","يذهب","قُو","فعل","I go to work by car.","أذهب إلى العمل بالسيارة."],
+["come","يأتي","كَم","فعل","Please come here.","من فضلك تعال هنا."],
+["eat","يأكل","إيت","فعل","I eat breakfast at seven.","أفطر الساعة السابعة."],
+["drink","يشرب","دْرِنك","فعل","I drink tea every morning.","أشرب الشاي كل صباح."],
+["sleep","ينام","سليپ","فعل","I sleep at eleven.","أنام الساعة الحادية عشرة."],
+["wake up","يستيقظ","وَيك أَپ","فعل","I wake up at six.","أستيقظ الساعة السادسة."],
+["work","يعمل","وُورك","فعل","He works at a bank.","هو يعمل في بنك."],
+["study","يدرس / يذاكر","ستَدي","فعل","I study English at night.","أدرس الإنجليزية بالليل."],
+["learn","يتعلم","لِرن","فعل","I want to learn English.","أريد أن أتعلم الإنجليزية."],
+["teach","يعلّم","تيتش","فعل","She teaches math.","هي تدرّس الرياضيات."],
+["read","يقرأ","رِيد","فعل","I read the news.","أقرأ الأخبار."],
+["write","يكتب","رايت","فعل","Please write your name.","من فضلك اكتب اسمك."],
+["speak","يتكلم","سپيك","فعل","Can you speak slowly?","هل تستطيع التكلم ببطء؟"],
+["talk","يتحدث","توك","فعل","We talk every day.","نتحدث كل يوم."],
+["say","يقول","سَي","فعل","What did you say?","ماذا قلت؟"],
+["tell","يخبر","تِل","فعل","Tell me the truth.","أخبرني الحقيقة."],
+["ask","يسأل / يطلب","آسك","فعل","I want to ask a question.","أريد أن أسأل سؤالاً."],
+["answer","يجيب","آنسر","فعل","Please answer the phone.","من فضلك رد على الهاتف."],
+["call","يتصل","كول","فعل","I will call you tomorrow.","سأتصل بك غداً."],
+["listen","يستمع","لِسِن","فعل","Listen to me, please.","استمع لي من فضلك."],
+["hear","يسمع","هير","فعل","I can't hear you.","لا أسمعك."],
+["see","يرى","سي","فعل","I see the problem.","أرى المشكلة."],
+["look","ينظر","لُوك","فعل","Look at this picture.","انظر إلى هذه الصورة."],
+["watch","يشاهد","وُوتش","فعل","I watch football on Friday.","أشاهد كرة القدم يوم الجمعة."],
+["find","يجد","فايند","فعل","I can't find my keys.","لا أجد مفاتيحي."],
+["lose","يفقد / يضيّع","لُوز","فعل","I lost my phone.","أضعت جوالي."],
+["give","يعطي","قِڤ","فعل","Give me a minute.","أعطني دقيقة."],
+["take","يأخذ","تَيك","فعل","Take this medicine.","خذ هذا الدواء."],
+["bring","يُحضر","برِنق","فعل","Please bring water.","من فضلك أحضر ماءً."],
+["buy","يشتري","باي","فعل","I buy bread every day.","أشتري الخبز كل يوم."],
+["sell","يبيع","سِل","فعل","They sell phones.","هم يبيعون الجوالات."],
+["pay","يدفع","پَي","فعل","I pay by card.","أدفع بالبطاقة."],
+["cost","يكلّف","كُوست","فعل","How much does it cost?","كم يكلّف؟"],
+["open","يفتح","أُوبِن","فعل","Open the door, please.","افتح الباب من فضلك."],
+["close","يغلق","كلُوز","فعل","The shop closes at ten.","المحل يغلق الساعة العاشرة."],
+["start","يبدأ","ستارت","فعل","The meeting starts at nine.","الاجتماع يبدأ الساعة التاسعة."],
+["finish","ينهي","فِنِش","فعل","I finish work at five.","أنهي عملي الساعة الخامسة."],
+["stop","يتوقف","ستُوپ","فعل","Stop here, please.","توقف هنا من فضلك."],
+["wait","ينتظر","ويت","فعل","Wait for me.","انتظرني."],
+["help","يساعد","هِلپ","فعل","Can you help me?","هل تستطيع مساعدتي؟"],
+["need","يحتاج","نيد","فعل","I need your help.","أحتاج مساعدتك."],
+["want","يريد","وانت","فعل","I want some water.","أريد بعض الماء."],
+["like","يحب / يعجبه","لايك","فعل","I like this place.","يعجبني هذا المكان."],
+["love","يحب (بقوة)","لَڤ","فعل","I love my family.","أحب عائلتي."],
+["hate","يكره","هَيت","فعل","I hate waiting.","أكره الانتظار."],
+["know","يعرف","نُو","فعل","I know him.","أعرفه."],
+["think","يعتقد / يفكر","ثِنك","فعل","I think it's good.","أعتقد أنه جيد."],
+["believe","يصدّق / يؤمن","بِليڤ","فعل","I believe you.","أصدقك."],
+["understand","يفهم","أندرستاند","فعل","I don't understand.","لا أفهم."],
+["remember","يتذكر","ريمِمبر","فعل","I remember his name.","أتذكر اسمه."],
+["forget","ينسى","فُرقِت","فعل","Don't forget your keys.","لا تنس مفاتيحك."],
+["use","يستخدم","يُوز","فعل","Can I use your phone?","هل أستطيع استخدام هاتفك؟"],
+["make","يصنع","مَيك","فعل","I make coffee at home.","أعمل القهوة في البيت."],
+["do","يفعل","دُو","فعل","What do you do?","ماذا تعمل؟"],
+["have","يملك / عنده","هاڤ","فعل","I have two brothers.","عندي أخوان."],
+["get","يحصل على","قِت","فعل","I get paid on Sunday.","أستلم راتبي يوم الأحد."],
+["put","يضع","پُت","فعل","Put it on the table.","ضعه على الطاولة."],
+["keep","يحتفظ","كيپ","فعل","Keep the change.","احتفظ بالباقي."],
+["leave","يغادر","لِيڤ","فعل","I leave home at seven.","أغادر البيت الساعة السابعة."],
+["stay","يبقى","ستَي","فعل","Please stay here.","من فضلك ابقَ هنا."],
+["live","يسكن / يعيش","لِڤ","فعل","I live in Riyadh.","أسكن في الرياض."],
+["walk","يمشي","وُوك","فعل","I walk to work.","أمشي إلى العمل."],
+["run","يجري","رَن","فعل","I run every morning.","أجري كل صباح."],
+["drive","يقود","دْرايڤ","فعل","I drive a small car.","أقود سيارة صغيرة."],
+["travel","يسافر","تراڤِل","فعل","I travel every summer.","أسافر كل صيف."],
+["visit","يزور","ڤِزِت","فعل","I visit my family on Friday.","أزور عائلتي يوم الجمعة."],
+["meet","يقابل","ميت","فعل","Nice to meet you.","تشرفت بمعرفتك."],
+["send","يرسل","سِند","فعل","Send me the file.","أرسل لي الملف."],
+["receive","يستلم","ريسيڤ","فعل","I received your message.","استلمت رسالتك."],
+["cook","يطبخ","كُوك","فعل","I cook dinner at home.","أطبخ العشاء في البيت."],
+["clean","ينظّف","كلين","فعل","Please clean the room.","من فضلك نظّف الغرفة."],
+["wash","يغسل","وُوش","فعل","I wash my car on Friday.","أغسل سيارتي يوم الجمعة."],
+["wear","يرتدي","وير","فعل","Wear your helmet.","ارتدِ خوذتك."],
+["try","يجرّب / يحاول","تراي","فعل","Let me try.","دعني أجرّب."],
+["change","يغيّر","تشَينج","فعل","I want to change my phone.","أريد تغيير جوالي."],
+["move","ينتقل / يحرّك","موڤ","فعل","I moved here last week.","انتقلت هنا الأسبوع الماضي."],
+["play","يلعب","پلَي","فعل","We play football on Friday.","نلعب كرة القدم يوم الجمعة."],
+["win","يفوز","وِن","فعل","Our team won.","فريقنا فاز."],
+["pray","يصلّي","پرَي","فعل","I pray five times a day.","أصلي خمس مرات في اليوم."],
+["rest","يرتاح","ريست","فعل","I need to rest.","أحتاج أن أرتاح."],
+["worry","يقلق","وُوري","فعل","Don't worry.","لا تقلق."],
+["happen","يحدث","هاپِن","فعل","What happened?","ماذا حدث؟"],
+["agree","يتفق","أقري","فعل","I agree with you.","أتفق معك."],
+["decide","يقرر","ديسايد","فعل","We need to decide.","نحتاج أن نقرر."],
+["choose","يختار","تشُوز","فعل","Choose one.","اختر واحداً."],
+["fix","يصلح","فِكس","فعل","Can you fix it?","هل تستطيع إصلاحه؟"],
+["check","يفحص / يتحقق","تشِك","فعل","Please check the report.","من فضلك افحص التقرير."],
+["explain","يشرح","إكسپلين","فعل","Can you explain this?","هل تستطيع شرح هذا؟"],
+["repeat","يعيد / يكرر","ريپيت","فعل","Can you repeat that?","هل تعيد ذلك؟"],
+["miss","يفوّت / يشتاق","مِس","فعل","I missed the bus.","فاتني الباص."],
+["arrive","يصل","أرايڤ","فعل","I arrive at nine.","أصل الساعة التاسعة."],
+["return","يرجع","ريتيرن","فعل","I return home at five.","أرجع البيت الساعة الخامسة."],
+["enjoy","يستمتع","إنجُوي","فعل","I enjoy cooking.","أستمتع بالطبخ."],
+/* أسماء */
+["time","وقت","تايم","اسم","I don't have time.","ليس عندي وقت."],
+["day","يوم","دَي","اسم","Have a nice day.","أتمنى لك يوماً جميلاً."],
+["week","أسبوع","ويك","اسم","See you next week.","أراك الأسبوع القادم."],
+["month","شهر","مَنث","اسم","I pay rent every month.","أدفع الإيجار كل شهر."],
+["year","سنة","يِر","اسم","I have two years of experience.","عندي خبرة سنتين."],
+["morning","صباح","مُورنِنق","اسم","Good morning.","صباح الخير."],
+["night","ليل","نايت","اسم","I study at night.","أدرس بالليل."],
+["money","مال / فلوس","مَني","اسم","I don't have money.","ليس عندي فلوس."],
+["price","سعر","پرايس","اسم","What's the price?","ما السعر؟"],
+["job","وظيفة","جُوب","اسم","I'm looking for a job.","أبحث عن وظيفة."],
+["company","شركة","كَمپَني","اسم","I work for a big company.","أعمل في شركة كبيرة."],
+["manager","مدير","مَنِجر","اسم","The manager is here.","المدير هنا."],
+["customer","عميل / زبون","كَستمر","اسم","The customer is waiting.","العميل ينتظر."],
+["worker","عامل","وُورْكر","اسم","The workers are ready.","العمال جاهزون."],
+["friend","صديق","فرِند","اسم","He is my friend.","هو صديقي."],
+["family","عائلة","فامِلي","اسم","I love my family.","أحب عائلتي."],
+["man","رجل","مان","اسم","That man is my neighbor.","ذلك الرجل جاري."],
+["woman","امرأة","وُومَن","اسم","The woman is a doctor.","المرأة طبيبة."],
+["child","طفل","تشايلد","اسم","The child is sleeping.","الطفل نائم."],
+["people","ناس","پيپِل","اسم","Many people are here.","ناس كثيرون هنا."],
+["house","بيت","هاوس","اسم","I have a small house.","عندي بيت صغير."],
+["home","منزل / بيت","هُوم","اسم","I'm at home.","أنا في البيت."],
+["city","مدينة","سِتي","اسم","Riyadh is a big city.","الرياض مدينة كبيرة."],
+["street","شارع","ستريت","اسم","The street is busy.","الشارع مزدحم."],
+["road","طريق","رُود","اسم","The road is closed.","الطريق مغلق."],
+["shop","محل","شُوپ","اسم","The shop is open.","المحل مفتوح."],
+["market","سوق","مارْكِت","اسم","I go to the market on Friday.","أذهب إلى السوق يوم الجمعة."],
+["bank","بنك","بانك","اسم","The bank is near here.","البنك قريب من هنا."],
+["hospital","مستشفى","هُسپِتَل","اسم","The hospital is far.","المستشفى بعيد."],
+["school","مدرسة","سكول","اسم","My son goes to school.","ابني يذهب إلى المدرسة."],
+["office","مكتب","أُفِس","اسم","I'm in the office.","أنا في المكتب."],
+["airport","مطار","إيرپُورت","اسم","Take me to the airport.","وصّلني إلى المطار."],
+["station","محطة","ستيشِن","اسم","Where is the station?","أين المحطة؟"],
+["car","سيارة","كار","اسم","I have a new car.","عندي سيارة جديدة."],
+["bus","باص","بَس","اسم","I take the bus to work.","آخذ الباص إلى العمل."],
+["taxi","تاكسي","تاكسي","اسم","I need a taxi.","أحتاج تاكسي."],
+["ticket","تذكرة","تِكِت","اسم","I need a ticket.","أحتاج تذكرة."],
+["phone","جوال","فُون","اسم","My phone is new.","جوالي جديد."],
+["computer","كمبيوتر","كُمپيُوتر","اسم","I work on a computer.","أعمل على كمبيوتر."],
+["internet","إنترنت","إنترنِت","اسم","The internet is slow.","الإنترنت بطيء."],
+["food","طعام","فُود","اسم","The food is delicious.","الأكل لذيذ."],
+["bread","خبز","بِرِد","اسم","I want some bread.","أريد بعض الخبز."],
+["rice","أرز","رايس","اسم","We eat rice and chicken.","نأكل أرزاً ودجاجاً."],
+["meat","لحم","ميت","اسم","I don't eat meat.","لا آكل اللحم."],
+["chicken","دجاج","تشِكِن","اسم","I like grilled chicken.","أحب الدجاج المشوي."],
+["fish","سمك","فِش","اسم","We ate fish for lunch.","أكلنا سمكاً على الغداء."],
+["fruit","فاكهة","فروت","اسم","I eat fruit every day.","آكل الفاكهة كل يوم."],
+["vegetable","خضار","ڤِجتَبِل","اسم","Eat more vegetables.","كُل خضاراً أكثر."],
+["water","ماء","وُوتر","اسم","I need some water.","أحتاج بعض الماء."],
+["coffee","قهوة","كُفي","اسم","I drink coffee every morning.","أشرب القهوة كل صباح."],
+["tea","شاي","تي","اسم","Tea with milk, please.","شاي بحليب من فضلك."],
+["milk","حليب","مِلك","اسم","I like milk.","أحب الحليب."],
+["breakfast","فطور","بِركفَست","اسم","Breakfast is ready.","الفطور جاهز."],
+["lunch","غداء","لَنتش","اسم","Let's have lunch.","لنتغدّ."],
+["dinner","عشاء","دِنر","اسم","What's for dinner?","ما العشاء؟"],
+["name","اسم","نَيم","اسم","What's your name?","ما اسمك؟"],
+["number","رقم","نَمبر","اسم","What's your number?","ما رقمك؟"],
+["address","عنوان","أدرِس","اسم","What's your address?","ما عنوانك؟"],
+["question","سؤال","كويسْتشِن","اسم","I have a question.","عندي سؤال."],
+["answer","إجابة","آنسر","اسم","I don't know the answer.","لا أعرف الإجابة."],
+["problem","مشكلة","پرُوبلِم","اسم","There is a problem.","هناك مشكلة."],
+["idea","فكرة","آيديا","اسم","That's a good idea.","هذه فكرة جيدة."],
+["reason","سبب","رِيزِن","اسم","What's the reason?","ما السبب؟"],
+["way","طريق / طريقة","وَي","اسم","Is this the right way?","هل هذا الطريق الصحيح؟"],
+["place","مكان","پليس","اسم","This is a nice place.","هذا مكان جميل."],
+["country","بلد","كَنتري","اسم","My country is Sudan.","بلدي السودان."],
+["language","لغة","لانقوِج","اسم","English is a global language.","الإنجليزية لغة عالمية."],
+["word","كلمة","وُورد","اسم","I don't know this word.","لا أعرف هذه الكلمة."],
+["sentence","جملة","سِنتِنس","اسم","Say the sentence again.","قُل الجملة مرة أخرى."],
+["story","قصة","ستُوري","اسم","Tell me a story.","احكِ لي قصة."],
+["news","أخبار","نيوز","اسم","What's the news?","ما الأخبار؟"],
+["weather","جو / طقس","وِذر","اسم","The weather is hot.","الجو حار."],
+["rain","مطر","رَين","اسم","I like the rain.","أحب المطر."],
+["sun","شمس","سَن","اسم","The sun is strong.","الشمس قوية."],
+["health","صحة","هِلث","اسم","Health is important.","الصحة مهمة."],
+["doctor","طبيب","دُكتر","اسم","I need a doctor.","أحتاج طبيباً."],
+["medicine","دواء","مِدِسِن","اسم","Take this medicine.","خذ هذا الدواء."],
+["pain","ألم","پَين","اسم","I have pain in my back.","عندي ألم في ظهري."],
+["body","جسم","بُدي","اسم","Exercise is good for the body.","الرياضة مفيدة للجسم."],
+["head","رأس","هِد","اسم","My head hurts.","رأسي يؤلمني."],
+["hand","يد","هاند","اسم","Wash your hands.","اغسل يديك."],
+["eye","عين","آي","اسم","My eyes are tired.","عيناي متعبتان."],
+["door","باب","دُور","اسم","Close the door.","أغلق الباب."],
+["room","غرفة","روم","اسم","The room is clean.","الغرفة نظيفة."],
+["bed","سرير","بِد","اسم","I go to bed at eleven.","أنام الساعة الحادية عشرة."],
+["key","مفتاح","كي","اسم","Where is my key?","أين مفتاحي؟"],
+["bag","حقيبة","باق","اسم","My bag is heavy.","حقيبتي ثقيلة."],
+["clothes","ملابس","كلُوذز","اسم","I need new clothes.","أحتاج ملابس جديدة."],
+["shoes","حذاء","شُوز","اسم","These shoes are small.","هذا الحذاء صغير."],
+["gift","هدية","قِفت","اسم","This is a gift for you.","هذه هدية لك."],
+["party","حفلة","پارتي","اسم","I'm going to a party.","سأذهب إلى حفلة."],
+["game","لعبة / مباراة","قَيم","اسم","The game starts at eight.","المباراة تبدأ الساعة الثامنة."],
+["music","موسيقى","ميُوزِك","اسم","I listen to music.","أستمع إلى الموسيقى."],
+["movie","فيلم","مُوڤي","اسم","Let's watch a movie.","لنشاهد فيلماً."],
+["book","كتاب","بُوك","اسم","I'm reading a good book.","أقرأ كتاباً جيداً."],
+["paper","ورق","پَيپر","اسم","I need paper and a pen.","أحتاج ورقاً وقلماً."],
+["picture","صورة","پِكتشر","اسم","Take a picture.","التقط صورة."],
+["life","حياة","لايف","اسم","Life is good.","الحياة جميلة."],
+["meeting","اجتماع","ميتِنق","اسم","The meeting is at nine.","الاجتماع الساعة التاسعة."],
+["report","تقرير","ريپُورت","اسم","I will send the report.","سأرسل التقرير."],
+["salary","راتب","سالري","اسم","My salary is paid monthly.","راتبي يُدفع شهرياً."],
+["rent","إيجار","رِنت","اسم","The rent is high.","الإيجار مرتفع."],
+["order","طلب","أُوردر","اسم","I want to cancel my order.","أريد إلغاء طلبي."],
+["delivery","توصيل","ديليڤري","اسم","The delivery is late.","التوصيل متأخر."],
+["thing","شيء","ثِنق","اسم","What is this thing?","ما هذا الشيء؟"],
+["part","جزء","پارت","اسم","This is part of the plan.","هذا جزء من الخطة."],
+["end","نهاية","إند","اسم","The end of the month.","نهاية الشهر."],
+["side","جانب","سايد","اسم","On the left side.","على الجانب الأيسر."],
+["birthday","عيد ميلاد","بِرْثدَي","اسم","Happy birthday!","كل عام وأنت بخير (عيد ميلاد سعيد)!"],
+/* صفات */
+["good","جيد","قُود","صفة","This coffee is good.","هذه القهوة جيدة."],
+["bad","سيئ","باد","صفة","The weather is bad.","الجو سيئ."],
+["big","كبير","بِق","صفة","It's a big house.","هذا بيت كبير."],
+["small","صغير","سمُول","صفة","I have a small car.","عندي سيارة صغيرة."],
+["new","جديد","نيو","صفة","I have a new phone.","عندي جوال جديد."],
+["old","قديم / كبير في السن","أُولد","صفة","My car is old.","سيارتي قديمة."],
+["young","شاب / صغير في السن","يَنق","صفة","He is young.","هو شاب."],
+["hot","حار / ساخن","هُت","صفة","It's hot today.","الجو حار اليوم."],
+["cold","بارد","كُولد","صفة","The water is cold.","الماء بارد."],
+["cheap","رخيص","تشيپ","صفة","This is cheap.","هذا رخيص."],
+["expensive","غالٍ","إكسپِنسِڤ","صفة","That's too expensive.","هذا غالٍ جداً."],
+["easy","سهل","إيزي","صفة","English is easy for me.","الإنجليزية سهلة عليّ."],
+["difficult","صعب","دِفِكَلت","صفة","This word is difficult.","هذه الكلمة صعبة."],
+["fast","سريع","فاست","صفة","He drives fast.","هو يقود بسرعة."],
+["slow","بطيء","سلُو","صفة","The internet is slow.","الإنترنت بطيء."],
+["early","مبكر","إيرلي","صفة","I wake up early.","أستيقظ مبكراً."],
+["late","متأخر","لَيت","صفة","I'm late.","أنا متأخر."],
+["free","مجاني / متفرغ","فري","صفة","Are you free today?","هل أنت متفرغ اليوم؟"],
+["busy","مشغول / مزدحم","بِزي","صفة","I'm busy now.","أنا مشغول الآن."],
+["ready","جاهز","ريدي","صفة","Are you ready?","هل أنت جاهز؟"],
+["happy","سعيد","هابي","صفة","I'm very happy.","أنا سعيد جداً."],
+["sad","حزين","ساد","صفة","He looks sad.","يبدو حزيناً."],
+["tired","متعب","تايرد","صفة","I'm tired.","أنا متعب."],
+["angry","غاضب","أنقري","صفة","He is angry.","هو غاضب."],
+["hungry","جائع","هَنقري","صفة","I'm hungry.","أنا جائع."],
+["sick","مريض","سِك","صفة","My son is sick.","ابني مريض."],
+["healthy","صحّي","هِلثي","صفة","Fruit is healthy.","الفاكهة صحية."],
+["clean","نظيف","كلين","صفة","The room is clean.","الغرفة نظيفة."],
+["dirty","وسخ","دِرتي","صفة","My car is dirty.","سيارتي وسخة."],
+["beautiful","جميل","بيُوتِفُل","صفة","It's a beautiful city.","هذه مدينة جميلة."],
+["nice","لطيف / جميل","نايس","صفة","He is a nice person.","هو شخص لطيف."],
+["kind","طيب / كريم","كايند","صفة","She is very kind.","هي طيبة جداً."],
+["strong","قوي","ستْرُونق","صفة","He is strong.","هو قوي."],
+["weak","ضعيف","ويك","صفة","The signal is weak.","الإشارة ضعيفة."],
+["tall","طويل","تُول","صفة","He is tall.","هو طويل."],
+["short","قصير","شُورت","صفة","It's a short trip.","هذه رحلة قصيرة."],
+["long","طويل","لونق","صفة","It's a long road.","هذا طريق طويل."],
+["hard","صعب / قاسٍ","هارد","صفة","This work is hard.","هذا العمل صعب."],
+["safe","آمن","سَيف","صفة","This place is safe.","هذا المكان آمن."],
+["dangerous","خطير","دَينجرِس","صفة","This road is dangerous.","هذا الطريق خطير."],
+["important","مهم","إمپُورتنت","صفة","This is important.","هذا مهم."],
+["different","مختلف","ديفِرنت","صفة","This one is different.","هذا مختلف."],
+["same","نفس","سَيم","صفة","We have the same phone.","عندنا نفس الجوال."],
+["right","صحيح / يمين","رايت","صفة","You are right.","أنت محق."],
+["wrong","خطأ","رونق","صفة","This is wrong.","هذا خطأ."],
+["true","صحيح / حقيقي","تْرُو","صفة","Is it true?","هل هذا صحيح؟"],
+["full","ممتلئ","فُل","صفة","My storage is full.","مساحة التخزين ممتلئة."],
+["empty","فارغ","إمْپتي","صفة","The bottle is empty.","الزجاجة فارغة."],
+["careful","حذر","كيرفُل","صفة","Be careful.","كن حذراً."],
+["sure","متأكد","شُور","صفة","I'm sure.","أنا متأكد."],
+["possible","ممكن","پُسِبِل","صفة","Is it possible?","هل هذا ممكن؟"],
+/* ظروف وحروف وكلمات ربط */
+["now","الآن","ناو","ظرف","I'm busy now.","أنا مشغول الآن."],
+["today","اليوم","تُودَي","ظرف","I work today.","أعمل اليوم."],
+["tomorrow","غداً","تومورُو","ظرف","See you tomorrow.","أراك غداً."],
+["yesterday","أمس","يِسترَدي","ظرف","I went there yesterday.","ذهبت هناك أمس."],
+["always","دائماً","أُولويز","ظرف","I always drink tea.","أنا دائماً أشرب الشاي."],
+["usually","عادةً","يُوجُولي","ظرف","I usually wake up at six.","عادةً أستيقظ الساعة السادسة."],
+["often","كثيراً","أُوفِن","ظرف","I often go there.","أذهب هناك كثيراً."],
+["sometimes","أحياناً","سَمتايمز","ظرف","Sometimes I walk.","أحياناً أمشي."],
+["never","أبداً","نِڤر","ظرف","I never smoke.","لا أدخّن أبداً."],
+["again","مرة أخرى","أقِن","ظرف","Say it again.","قُلها مرة أخرى."],
+["soon","قريباً","سون","ظرف","See you soon.","أراك قريباً."],
+["here","هنا","هير","ظرف","Come here.","تعال هنا."],
+["there","هناك","ذير","ظرف","I'll be there soon.","سأكون هناك قريباً."],
+["very","جداً","ڤِري","ظرف","It's very good.","هذا جيد جداً."],
+["too","زيادة / أيضاً","تو","ظرف","It's too hot.","الجو حار جداً (زيادة عن اللازم)."],
+["also","أيضاً","أُولسُو","ظرف","I also like tea.","أنا أيضاً أحب الشاي."],
+["only","فقط","أُونلي","ظرف","I have only one.","عندي واحد فقط."],
+["maybe","ربما","مَيبي","ظرف","Maybe tomorrow.","ربما غداً."],
+["really","فعلاً","ريلي","ظرف","Really? Tell me more.","فعلاً؟ أخبرني أكثر."],
+["together","معاً","تُوقِذر","ظرف","We work together.","نعمل معاً."],
+["alone","وحيداً","أَلُون","ظرف","I live alone.","أسكن وحدي."],
+["well","جيداً","ويل","ظرف","I speak English well.","أتكلم الإنجليزية جيداً."],
+["quickly","بسرعة","كويكلي","ظرف","Please come quickly.","من فضلك تعال بسرعة."],
+["slowly","ببطء","سلُولي","ظرف","Speak slowly, please.","تكلم ببطء من فضلك."],
+["because","لأن","بيكُوز","حرف","I'm late because of traffic.","أنا متأخر بسبب الزحمة."],
+["but","لكن","بَت","حرف","I like it, but it's expensive.","يعجبني لكنه غالٍ."],
+["and","و","آند","حرف","Tea and coffee.","شاي وقهوة."],
+["or","أو","أُور","حرف","Tea or coffee?","شاي أم قهوة؟"],
+["if","إذا","إف","حرف","Call me if you need help.","اتصل بي إذا احتجت مساعدة."],
+["when","عندما","ون","حرف","Call me when you arrive.","اتصل بي عندما تصل."],
+["before","قبل","بِفُور","حرف","Call me before nine.","اتصل بي قبل التاسعة."],
+["after","بعد","آفتر","حرف","I rest after work.","أرتاح بعد العمل."],
+["with","مع","ويذ","حرف","I live with my family.","أسكن مع عائلتي."],
+["without","بدون","ويذاوت","حرف","Coffee without sugar.","قهوة بدون سكر."],
+["for","لـ / من أجل","فور","حرف","This is for you.","هذا لك."],
+["from","من","فروم","حرف","I'm from Sudan.","أنا من السودان."],
+["to","إلى","تو","حرف","I go to work.","أذهب إلى العمل."],
+["in","في","إن","حرف","I live in Riyadh.","أسكن في الرياض."],
+["on","على","أون","حرف","It's on the table.","هو على الطاولة."],
+["at","عند / في","أت","حرف","I'm at home.","أنا في البيت."],
+["near","قريب من","نير","حرف","It's near here.","هو قريب من هنا."],
+["far","بعيد","فار","ظرف","It's far from here.","هو بعيد من هنا."],
+["up","فوق","أپ","ظرف","Stand up.","قف."],
+["down","تحت","داون","ظرف","Sit down.","اجلس."],
+["inside","داخل","إنسايد","ظرف","Come inside.","ادخل."],
+["outside","خارج","أوتسايد","ظرف","I'm outside.","أنا بالخارج."],
+["between","بين","بِتوِين","حرف","Between you and me.","بيني وبينك."],
+["about","عن / حوالي","أباوت","حرف","Tell me about it.","أخبرني عنه."],
+["all","كل / الجميع","أُول","كلمة","Thank you all.","شكراً لكم جميعاً."],
+["some","بعض","سَم","كلمة","I want some water.","أريد بعض الماء."],
+["many","كثير (للمعدود)","مِني","كلمة","I have many friends.","عندي أصدقاء كثيرون."],
+["much","كثير (لغير المعدود)","ماتش","كلمة","I don't have much time.","ليس عندي وقت كثير."],
+["every","كل","إڤري","كلمة","I study every day.","أدرس كل يوم."],
+["more","أكثر","مور","كلمة","I need more time.","أحتاج وقتاً أكثر."],
+["less","أقل","لِس","كلمة","I drink less coffee.","أشرب قهوة أقل."],
+["enough","كافٍ","إنَف","كلمة","That's enough.","هذا يكفي."],
+/* كلمات السؤال */
+["what","ماذا / ما","وات","سؤال","What is this?","ما هذا؟"],
+["where","أين","وير","سؤال","Where are you?","أين أنت؟"],
+["when","متى","ون","سؤال","When do you start?","متى تبدأ؟"],
+["why","لماذا","واي","سؤال","Why are you late?","لماذا أنت متأخر؟"],
+["who","من","هُو","سؤال","Who is he?","من هو؟"],
+["how","كيف","هَاو","سؤال","How are you?","كيف حالك؟"],
+["which","أي (من بين خيارات)","ويتش","سؤال","Which one do you want?","أي واحد تريد؟"],
+["how much","بكم / كم (لغير المعدود)","هَاو ماتش","سؤال","How much is this?","بكم هذا؟"],
+["how many","كم (للمعدود)","هَاو مِني","سؤال","How many brothers do you have?","كم أخاً عندك؟"],
+/* عبارات يومية */
+["please","من فضلك","پليز","عبارة","Water, please.","ماء من فضلك."],
+["thank you","شكراً","ثانك يُو","عبارة","Thank you very much.","شكراً جزيلاً."],
+["sorry","آسف","سُوري","عبارة","Sorry, I'm late.","آسف، أنا متأخر."],
+["excuse me","لو سمحت","إكسكيوز مي","عبارة","Excuse me, where is the bank?","لو سمحت، أين البنك؟"],
+["welcome","أهلاً / عفواً","وِلكَم","عبارة","Welcome to my house.","أهلاً بك في بيتي."],
+["yes","نعم","يَس","عبارة","Yes, please.","نعم من فضلك."],
+["no","لا","نُو","عبارة","No, thank you.","لا شكراً."],
+["maybe later","ربما لاحقاً","مَيبي لَيتر","عبارة","Maybe later, thanks.","ربما لاحقاً، شكراً."],
+["no problem","لا مشكلة","نُو پرُوبلِم","عبارة","No problem, take your time.","لا مشكلة، خذ وقتك."],
+["of course","طبعاً","أُڤ كُورس","عبارة","Of course, I can help.","طبعاً، أستطيع المساعدة."],
+["I don't know","لا أعرف","آي دُونت نُو","عبارة","I don't know the answer.","لا أعرف الإجابة."],
+["I'm not sure","لست متأكداً","آيم نُوت شُور","عبارة","I'm not sure about that.","لست متأكداً من ذلك."],
+["good luck","حظاً موفقاً","قُود لَك","عبارة","Good luck with your exam.","حظاً موفقاً في امتحانك."],
+["take care","اعتنِ بنفسك","تَيك كير","عبارة","Take care, see you.","اعتنِ بنفسك، أراك."]
+];
+
 /* ===== الحالة والتخزين ===== */
-const DEF={done:{},cards:{},streak:0,last:-1,rate:0.9};
+const DEF={done:{},cards:{},streak:0,last:-1,rate:0.9,wr:{},dlg:{},gram:{},miss:[],start:0};
 function load(){try{return Object.assign({},DEF,JSON.parse(localStorage.getItem('eng1')||'{}'))}catch(e){return Object.assign({},DEF)}}
 let S=load();
 function save(){try{localStorage.setItem('eng1',JSON.stringify(S))}catch(e){}}
@@ -367,6 +838,7 @@ function shuf(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Ma
 
 const ALL=[];UNITS.forEach(u=>u.s.forEach((x,i)=>ALL.push({u:u.id,i,en:x[0],ar:x[1],pr:x[2],id:u.id+'-'+i,k:ALL.length})));
 VOCAB.forEach(c=>c.w.forEach((x,i)=>ALL.push({u:'v'+c.id,i,en:x[0],ar:x[1],pr:x[2],id:'v'+c.id+'-'+i,k:ALL.length})));
+PATTERNS.forEach(p=>p.items.forEach((x,i)=>ALL.push({u:'p'+p.id,i,en:p.en.replace('___',x[0]),ar:p.ar.replace('___',x[1]),pr:p.pr.replace('___',x[2]),id:'p'+p.id+'-'+i,k:ALL.length})));
 const byUnit=id=>ALL.filter(c=>c.u===id);
 const IV=[0,1,2,4,8,16,30];
 function rate(id,ok){const c=S.cards[id]||{b:0,d:0};c.b=ok?Math.min(c.b+1,6):1;c.d=today()+IV[c.b];S.cards[id]=c;touch();save()}
@@ -390,31 +862,36 @@ const playK=(k,s)=>say(ALL[k].en,!!s);
 /* ===== التنقل ===== */
 let V={n:'home'};
 function go(n,o){V=Object.assign({n},o||{});try{speechSynthesis.cancel()}catch(e){}render();window.scrollTo(0,0)}
-function render(){({home,unit,sounds,voice,review,vocab,vcat})[V.n]()}
+function render(){({home,unit,sounds,voice,review,vocab,vcat,patList,pat,dlgList,dlg,gramList,gram,wrList,wr,dict,plan})[V.n]()}
 const topbar=(t,back)=>`<div class="top"><button onclick="go('${back}')">→</button><div>${t}</div></div>`;
 
 /* ===== الرئيسية ===== */
 function home(){
- const t=today(),due=dueCards().length,next=UNITS.find(u=>!S.done[u.id]);
+ const t=today(),due=dueCards().length;
  const dn=UNITS.filter(u=>S.done[u.id]).length,pct=Math.round(dn/UNITS.length*100);
  const st=S.last>=t-1?S.streak:0;
+ const mi=Math.min(PLAN.length-1,Math.max(0,Math.floor((t-S.start)/30)));
  app.innerHTML=`
  <div class="hd"><h1>إنجليزي بدون نت</h1><div class="chip">🔥 ${st} يوم</div></div>
  <div class="card hero">
   <div class="mut sm">جلسة اليوم (حوالي ساعة)</div>
-  ${next?`<div class="big">الوحدة ${next.id}: ${next.t}</div>
-  <button class="btn pri" onclick="go('unit',{id:${next.id},step:0})">ابدأ الجلسة ▶</button>`:`<div class="big">خلصت كل الوحدات 🎉 راجع الجمل يومياً</div>`}
+  <div class="big">${PLAN[mi].t}</div>
+  <button class="btn pri" onclick="go('plan')">ابدأ من خطتك ▶</button>
   ${due?`<button class="btn" onclick="go('review')">مراجعة اليوم (${due} جملة)</button>`:`<div class="mut sm">ما في جمل للمراجعة الآن</div>`}
  </div>
- <div class="card sm"><b>ترتيب الساعة:</b>
-  <ol><li>استمع للجمل (10 د)</li><li>ردّد كل جملة 3 مرات بصوت عالي (20 د)</li><li>ركّب الجمل (10 د)</li><li>انطق من المعنى (10 د)</li><li>مراجعة الجمل القديمة (10 د)</li></ol>
-  القاعدة الذهبية: <b>قُل الجملة بصوتك</b> ولا تكتفِ بالقراءة. الكلام يطلع بالكلام.</div>
+ <div class="card sm"><b>القاعدة الذهبية:</b> قُل الجملة بصوتك ولا تكتفِ بالقراءة. الكلام يطلع بالكلام.</div>
+ <h2>تدرّب على الكلام</h2>
+ <div class="row2"><button class="btn" onclick="go('patList')">🧩 القوالب</button><button class="btn" onclick="go('dlgList')">🎭 الحوارات</button></div>
+ <div class="row2"><button class="btn" onclick="go('gramList')">📖 القواعد</button><button class="btn" onclick="go('wrList')">✍️ الكتابة</button></div>
+ <h2>ابحث وتعلّم</h2>
+ <div class="row2"><button class="btn pri" onclick="go('dict')">🔤 القاموس الذكي</button><button class="btn" onclick="go('vocab')">📚 قاموس الكلمات</button></div>
+ <div class="row2"><button class="btn" onclick="go('sounds')">🔊 معمل الأصوات</button><button class="btn" onclick="go('voice')">⚙️ الصوت والنسخ الاحتياطي</button></div>
+ <h2>الوحدات حسب المواضيع</h2>
  <div class="mut sm">تقدمك: ${dn} من ${UNITS.length} وحدات</div><div class="bar"><i style="width:${pct}%"></i></div>
- <h2>الوحدات</h2>
+ <details class="card"><summary>اعرض الوحدات (${UNITS.length})</summary>
  ${UNITS.map(u=>`${u.h?`<h2>${u.h}</h2>`:''}<div class="u ${S.done[u.id]?'done':''}" onclick="go('unit',{id:${u.id},step:0})"><span>${u.id}. ${u.t}</span><span>${S.done[u.id]?'✅':'◀'}</span></div>`).join('')}
- <button class="btn pri" style="margin-top:14px" onclick="go('vocab')">📚 قاموس الكلمات (ألوان، أرقام، بيت، سيارة...)</button>
- <div class="row2"><button class="btn" onclick="go('sounds')">🔊 معمل الأصوات</button><button class="btn" onclick="go('voice')">⚙️ إعداد الصوت</button></div>
- <div class="card sm"><b>دليل النطق بالحروف العربية:</b><br>پ = P (مثل pen) &nbsp;•&nbsp; ڤ = V (مثل very) &nbsp;•&nbsp; ق = G (مثل good، زي ما بنقولها في لهجتنا) &nbsp;•&nbsp; ث = th في think &nbsp;•&nbsp; ذ = th في this.<br>النطق المكتوب تقريبي. اعتمد على الصوت دائماً.</div>`;
+ </details>
+ <div class="card sm"><b>دليل النطق بالحروف العربية:</b><br>پ = P (مثل pen) &nbsp;•&nbsp; ڤ = V (مثل very) &nbsp;•&nbsp; ق = G (مثل good) &nbsp;•&nbsp; ث = th في think &nbsp;•&nbsp; ذ = th في this.<br>النطق المكتوب تقريبي. اعتمد على الصوت دائماً.</div>`;
 }
 
 /* ===== الوحدة ===== */
@@ -554,6 +1031,151 @@ function voice(){
  <textarea id="bk" class="en" rows="4" style="width:100%;background:var(--card2);color:var(--tx);border:1px solid var(--bd);border-radius:12px;padding:8px;font-size:14px" placeholder="الكود يظهر هنا، أو الصق كود قديم"></textarea>
  <div class="row2"><button class="btn" onclick="bkCopy()">نسخ</button><button class="btn pri" onclick="bkRestore()">استعادة</button></div></div>`;
 }
+/* ===== أدوات مساعدة ===== */
+const escHtml=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+const ea=s=>String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');
+const sayBtn=(t,slow)=>`<button class="ib" data-t="${ea(t)}" onclick="say(this.dataset.t${slow?',true':''})">${slow?'🐢':'▶'}</button>`;
+function copyText(t){
+ const fb=()=>{const a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();try{document.execCommand('copy');toast('تم النسخ ✅')}catch(_){toast('انسخه يدوياً')}a.remove()};
+ try{navigator.clipboard.writeText(t).then(()=>toast('تم النسخ ✅'),fb)}catch(e){fb()}
+}
+function fixS(){S.wr=S.wr||{};S.dlg=S.dlg||{};S.gram=S.gram||{};S.miss=S.miss||[];if(!S.start)S.start=today()}
+fixS();save();
+
+/* ===== الخطة ===== */
+const PLAN=[
+{t:"الشهر 1: الأساس والنطق",d:"هدفك: تنطق صح، وتركّب جمل بسيطة، وتسلّم وتعرّف نفسك.",tasks:[["🔊 معمل الأصوات (أول أسبوع)","sounds"],["🧩 القوالب 1 إلى 5","patList"],["الوحدة 1: التحيات","unit",{id:1,step:0}],["الوحدة 2: كلمات النجاة","unit",{id:2,step:0}],["الوحدة 3: الأرقام والوقت","unit",{id:3,step:0}],["📚 كلمات: الألوان والأرقام والعائلة","vocab"],["📖 القواعد: الدروس 1 إلى 3","gramList"],["🎭 الحوارات 1 و2","dlgList"],["✍️ الكتابة 1 و2","wrList"]]},
+{t:"الشهر 2: الحياة اليومية",d:"هدفك: تتعامل في السوق والمطعم والطريق والجيران.",tasks:[["🧩 القوالب 6 إلى 11","patList"],["الوحدة 4: الأماكن والاتجاهات","unit",{id:4,step:0}],["الوحدة 7: التسوق والأكل","unit",{id:7,step:0}],["الوحدة 8: الهاتف","unit",{id:8,step:0}],["الوحدة 19: المزاج اليومي","unit",{id:19,step:0}],["الوحدة 20: محادثات يومية","unit",{id:20,step:0}],["📚 كلمات: البيت والسيارة والكوفي","vocab"],["📖 القواعد: الدروس 4 و5","gramList"],["🎭 الحوارات 3 إلى 6","dlgList"],["✍️ الكتابة 3 إلى 6","wrList"]]},
+{t:"الشهر 3: تحكي عن نفسك",d:"هدفك: تحكي عن يومك وماضيك وخططك، وتعطي رأيك.",tasks:[["🧩 القوالب 12 إلى 16","patList"],["الوحدة 9: المقابلة (1)","unit",{id:9,step:0}],["الوحدة 10: المقابلة (2)","unit",{id:10,step:0}],["الوحدة 11: الاجتماعات والرأي","unit",{id:11,step:0}],["📖 القواعد: الدروس 6 إلى 8","gramList"],["🎭 الحوارات 7 و8","dlgList"],["✍️ الكتابة 7 إلى 10","wrList"],["💬 جرّب محادثة معي في الشات (لما يكون عندك نت)","home"]]},
+{t:"الشهر 4: شغلك وتخصصك",d:"هدفك: مصطلحات شغلك وتقنيتك بثقة.",tasks:[["الوحدة 5: تعليمات للعمال","unit",{id:5,step:0}],["الوحدة 6: المشاكل والتقارير","unit",{id:6,step:0}],["الوحدة 12: التقنية","unit",{id:12,step:0}],["الوحدة 13: Make وn8n","unit",{id:13,step:0}],["الوحدة 14: Claude والذكاء الاصطناعي","unit",{id:14,step:0}],["الوحدة 15: المحاسبة والبيانات","unit",{id:15,step:0}],["الوحدة 16: التأمين الطبي","unit",{id:16,step:0}],["الوحدة 17: المناديب","unit",{id:17,step:0}],["الوحدة 21: GitHub","unit",{id:21,step:0}],["الوحدة 22: الجوال","unit",{id:22,step:0}],["✍️ الكتابة 11 و12","wrList"]]},
+{t:"الشهر 5: مراجعة وحرية",d:"هدفك: تكلّم بدون نص. أعد الحوارات بدون ما تنظر، وتكلم مع ناس حقيقيين كل يوم.",tasks:[["الوحدة 18: النقاش والسياسة بأدب","unit",{id:18,step:0}],["مراجعة اليوم (الجمل الصعبة)","review"],["🎭 أعد كل الحوارات بدون نظر","dlgList"],["🧩 أعد كل القوالب","patList"],["🔤 جرّب القاموس لكلمات من حياتك","dict"]]}
+];
+function plan(){
+ const mi=Math.min(PLAN.length-1,Math.max(0,Math.floor((today()-S.start)/30)));
+ app.innerHTML=`${topbar('خطتك (4-5 شهور)','home')}
+ <div class="card sm"><b>جلسة اليوم (ساعة):</b><ol><li>10 د: قالب أو وحدة جديدة، استمع وردّد</li><li>10 د: انطق من المعنى</li><li>10 د: حوار واحد تمثله بصوتك</li><li>10 د: درس قواعد أو كتابة</li><li>10 د: مراجعة اليوم</li><li>10 د: كلام حقيقي: قل جملة إنجليزية لشخص حولك، أو سجّل صوتك</li></ol></div>
+ ${PLAN.map((m,i)=>`<div class="card ${i===mi?'hero':''}"><b>${m.t}</b> ${i===mi?'<span class="chip">أنت هنا</span>':''}<div class="mut sm">${m.d}</div>${m.tasks.map(t=>`<button class="btn ghost" onclick='go(${JSON.stringify(t[1])},${JSON.stringify(t[2]||{})})'>${t[0]}</button>`).join('')}</div>`).join('')}
+ <div class="card sm">الشهور تقريبية (30 يوماً لكل شهر من أول فتح). تقدّم بسرعتك، المهم تكمل كل يوم.</div>`;
+}
+
+/* ===== القوالب ===== */
+function patList(){
+ app.innerHTML=`${topbar('القوالب (بدّل الكلمة)','home')}<div class="card sm">القالب جملة ثابتة وتبدّل فيها الكلمة. تتعلم قالباً واحداً وتطلع لك 8 جمل وأكثر. اختر قالباً:</div>
+ ${PATTERNS.map((p,i)=>`<div class="u" onclick="go('pat',{i:${i}})"><span class="en" lang="en">${p.id}. ${p.en}</span><span class="mut sm">${p.ar}</span></div>`).join('')}`;
+}
+function pat(){
+ const p=PATTERNS[V.i],cs=ALL.filter(x=>x.u==='p'+p.id);
+ app.innerHTML=`${topbar('قالب '+p.id,'patList')}<div id="body">
+ <div class="card hero"><div class="en big" lang="en">${p.en}</div><div class="pr">${p.pr}</div><div class="ar">${p.ar}</div><div class="mut sm" style="margin-top:6px">💡 ${p.tip}</div></div>
+ <button class="btn pri" onclick="patQuiz()">🎯 اختبرني: قُل الجملة من المعنى</button>
+ ${cs.map(cardHTML).join('')}</div>`;
+}
+function patQuiz(){
+ const p=PATTERNS[V.i],cs=ALL.filter(x=>x.u==='p'+p.id);
+ runSpeak(shuf(cs),()=>{touch();save();$('#body').innerHTML=`<div class="card hero"><div class="big">✅ خلصت القالب ${p.id}</div><div>جرّب الآن تبدّل الكلمة بكلمة من عندك وقل الجملة بصوتك.</div></div><button class="btn pri" onclick="go('pat',{i:${V.i}})">رجوع</button><button class="btn" onclick="go('patList')">القوالب</button>`});
+}
+
+/* ===== الحوارات ===== */
+let D={},dlgTok=0;
+function dlgList(){
+ app.innerHTML=`${topbar('الحوارات','home')}<div class="card sm">الطرف الآخر يتكلم بالصوت، وأنت ترد بصوتك. بعد ما تخلص مرة، أعد الحوار بدون ما تنظر في النص.</div>
+ ${DIALOGS.map((d,i)=>`<div class="u ${S.dlg[d.id]?'done':''}" onclick="go('dlg',{i:${i}})"><span>${d.id}. ${d.t}</span><span>${S.dlg[d.id]?'✅':'◀'}</span></div>`).join('')}`;
+}
+function dlg(){D={d:DIALOGS[V.i],i:0,rev:false};app.innerHTML=`${topbar(D.d.t,'dlgList')}<div id="body"></div>`;drawDlg()}
+const bub=L=>`<div class="bub ${L[0]==='A'?'a':'y'}"><div class="mut sm">${L[0]==='A'?'الطرف الآخر':'أنت'}</div><div class="en" lang="en">${L[1]}</div><div class="pr">${L[3]}</div><div class="ar sm">${L[2]}</div>${sayBtn(L[1])}</div>`;
+function dlgAll(){const ls=DIALOGS[V.i].l,tok=++dlgTok;let k=0;const nx=()=>{if(V.n!=='dlg'||tok!==dlgTok||k>=ls.length)return;say(ls[k++][1],false,()=>setTimeout(nx,400))};nx()}
+function drawDlg(){
+ const d=D.d,b=$('#body');let h=`<div class="card sm">📍 ${d.sc}</div>`;
+ if(D.i===0)h+=`<button class="btn" onclick="dlgAll()">🎧 استمع للحوار كاملاً أولاً</button>`;
+ for(let j=0;j<D.i;j++)h+=bub(d.l[j]);
+ if(D.i>=d.l.length){
+  S.dlg[d.id]=true;touch();save();
+  h+=`<div class="card hero"><div class="big">🎉 خلصت الحوار</div><div>أعده مرة ثانية بدون ما تنظر في النص.</div></div><button class="btn pri" onclick="go('dlg',{i:${V.i}})">أعد الحوار</button><button class="btn" onclick="go('dlgList')">القائمة</button>`;
+  b.innerHTML=h;return;
+ }
+ const L=d.l[D.i];
+ if(L[0]==='A'){h+=bub(L)+`<button class="btn pri" onclick="D.i++;drawDlg()">التالي ←</button>`;b.innerHTML=h;say(L[1]);}
+ else{
+  h+=`<div class="card focus"><div class="mut sm">دورك. قُل بالإنجليزي بصوت عالي:</div><div class="ar big">${L[2]}</div>`;
+  if(D.rev)h+=`<div class="en big" lang="en">${L[1]}</div><div class="pr" style="text-align:center">${L[3]}</div><div class="row2">${sayBtn(L[1])}${sayBtn(L[1],1)}</div><div class="row2"><button class="btn pri" onclick="D.i++;D.rev=false;drawDlg()">قلتها ✓</button><button class="btn bad" onclick="D.rev=false;drawDlg()">أعد المحاولة</button></div>`;
+  else h+=`<button class="btn pri" onclick="D.rev=true;drawDlg();say(D.d.l[D.i][1])">اكشف الجملة</button>`;
+  h+=`</div>`;b.innerHTML=h;
+ }
+}
+
+/* ===== القواعد ===== */
+let GQ={};
+function gramList(){
+ app.innerHTML=`${topbar('القواعد','home')}<div class="card sm">دروس قصيرة بالعربي. اقرأ القاعدة، اسمع الأمثلة وكررها، ثم حل التمرين.</div>
+ ${GRAMMAR.map((g,i)=>`<div class="u ${S.gram[g.id]?'done':''}" onclick="go('gram',{i:${i}})"><span>${g.id}. ${g.t}</span><span>${S.gram[g.id]?'✅':'◀'}</span></div>`).join('')}`;
+}
+function gram(){
+ const g=GRAMMAR[V.i];GQ={n:0,done:0};
+ app.innerHTML=`${topbar(g.id+'. '+g.t,'gramList')}<div class="card">${g.ex_ar}</div>
+ <h2>أمثلة (اسمعها وكررها)</h2>
+ ${g.s.map(x=>`<div class="sc"><div class="en" lang="en">${x[0]}</div><div class="pr">${x[2]}</div><div class="ar">${x[1]}</div><div class="r">${sayBtn(x[0])}${sayBtn(x[0],1)}</div></div>`).join('')}
+ <h2>تمرين</h2>
+ ${g.q.map((q,qi)=>`<div class="card"><div class="en" lang="en" style="font-size:19px;margin-bottom:6px">${q[0]}</div><div class="row2" style="grid-template-columns:repeat(${q[1].length},1fr)">${q[1].map((o,oi)=>`<button class="btn en" lang="en" id="g${qi}_${oi}" onclick="gAns(${qi},${oi})">${o}</button>`).join('')}</div><div id="gf${qi}"></div></div>`).join('')}
+ <div id="gscore"></div><button class="btn pri" onclick="markGram()">خلصت الدرس ✓</button>`;
+}
+function gAns(qi,oi){
+ const g=GRAMMAR[V.i],q=g.q[qi];if(GQ['a'+qi]!==undefined)return;GQ['a'+qi]=oi;
+ const ok=oi===q[2];if(ok)GQ.n++;
+ q[1].forEach((_,j)=>{const b=$('#g'+qi+'_'+j);b.disabled=true;if(j===q[2])b.classList.add('pri');else if(j===oi)b.classList.add('bad')});
+ $('#gf'+qi).innerHTML=`<div class="${ok?'ok':'no'}">${ok?'✓ صح':'✗ غلط'}: ${q[3]}</div>`;
+ GQ.done++;if(GQ.done===g.q.length)$('#gscore').innerHTML=`<div class="card hero">نتيجتك: ${GQ.n} من ${g.q.length}</div>`;
+}
+function markGram(){S.gram[GRAMMAR[V.i].id]=true;touch();save();toast('تم ✅');go('gramList')}
+
+/* ===== الكتابة ===== */
+function wrList(){
+ app.innerHTML=`${topbar('الكتابة اليومية','home')}<div class="card sm">اكتب بالإنجليزي، ثم قارن بالنموذج وقائمة التحقق. ولما يكون عندك نت، انسخ كتابتك وأرسلها لي وأصحح لك.</div>
+ ${WRITING.map((w,i)=>`<div class="u ${(S.wr[w.id]||{}).t?'done':''}" onclick="go('wr',{i:${i}})"><span>${w.id}. ${w.t}</span><span>${(S.wr[w.id]||{}).t?'✅':'◀'}</span></div>`).join('')}`;
+}
+function wr(){
+ const w=WRITING[V.i],cur=(S.wr[w.id]||{}).t||'';
+ app.innerHTML=`${topbar(w.id+'. '+w.t,'wrList')}<div class="card">✍️ ${w.task}</div>
+ <textarea id="wt" class="inp en" lang="en" rows="7" placeholder="Write here in English...">${escHtml(cur)}</textarea>
+ <div class="row2"><button class="btn pri" onclick="wrSave()">حفظ</button><button class="btn" onclick="wrCopy()">نسخ لإرسالها لي</button></div>
+ <div class="card sm"><b>قائمة التحقق (قارن كتابتك):</b>${w.ck.map(c=>`<div>☐ ${c}</div>`).join('')}</div>
+ <button class="btn" onclick="wrModel()">أرني النموذج</button><div id="wm"></div>`;
+}
+function wrSave(){const w=WRITING[V.i];S.wr[w.id]={t:$('#wt').value,d:today()};touch();save();toast('تم الحفظ ✅')}
+function wrCopy(){const w=WRITING[V.i];copyText('الكتابة ('+w.t+'):\n'+w.task+'\n\n'+$('#wt').value)}
+function wrModel(){const w=WRITING[V.i];$('#wm').innerHTML=`<div class="card"><div class="mut sm">نموذج (لا تنسخه، كتب بأسلوبك):</div><div class="en" lang="en" style="font-size:18px;margin:6px 0">${w.en}</div>${sayBtn(w.en)}${sayBtn(w.en,1)}<div class="ar sm" style="margin-top:6px">${w.ar}</div></div>`}
+
+/* ===== القاموس الذكي ===== */
+const nrm=s=>String(s).toLowerCase().replace(/[ً-ْـ]/g,'').replace(/[أإآ]/g,'ا').replace(/ى/g,'ي').replace(/ة/g,'ه').trim();
+function dict(){
+ app.innerHTML=`${topbar('القاموس الذكي','home')}<div class="card sm">اكتب كلمة بالعربي أو بالإنجليزي، وتطلع لك <b>المعنى الأشهر</b> مع النطق ومثال. ما أعطيك 100 معنى.</div>
+ <input id="dq" class="inp" type="search" autocomplete="off" placeholder="مثال: يشتري  أو  buy" oninput="dsearch()">
+ <div id="dres" style="margin:10px 0"><span class="mut sm">اكتب للبحث...</span></div><div id="dmiss"></div>`;
+ renderMiss();
+}
+function dsearch(){
+ const raw=$('#dq').value.trim(),q=nrm(raw),box=$('#dres');
+ if(q.length<2){box.innerHTML='<span class="mut sm">اكتب حرفين على الأقل...</span>';return}
+ const ar=/[؀-ۿ]/.test(raw);
+ const key=e=>ar?nrm(e[1]):e[0].toLowerCase();
+ const stem=w=>w.replace(/^ال/,'').replace(/^[يتنا](?=.{3,})/,'');
+ const qs=ar?q.split(/\s+/).map(stem).join(' '):q;
+ const stems=e=>nrm(e[1]).split(/[\/،\s]+/).filter(Boolean).map(stem);
+ let hits=DICT.filter(e=>key(e).includes(q)||(ar&&stems(e).some(w=>w.includes(qs))));
+ hits.sort((a,b)=>((key(a).startsWith(q)?0:1)-(key(b).startsWith(q)?0:1))||(key(a).length-key(b).length));
+ hits=hits.slice(0,12);
+ let h=hits.map(e=>`<div class="sc"><div style="display:flex;justify-content:space-between;align-items:center"><div class="en big" lang="en" style="margin:0">${e[0]} <span class="mut sm">(${e[3]})</span></div>${sayBtn(e[0])}</div><div class="pr">${e[2]}</div><div class="ar" style="font-size:19px">${e[1]}</div><div class="en sm mut" lang="en" style="margin-top:6px">${e[4]} ${sayBtn(e[4])}</div><div class="ar sm mut">${e[5]}</div></div>`).join('');
+ const seen=new Set(hits.map(e=>e[0].toLowerCase()));
+ const ex=ALL.filter(c=>(ar?nrm(c.ar).includes(q):c.en.toLowerCase().includes(q))&&!seen.has(c.en.toLowerCase())).slice(0,8);
+ if(ex.length)h+=`<h2>من دروسك</h2>`+ex.map(cardHTML).join('');
+ if(!hits.length&&!ex.length)h=`<div class="card">ما لقيت «${escHtml(raw)}» عندي.<button class="btn" onclick="addMiss()">أضفها لقائمة الكلمات الناقصة</button></div>`;
+ box.innerHTML=h;
+}
+function addMiss(){const w=$('#dq').value.trim();if(!w)return;if(!S.miss.includes(w))S.miss.push(w);save();renderMiss();toast('تمت الإضافة')}
+function renderMiss(){
+ const b=$('#dmiss');if(!b)return;
+ b.innerHTML=S.miss.length?`<div class="card sm"><b>كلمات ناقصة (${S.miss.length}):</b><div>${S.miss.map(escHtml).join('، ')}</div><div class="row2"><button class="btn" onclick="copyText('كلمات ناقصة في القاموس:\\n'+S.miss.join('\\n'))">نسخ وإرسالها لي</button><button class="btn bad" onclick="S.miss=[];save();renderMiss()">مسح</button></div></div>`:'';
+}
+
 /* ===== نسخة احتياطية ===== */
 function bkMake(){try{$('#bk').value='ENG1.'+btoa(unescape(encodeURIComponent(JSON.stringify(S))));toast('تم. انسخ الكود واحفظه')}catch(e){toast('تعذّر إنشاء الكود')}}
 function bkCopy(){const t=$('#bk');if(!t.value){toast('اضغط إنشاء كود أولاً');return}t.select();try{navigator.clipboard.writeText(t.value).then(()=>toast('تم النسخ'),()=>{document.execCommand('copy');toast('تم النسخ')})}catch(e){try{document.execCommand('copy');toast('تم النسخ')}catch(_){toast('انسخه يدوياً')}}}
@@ -562,7 +1184,7 @@ function bkRestore(){
  if(!v.startsWith('ENG1.')){toast('الكود غير صحيح');return}
  try{const o=JSON.parse(decodeURIComponent(escape(atob(v.slice(5)))));
   if(typeof o!=='object'||!o.done||!o.cards)throw 0;
-  S=Object.assign({},DEF,o);save();toast('تمت استعادة تقدمك ✅');setTimeout(()=>go('home'),900)}
+  S=Object.assign({},DEF,o);fixS();save();toast('تمت استعادة تقدمك ✅');setTimeout(()=>go('home'),900)}
  catch(e){toast('الكود غير صحيح أو ناقص')}
 }
 if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol)){navigator.serviceWorker.register('sw.js').catch(()=>{})}
