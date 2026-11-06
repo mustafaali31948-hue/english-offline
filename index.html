@@ -1004,7 +1004,7 @@ const SPEAK=[
 (function(){const seen=new Set(),out=[];DICT.forEach(e=>{const k=e[0].toLowerCase()+'|'+e[3];if(!seen.has(k)){seen.add(k);out.push(e)}});DICT.length=0;out.forEach(e=>DICT.push(e))})();
 
 /* ===== الحالة والتخزين ===== */
-const DEF={done:{},cards:{},streak:0,last:-1,rate:0.9,wr:{},dlg:{},gram:{},miss:[],start:0,pat:{},speak:{},wi:0,day:{d:-1,done:{}}};
+const DEF={done:{},cards:{},streak:0,last:-1,rate:0.9,wr:{},dlg:{},gram:{},miss:[],start:0,pat:{},speak:{},wi:0,day:{d:-1,done:{}},voiceName:'',pitch:0.8};
 function load(){try{return Object.assign({},DEF,JSON.parse(localStorage.getItem('eng1')||'{}'))}catch(e){return Object.assign({},DEF)}}
 let S=load();
 function save(){try{localStorage.setItem('eng1',JSON.stringify(S))}catch(e){}}
@@ -1029,12 +1029,12 @@ const dueCards=()=>ALL.filter(c=>S.cards[c.id]&&S.cards[c.id].d<=today());
 let voices=[];
 function loadVoices(){try{voices=speechSynthesis.getVoices().filter(v=>/^en/i.test(v.lang))}catch(e){voices=[]}}
 if('speechSynthesis' in window){loadVoices();speechSynthesis.onvoiceschanged=loadVoices}
-function pickVoice(){return voices.find(v=>/en[-_]US/i.test(v.lang)&&v.localService)||voices.find(v=>/en[-_](US|GB)/i.test(v.lang)&&v.localService)||voices.find(v=>/en[-_]US/i.test(v.lang))||voices[0]||null}
+function pickVoice(){return (S.voiceName&&voices.find(v=>v.name===S.voiceName))||voices.find(v=>/en[-_]US/i.test(v.lang)&&v.localService)||voices.find(v=>/en[-_](US|GB)/i.test(v.lang)&&v.localService)||voices.find(v=>/en[-_]US/i.test(v.lang))||voices[0]||null}
 function say(text,slow,cb){
  if(!('speechSynthesis' in window)){toast('جهازك ما يدعم الصوت');return}
  try{speechSynthesis.cancel();
   setTimeout(()=>{const u=new SpeechSynthesisUtterance(text);u.lang='en-US';const v=pickVoice();if(v){u.voice=v;u.lang=v.lang}
-   u.rate=slow?0.55:S.rate;if(cb){u.onend=cb;u.onerror=cb}
+   u.rate=slow?0.55:S.rate;u.pitch=S.pitch||0.8;if(cb){u.onend=cb;u.onerror=cb}
    speechSynthesis.speak(u)},60)
  }catch(e){toast('تعذّر تشغيل الصوت')}
 }
@@ -1196,13 +1196,18 @@ function sounds(){
 function sayS(g,p,i){say(SOUNDS[g].p[p][i],true)}
 
 /* ===== إعداد الصوت ===== */
+function tryV(i){const v=voices[i];if(!v)return;try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance('Hello, my name is David. Nice to meet you.');u.voice=v;u.lang=v.lang;u.rate=S.rate;u.pitch=S.pitch||0.8;speechSynthesis.speak(u)}catch(e){toast('تعذّر تشغيل الصوت')}}
+function chooseV(i){const v=voices[i];if(!v)return;S.voiceName=v.name;save();toast('تم اختيار الصوت ✅');voice()}
 function voice(){
  const v=pickVoice();
  app.innerHTML=`${topbar('إعداد الصوت','home')}
  <div class="card"><div>حالة الصوت: ${('speechSynthesis' in window)?(voices.length?`✅ تم العثور على ${voices.length} صوت إنجليزي`:'⚠️ ما لقينا صوت إنجليزي'):'❌ المتصفح لا يدعم الصوت'}</div>
  ${v?`<div class="sm mut en" lang="en">${v.name} (${v.lang}) ${v.localService?'• يعمل بدون نت':'• قد يحتاج نت'}</div>`:''}
  <div class="row2"><button class="btn" onclick="say('Hello, my name is Sara. Nice to meet you.')">▶ تجربة</button><button class="btn" onclick="say('Hello, my name is Sara. Nice to meet you.',true)">🐢 بطيء</button></div>
- <div class="sm mut">سرعة الصوت العادي:</div><input type="range" min="60" max="110" value="${Math.round(S.rate*100)}" oninput="S.rate=this.value/100;save()"></div>
+ <div class="sm mut">سرعة الصوت العادي:</div><input type="range" min="60" max="110" value="${Math.round(S.rate*100)}" oninput="S.rate=this.value/100;save()">
+ <div class="sm mut" style="margin-top:8px">عمق الصوت (أقل = أغلظ وأثخن):</div><input type="range" min="50" max="100" value="${Math.round((S.pitch||0.8)*100)}" oninput="S.pitch=this.value/100;save()"></div>
+ <div class="card sm"><b>اختر صوت رجل واضح:</b><br>جرّب كل صوت واختر الأوضح والأغلظ. الصوت المختار يُستخدم في كل التطبيق.
+ ${voices.length?voices.map((x,i)=>`<div class="sc"><div class="en sm" lang="en">${escHtml(x.name)} (${x.lang}) ${S.voiceName===x.name?'✅':''}</div><div class="r"><button class="ib" onclick="tryV(${i})">▶ جرّب</button><button class="ib" onclick="chooseV(${i})">اختر</button></div></div>`).join(''):'<div class="mut">ما لقينا أصوات. شوف الخطوات تحت.</div>'}</div>
  <div class="card sm"><b>لو الصوت ما اشتغل أو يحتاج نت:</b><ol>
  <li>وانت عندك نت (مرة واحدة فقط): افتح إعدادات التلفون.</li>
  <li>ابحث عن <b>تحويل النص إلى كلام</b> (Text-to-speech).</li>
@@ -1222,7 +1227,7 @@ function copyText(t){
  const fb=()=>{const a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();try{document.execCommand('copy');toast('تم النسخ ✅')}catch(_){toast('انسخه يدوياً')}a.remove()};
  try{navigator.clipboard.writeText(t).then(()=>toast('تم النسخ ✅'),fb)}catch(e){fb()}
 }
-function fixS(){S.wr=S.wr||{};S.dlg=S.dlg||{};S.gram=S.gram||{};S.miss=S.miss||[];S.pat=S.pat||{};S.speak=S.speak||{};S.wi=S.wi||0;S.day=S.day||{d:-1,done:{}};if(!S.start)S.start=today()}
+function fixS(){if(typeof S.pitch!=='number')S.pitch=0.8;S.voiceName=S.voiceName||'';S.wr=S.wr||{};S.dlg=S.dlg||{};S.gram=S.gram||{};S.miss=S.miss||[];S.pat=S.pat||{};S.speak=S.speak||{};S.wi=S.wi||0;S.day=S.day||{d:-1,done:{}};if(!S.start)S.start=today()}
 fixS();save();
 
 /* ===== الخطة ===== */
