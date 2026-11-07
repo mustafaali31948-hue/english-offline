@@ -1003,8 +1003,53 @@ const SPEAK=[
 /* إزالة التكرار (حسب الكلمة والنوع) مع بقاء الترتيب ثابتاً */
 (function(){const seen=new Set(),out=[];DICT.forEach(e=>{const k=e[0].toLowerCase()+'|'+e[3];if(!seen.has(k)){seen.add(k);out.push(e)}});DICT.length=0;out.forEach(e=>DICT.push(e))})();
 
+/* ===== المستوى 3 + القراءة + تعريف المستويات ===== */
+/* ===== كلمات المستوى 3 (تُضاف في آخر القاموس) ===== */
+DICT.push(
+["achieve","يحقق","أتشيف","فعل"],["advertise","يعلن (إعلان)","أدڤِرتايز","فعل"],["afford","يتحمل ثمنه","أفُورد","فعل"],["argue","يجادل","آرقيُو","فعل"],["behave","يتصرف","بِهَيڤ","فعل"],["benefit","يستفيد","بِنِفِت","فعل"],["challenge","يتحدى","تشالِنج","فعل"],["communicate","يتواصل","كُمْيُونِكَيت","فعل"],["compete","ينافس","كُمپيت","فعل"],["concentrate","يركّز","كُونسِنتريت","فعل"],["consider","يفكر في / يعتبر","كُنسِدِر","فعل"],["contain","يحتوي","كُنتَين","فعل"],["convince","يقنع","كُنڤِنس","فعل"],["damage","يتلف","دامِج","فعل"],["decrease","ينقص","ديكريس","فعل"],["disappear","يختفي","ديسَپير","فعل"],["discover","يكتشف","ديسكَڤر","فعل"],["encourage","يشجّع","إنكَرِج","فعل"],["exist","يوجد","إقزِست","فعل"],["express","يعبّر","إكسپرِس","فعل"],["fail","يفشل / يرسب","فَيل","فعل"],["gain","يكسب","قَين","فعل"],["handle","يتعامل مع","هانْدِل","فعل"],["identify","يحدد","آيدِنتِفاي","فعل"],["ignore","يتجاهل","إقنُور","فعل"],["increase","يزيد","إنكريس","فعل"],["influence","يؤثر","إنفلُوِنس","فعل"],["inform","يبلغ","إنفُورم","فعل"],["insist","يصرّ","إنسِست","فعل"],["introduce","يقدّم (شخصاً)","إنترُديُوس","فعل"],["involve","يتضمن","إنڤُولڤ","فعل"],["judge","يحكم","جَدج","فعل"],["lack","ينقصه","لاك","فعل"],["lead","يقود","لِيد","فعل"],["limit","يحدّ","لِمِت","فعل"],["maintain","يحافظ على","مَينتَين","فعل"],["obtain","يحصل على","أبتَين","فعل"],["occur","يحدث","أكِر","فعل"],["operate","يشغّل","أُپِرَيت","فعل"],["participate","يشارك","پارتِسِپَيت","فعل"],["permit","يسمح","پِرمِت","فعل"],["predict","يتوقع","پريديكت","فعل"],["produce","ينتج","پرُديُوس","فعل"],["provide","يوفّر","پرُوڤايد","فعل"],["publish","ينشر","پَبلِش","فعل"],["recommend","يوصي","ريكُمِند","فعل"],["recognize","يتعرف على","ريكُقنايز","فعل"],["regret","يندم","ريقرِت","فعل"],["rely on","يعتمد على","ريلاي أون","فعل"],["remind","يذكّر","ريمايند","فعل"],["represent","يمثّل","ريپريزِنت","فعل"],["require","يتطلب","ريكوايِر","فعل"],["respond","يستجيب","ريسپُوند","فعل"],["retire","يتقاعد","ريتايِر","فعل"],["review","يراجع","ريڤيُو","فعل"],["satisfy","يُرضي","ساتِسفاي","فعل"],["select","يختار","سِلِكت","فعل"],["separate","يفصل","سِپَرَيت","فعل"],["settle","يستقر","سِتِل","فعل"],["spread","ينتشر","سپرِد","فعل"],["suffer","يعاني","سَفِر","فعل"],["suit","يناسب","سُوت","فعل"],["supply","يزوّد","سَپلاي","فعل"],["survive","ينجو","سَرڤايڤ","فعل"],["tend to","يميل إلى","تِند تو","فعل"],["threaten","يهدد","ثرِتِن","فعل"],["track","يتتبع","تراك","فعل"],["treat","يعالج / يعامل","تريت","فعل"],["value","يقدّر","ڤاليُو","فعل"],["volunteer","يتطوع","ڤُولَنتير","فعل"],
+["advantage","ميزة","أدڤانتِج","اسم"],["disadvantage","عيب","ديسأدڤانتِج","اسم"],["benefit","فائدة","بِنِفِت","اسم"],["environment","بيئة","إنڤايرنمِنت","اسم"],["government","حكومة","قَڤرنمِنت","اسم"],["economy","اقتصاد","إكُنُمي","اسم"],["society","مجتمع","سَسايِتي","اسم"],["culture","ثقافة","كَلتشر","اسم"],["education","تعليم","إجُوكَيشِن","اسم"],["competition","منافسة","كُمپِتِشِن","اسم"],["relationship","علاقة","ريلَيشِنشِپ","اسم"],["situation","وضع","سِتشُوَيشِن","اسم"],["solution","حل","سُلُوشِن","اسم"],["decision","قرار","ديسِجِن","اسم"],["discussion","نقاش","ديسكَشِن","اسم"],["opportunity","فرصة","أپُرتيُونِتي","اسم"],["responsibility","مسؤولية","ريسپُونسِبِلِتي","اسم"],["requirement","متطلب","ريكوايرمِنت","اسم"],["process","عملية","پروسِس","اسم"],["system","نظام","سِستِم","اسم"],["service","خدمة","سيرڤِس","اسم"],["product","منتج","پرُودَكت","اسم"],["business","تجارة / عمل","بِزنِس","اسم"],["industry","صناعة","إندَستري","اسم"],["resource","مورد","ريسُورس","اسم"],["research","بحث علمي","ريسيرتش","اسم"],["survey","استبيان","سيرڤَي","اسم"],["policy","سياسة / لائحة","پُولِسي","اسم"],["agreement","اتفاق","أقريمِنت","اسم"],["argument","جدال / حجة","آرقيُومِنت","اسم"],["behavior","سلوك","بِهَيڤيِر","اسم"],["cause","سبب","كُوز","اسم"],["effect","أثر","إفِكت","اسم"],["impact","تأثير قوي","إمپاكت","اسم"],["growth","نمو","قرُوث","اسم"],["trend","اتجاه عام","ترِند","اسم"],["issue","قضية","إشُو","اسم"],["effort","جهد","إفِرت","اسم"],["energy","طاقة","إنِرجي","اسم"],["event","حدث","إڤِنت","اسم"],["evidence","دليل","إڤِدِنس","اسم"],["expert","خبير","إكسپيرت","اسم"],["feeling","شعور","فيلِنق","اسم"],["focus","تركيز","فُوكِس","اسم"],["future","مستقبل","فيُوتشر","اسم"],["past","ماضي","پاست","اسم"],["present","حاضر / هدية","پرِزِنت","اسم"],["history","تاريخ","هِستري","اسم"],["improvement","تحسّن","إمپروڤمِنت","اسم"],["income","دخل","إنكَم","اسم"],["expense","مصروف","إكسپِنس","اسم"],["introduction","مقدمة / تعريف","إنترُدَكشِن","اسم"],["memory","ذاكرة","مِمَري","اسم"],["mood","مزاج","مُود","اسم"],["nature","طبيعة","نَيتشر","اسم"],["offer","عرض","أُفِر","اسم"],["option","خيار","أُپشِن","اسم"],["performance","أداء","پِرفُورمِنس","اسم"],["pressure","ضغط","پرِشر","اسم"],["priority","أولوية","پرايُورِتي","اسم"],["progress","تقدم","پرُوقرِس","اسم"],["promise","وعد","پرُومِس","اسم"],["purpose","غرض","پيرپِس","اسم"],["reaction","رد فعل","ريأكشِن","اسم"],["reputation","سمعة","ريپيُوتَيشِن","اسم"],["risk","مخاطرة","رِسك","اسم"],["role","دور","رُول","اسم"],["routine","روتين","رُوتين","اسم"],["safety","سلامة","سَيفتي","اسم"],["shortage","نقص","شُورتِج","اسم"],["stress","ضغط نفسي","ستْرِس","اسم"],["talent","موهبة","تالِنت","اسم"],["technology","تقنية","تِكنُلُجي","اسم"],["theory","نظرية","ثِيَري","اسم"],["tradition","تقليد","ترادِشِن","اسم"],["training","تدريب","ترَينِنق","اسم"],["travel","سفر","تراڤِل","اسم"],["victim","ضحية","ڤِكتِم","اسم"],["view","وجهة نظر","ڤيُو","اسم"],
+["able","قادر","إيبِل","صفة"],["aware","واعٍ / مدرك","أوير","صفة"],["basic","أساسي","بَيسِك","صفة"],["certain","متأكد / معيّن","سيرتِن","صفة"],["common","شائع","كُومِن","صفة"],["complete","كامل","كُمپليت","صفة"],["current","حالي","كَرِنت","صفة"],["direct","مباشر","دايرِكت","صفة"],["effective","فعّال","إفِكتِڤ","صفة"],["equal","متساوٍ","إيكوِل","صفة"],["essential","ضروري جداً","إسِنشِل","صفة"],["exact","دقيق","إقزاكت","صفة"],["familiar","مألوف","فَميليِر","صفة"],["final","نهائي","فاينِل","صفة"],["flexible","مرن","فِلِكسِبِل","صفة"],["general","عام","جِنِرِل","صفة"],["global","عالمي","قلُوبِل","صفة"],["huge","ضخم","هيُوج","صفة"],["independent","مستقل","إنديپِنْدِنت","صفة"],["individual","فردي","إنديڤِجُوَل","صفة"],["likely","محتمل","لايكلي","صفة"],["major","رئيسي","مَيجِر","صفة"],["minor","ثانوي","مايِنر","صفة"],["natural","طبيعي","ناتشرِل","صفة"],["official","رسمي","أفِشِل","صفة"],["original","أصلي","أرِجِنِل","صفة"],["particular","معيّن","پارتِكيُولر","صفة"],["personal","شخصي","پيرسِنِل","صفة"],["physical","جسدي","فِزِكِل","صفة"],["positive","إيجابي","پُزِتِڤ","صفة"],["negative","سلبي","نِقاتِڤ","صفة"],["powerful","قوي التأثير","پاوِرفُل","صفة"],["practical","عملي","پراكتِكِل","صفة"],["professional","محترف","پرُفِشِنِل","صفة"],["recent","حديث","ريسِنت","صفة"],["regular","منتظم","رِقيُولر","صفة"],["relevant","ذو صلة","رِلِڤِنت","صفة"],["responsible","مسؤول","ريسپُونسِبِل","صفة"],["similar","مشابه","سِمِلر","صفة"],["social","اجتماعي","سُوشِل","صفة"],["successful","ناجح","سَكسِسفُل","صفة"],["suitable","مناسب","سُوتِبِل","صفة"],["unusual","غير معتاد","أنيُوجُوَل","صفة"],["useful","مفيد","يُوسفُل","صفة"],["valuable","قيّم","ڤاليُوبِل","صفة"],["various","متنوع","ڤيريِس","صفة"],["willing","راغب / مستعد","وِلِنق","صفة"],
+["although","رغم أن","أُلذُو","ربط"],["however","مع ذلك","هَاوِڤر","ربط"],["therefore","لذلك","ذيرفُور","ربط"],["instead","بدلاً من ذلك","إنستِد","ربط"],["meanwhile","في هذه الأثناء","مينوايل","ربط"],["unless","ما لم","أنلِس","ربط"],["whether","سواء","وِذر","ربط"],["during","أثناء","ديُورِنق","ربط"],["among","بين (مجموعة)","أمَنق","ربط"],["despite","رغم","ديسپايت","ربط"],["within","ضمن / خلال","ويذِن","ربط"],["anyway","على أي حال","إنيوَي","ربط"],["actually","في الواقع","أكتشُوَلي","ظرف"],["finally","أخيراً","فاينلي","ظرف"],["generally","عموماً","جِنرلي","ظرف"],["mostly","غالباً","مُوستلي","ظرف"],["nearly","تقريباً","نيرلي","ظرف"],["probably","على الأرجح","پرُبِبلي","ظرف"],["recently","مؤخراً","ريسِنتلي","ظرف"],["especially","خصوصاً","إسپِشَلي","ظرف"],["certainly","بالتأكيد","سيرتِنلي","ظرف"],["definitely","قطعاً","ديفِنِتلي","ظرف"],["apparently","يبدو أن","أپارِنتلي","ظرف"],["immediately","فوراً","إمِديِتلي","ظرف"],["otherwise","وإلا","أَذِروايز","ظرف"],["besides","إضافة إلى","بِسايدز","ربط"],["according to","حسب","أكُردِنق تو","ربط"],["instead of","بدلاً من","إنستِد أڤ","ربط"],["such as","مثل","سَتش آز","ربط"],["as well as","بالإضافة إلى","آز ويل آز","ربط"],["in addition","إضافة إلى ذلك","إن أدِشِن","ربط"],["on the other hand","من ناحية أخرى","أون ذي أَذِر هاند","ربط"],["in conclusion","في الختام","إن كُنكلُوجِن","ربط"],["for instance","على سبيل المثال","فور إنستِنس","ربط"],["as a result","نتيجة لذلك","آز أ ريزَلت","ربط"],["in order to","من أجل أن","إن أُردِر تو","ربط"],["even though","رغم أن","إيڤِن ذُو","ربط"],["a lot of","الكثير من","أ لُوت أڤ","ربط"]
+);
+(function(){const seen=new Set(),out=[];DICT.forEach(e=>{const k=e[0].toLowerCase()+'|'+e[3];if(!seen.has(k)){seen.add(k);out.push(e)}});DICT.length=0;out.forEach(e=>DICT.push(e))})();
+
+/* ===== نصوص القراءة ===== */
+const READ=[
+{id:1,lv:1,t:"عن سارة",en:"My name is Sara. I am from Egypt. I live in Riyadh with my family. I work in a shop. I like my job.",ar:"اسمي سارة. أنا من مصر. أسكن في الرياض مع عائلتي. أعمل في محل. أحب عملي.",q:[["من أين سارة؟",["Egypt","Sudan","Riyadh"],0],["أين تسكن؟",["Cairo","Riyadh","Jeddah"],1],["ماذا تحب؟",["her job","her car","her phone"],0]]},
+{id:2,lv:1,t:"في السوق",en:"Ali goes to the market on Friday. He buys bread, rice and fruit. The bread is two riyals. He pays with cash. Then he goes home.",ar:"علي يذهب إلى السوق يوم الجمعة. يشتري خبزاً وأرزاً وفاكهة. الخبز بريالين. يدفع نقداً. ثم يذهب إلى البيت.",q:[["متى يذهب علي للسوق؟",["on Friday","on Monday","every day"],0],["بكم الخبز؟",["five riyals","two riyals","ten riyals"],1],["كيف يدفع؟",["with a card","with cash","with his phone"],1]]},
+{id:3,lv:1,t:"عائلة عمر",en:"Omar has a big family. He has two brothers and one sister. His father is a driver. His mother works at home. They live in a small house.",ar:"عند عمر عائلة كبيرة. عنده أخوان وأخت واحدة. أبوه سائق. أمه تعمل في البيت. يسكنون في بيت صغير.",q:[["كم أخاً عند عمر؟",["one","two","three"],1],["ماذا يعمل أبوه؟",["a teacher","a driver","a doctor"],1],["أين تعمل أمه؟",["at home","in a shop","in a bank"],0]]},
+{id:4,lv:1,t:"الجو اليوم",en:"Today is hot and sunny. I wear light clothes. I drink a lot of water. In the evening it is cooler. I like the evening.",ar:"اليوم الجو حار ومشمس. ألبس ملابس خفيفة. أشرب ماءً كثيراً. في المساء يصير الجو أبرد. أحب المساء.",q:[["كيف الجو اليوم؟",["cold and rainy","hot and sunny","cool and windy"],1],["ماذا يشرب؟",["a lot of water","tea","milk"],0],["متى يصير الجو أبرد؟",["in the morning","in the evening","at noon"],1]]},
+{id:5,lv:1,t:"في المطعم",en:"Hana is at a restaurant. She orders chicken and salad. She does not like rice. The waiter brings water. The food is delicious.",ar:"هناء في مطعم. تطلب دجاجاً وسلطة. لا تحب الأرز. النادل يحضر الماء. الأكل لذيذ.",q:[["ماذا تطلب؟",["fish and rice","chicken and salad","pizza"],1],["ماذا لا تحب؟",["salad","chicken","rice"],2],["كيف الأكل؟",["delicious","cold","bad"],0]]},
+{id:6,lv:1,t:"رسالة قصيرة",en:"Hi Noor, I am at the station. I am five minutes late. Please wait for me. See you soon. Ahmed",ar:"مرحباً نور، أنا في المحطة. أنا متأخر خمس دقائق. من فضلك انتظريني. أراك قريباً. أحمد",q:[["أين أحمد؟",["at home","at the station","at work"],1],["كم دقيقة متأخر؟",["five","ten","fifteen"],0],["ماذا يطلب؟",["to wait for him","to call him","to come home"],0]]},
+{id:7,lv:2,t:"أمس",en:"Yesterday I woke up at six. I went to work by bus. The bus was late, so I arrived at nine. After work I visited my friend. We ate dinner together and talked for two hours. I went to bed at eleven.",ar:"أمس استيقظت الساعة السادسة. ذهبت إلى العمل بالباص. الباص تأخر فوصلت الساعة التاسعة. بعد العمل زرت صديقي. تعشينا معاً وتكلمنا ساعتين. نمت الساعة الحادية عشرة.",q:[["لماذا وصل متأخراً؟",["the bus was late","he woke up late","he was sick"],0],["ماذا فعل بعد العمل؟",["went shopping","visited his friend","went home"],1],["متى نام؟",["at ten","at eleven","at twelve"],1]]},
+{id:8,lv:2,t:"رحلة قادمة",en:"Next month I am going to travel to Jeddah. I will go by plane. I am going to stay in a hotel near the sea. I will visit my cousin and eat fish. I hope the weather will be nice.",ar:"الشهر القادم سأسافر إلى جدة. سأذهب بالطائرة. سأقيم في فندق قرب البحر. سأزور ابن عمي وآكل سمكاً. آمل أن يكون الجو جميلاً.",q:[["إلى أين سيسافر؟",["Dubai","Jeddah","Cairo"],1],["كيف سيسافر؟",["by car","by plane","by bus"],1],["أين سيقيم؟",["with his cousin","in a hotel near the sea","in an apartment"],1]]},
+{id:9,lv:2,t:"في العيادة",en:"Yara has a headache and a cough. She goes to the clinic. The doctor says she should rest and drink water. She must take the medicine three times a day. She feels better after two days.",ar:"يارا عندها صداع وكحّة. تذهب إلى العيادة. الطبيب يقول إنها يجب أن ترتاح وتشرب ماء. يجب أن تأخذ الدواء ثلاث مرات في اليوم. تتحسن بعد يومين.",q:[["ماذا قال الطبيب؟",["rest and drink water","go to work","eat more"],0],["كم مرة تأخذ الدواء؟",["once a day","twice a day","three times a day"],2],["متى تحسنت؟",["after two days","after a week","the same day"],0]]},
+{id:10,lv:2,t:"يوم عمل",en:"Khaled works in an office. He starts at eight and finishes at four. His boss is very kind. Today there is a meeting at ten. Khaled has to send a report before the meeting.",ar:"خالد يعمل في مكتب. يبدأ الساعة الثامنة وينتهي الساعة الرابعة. مديره طيب جداً. اليوم عنده اجتماع الساعة العاشرة. لازم يرسل خالد تقريراً قبل الاجتماع.",q:[["متى ينتهي عمله؟",["at four","at five","at six"],0],["كيف مديره؟",["very kind","very busy","angry"],0],["ماذا لازم يرسل؟",["a report","an email","a file"],0]]},
+{id:11,lv:2,t:"شقة جديدة",en:"I moved to a new apartment last week. It has two bedrooms and a small kitchen. The rent is two thousand riyals a month. My neighbor is friendly. There is a market near the building.",ar:"انتقلت إلى شقة جديدة الأسبوع الماضي. فيها غرفتا نوم ومطبخ صغير. الإيجار ألفا ريال في الشهر. جاري ودود. يوجد سوق قرب العمارة.",q:[["كم غرفة نوم فيها؟",["one","two","three"],1],["كم الإيجار؟",["one thousand","two thousand","three thousand"],1],["ماذا قرب العمارة؟",["a market","a school","a bank"],0]]},
+{id:12,lv:2,t:"دعوة",en:"Hi Ali, we are having a barbecue on Friday at six. Can you come? Please bring some drinks. My house is near the mosque. Let me know. Omar",ar:"مرحباً علي، سنعمل شواء يوم الجمعة الساعة السادسة. هل تستطيع القدوم؟ من فضلك أحضر مشروبات. بيتي قرب المسجد. أخبرني. عمر",q:[["متى الشواء؟",["Friday at six","Friday at eight","Saturday at six"],0],["ماذا يطلب أن يحضر؟",["food","drinks","chairs"],1],["أين البيت؟",["near the mosque","near the bank","near the market"],0]]},
+{id:13,lv:3,t:"Learning English",en:"Learning a new language is not easy, but it is possible. If you practice every day, you will improve faster. Many people stop because they feel afraid of making mistakes. However, mistakes are a normal part of learning. The best advice is to speak as much as you can.",ar:"تعلم لغة جديدة ليس سهلاً لكنه ممكن. إذا تمرنت كل يوم ستتحسن أسرع. كثير من الناس يتوقفون لأنهم يخافون من الأخطاء. لكن الأخطاء جزء طبيعي من التعلم. أفضل نصيحة هي أن تتكلم بقدر ما تستطيع.",q:[["What is the main advice?",["Read more books","Speak as much as you can","Study grammar only"],1],["Why do many people stop?",["They are afraid of mistakes","They have no time","They are bored"],0],["What happens if you practice every day?",["You improve faster","You get tired","You forget"],0]]},
+{id:14,lv:3,t:"A problem at work",en:"Last week our delivery system stopped working. Customers were angry because their orders were late. The team found the problem in two hours. It was a small error in the database. After that, we added a check to prevent it from happening again.",ar:"الأسبوع الماضي توقف نظام التوصيل عندنا. كان العملاء غاضبين لأن طلباتهم تأخرت. وجد الفريق المشكلة خلال ساعتين. كانت خطأ صغيراً في قاعدة البيانات. بعد ذلك أضفنا فحصاً لمنع تكراره.",q:[["Why were customers angry?",["The prices were high","Their orders were late","The app was new"],1],["What was the problem?",["A broken phone","A small error in the database","A lost package"],1],["What did the team do after that?",["Added a check","Closed the system","Changed the customers"],0]]},
+{id:15,lv:3,t:"Online shopping",en:"Online shopping is becoming more popular. It is easy and often cheaper than going to the shops. But there are some risks. You cannot touch the product before you buy it, and sometimes delivery takes too long. Always read the reviews and check the return policy.",ar:"التسوق عبر الإنترنت صار أكثر شعبية. هو سهل وغالباً أرخص من الذهاب للمحلات. لكن فيه بعض المخاطر. لا تستطيع لمس المنتج قبل الشراء، وأحياناً التوصيل يتأخر. اقرأ دائماً التقييمات وافحص سياسة الإرجاع.",q:[["What is one advantage?",["It is easy and often cheaper","It is always fast","It has no risks"],0],["What is one risk?",["The price is high","You cannot touch the product","No reviews exist"],1],["What should you check?",["The weather","The reviews and return policy","The shop's address"],1]]},
+{id:16,lv:3,t:"Health insurance",en:"My company gives me medical insurance. It covers visits to the doctor and most medicines, but I pay a small part called a co-payment. For big treatments, I need approval first. If I lose my card, I should call the insurance office.",ar:"شركتي تعطيني تأميناً طبياً. يغطي زيارات الطبيب ومعظم الأدوية، لكني أدفع جزءاً صغيراً اسمه co-payment. للعلاجات الكبيرة أحتاج موافقة أولاً. إذا ضاعت بطاقتي يجب أن أتصل بمكتب التأمين.",q:[["What does the insurance cover?",["Only hospitals","Doctor visits and most medicines","Everything for free"],1],["What is a co-payment?",["A small part the patient pays","A type of card","A medicine"],0],["When is approval needed?",["For big treatments","For every visit","Never"],0]]},
+{id:17,lv:3,t:"A weekend trip",en:"We wanted to go to the beach, but the weather was bad, so we changed our plan. Instead, we visited a museum and had lunch in a nice restaurant. It was cheaper than we expected. If the weather is better next weekend, we will try the beach again.",ar:"أردنا الذهاب إلى الشاطئ لكن الجو كان سيئاً فغيّرنا خطتنا. بدلاً من ذلك زرنا متحفاً وتغدّينا في مطعم جميل. كان أرخص مما توقعنا. إذا كان الجو أفضل الأسبوع القادم سنجرب الشاطئ مرة أخرى.",q:[["Why did they change the plan?",["The weather was bad","They were tired","The beach was closed"],0],["Where did they have lunch?",["At home","In a restaurant","On the beach"],1],["What will they do if the weather is better?",["Visit a museum","Try the beach again","Stay at home"],1]]},
+{id:18,lv:3,t:"Two opinions",en:"Some people think working from home is better because you save time and money. Others believe it is difficult to focus at home and you miss your colleagues. In my opinion, the best solution is a mix: two days at home and three days in the office.",ar:"بعض الناس يظنون أن العمل من البيت أفضل لأنك توفّر الوقت والمال. وآخرون يرون أنه صعب التركيز في البيت وتشتاق لزملائك. في رأيي أفضل حل هو المزج: يومان في البيت وثلاثة في المكتب.",q:[["What is one advantage of working from home?",["Saving time and money","More meetings","Better colleagues"],0],["What problem do others mention?",["Too much noise","Difficult to focus and missing colleagues","Low salary"],1],["What is the writer's opinion?",["Always work from home","A mix of home and office","Always work in the office"],1]]}
+];
+
+/* ===== المستويات ===== */
+const LEVELS=[
+{id:1,cefr:"A1",t:"مبتدئ",goal:["أعرّف بنفسي وبعائلتي وأحيّي الناس","أطلب وأسأل عن السعر والمكان والاتجاهات","أفهم جملاً بطيئة وبسيطة وأردّ عليها","أنطق الأصوات الإنجليزية الأساسية صح"],
+ steps:[["sounds",0],["unit",1],["pat",1],["gram",1],["dlg",1],["speak",1],["unit",2],["pat",2],["gram",2],["dlg",2],["read",1],["unit",3],["vocab",2],["pat",3],["gram",3],["dlg",3],["wr",1],["unit",4],["pat",4],["gram",4],["read",2],["vocab",1],["pat",5],["dlg",4],["speak",2],["unit",19],["gram",9],["pat",6],["vocab",3],["dlg",5],["read",3],["pat",7],["gram",10],["unit",20],["speak",3],["vocab",4],["gram",11],["pat",9],["dlg",9],["read",4],["pat",10],["pat",11],["gram",12],["wr",2],["dlg",16],["gram",18],["vocab",6],["read",5],["dlg",10],["read",6],["wr",3]],
+ sp:["قدّم نفسك في 5 جمل بصوت عالي بدون نظر (الاسم، العمر، البلد، المدينة، ماذا تحب)","مثّل حوار الكوفي كاملاً (دورك فقط) بدون نظر في النص","قل الأرقام من 1 إلى 20 والألوان الأساسية بدون نظر","اسأل 3 أسئلة مختلفة: Where is ___? / How much is ___? / Can I ___?"],wmin:25,wtask:"اكتب فقرة عن يومك أو عن نفسك (25 كلمة على الأقل)."},
+{id:2,cefr:"A2",t:"أساسي",goal:["أحكي عمّا فعلته أمس وعمّا سأفعله غداً","أتعامل في المطعم والسوق والطبيب والبنك والشقة","أتكلم في الهاتف وأطلب بأدب وأفهم التعليمات","أتعامل مع العمال والزملاء في مواقف الشغل البسيطة"],
+ steps:[["unit",7],["pat",8],["gram",5],["dlg",6],["speak",4],["unit",8],["pat",12],["gram",6],["dlg",7],["read",7],["unit",5],["pat",13],["gram",13],["dlg",8],["wr",4],["unit",6],["pat",14],["gram",7],["dlg",11],["read",8],["unit",12],["pat",15],["gram",8],["dlg",12],["speak",5],["unit",22],["pat",16],["gram",15],["dlg",13],["read",9],["unit",21],["gram",19],["dlg",17],["wr",5],["read",10],["unit",16],["gram",20],["dlg",18],["speak",6],["dlg",19],["vocab",5],["vocab",7],["wr",6],["read",11],["unit",17],["dlg",20],["speak",7],["wr",7],["read",12],["vocab",8],["speak",8]],
+ sp:["احكِ عمّا فعلت أمس (5 جمل بالماضي) بدون نظر","احكِ عن خططك للأسبوع القادم باستخدام going to و will","مثّل حوار الطبيب وحوار الشقة بدون نظر في النص","اطلب شيئاً بأدب في 3 مواقف مختلفة (Could you...? / Can I...? / Would you like...?)"],wmin:40,wtask:"اكتب رسالة أو فقرة عن أسبوعك الماضي وخططك القادمة (40 كلمة على الأقل)."},
+{id:3,cefr:"B1",t:"متوسط",goal:["أناقش وأعطي رأيي وأختلف بأدب وأدعمه بسبب","أشرح مشكلة وأحكي قصة وأحل موقفاً معقداً","أدير مقابلة عمل وأشتكي وأطلب حقي بأدب","أتكلم عن شغلي وتخصصي (أتمتة، ذكاء اصطناعي، محاسبة، تأمين، مناديب)"],
+ steps:[["unit",9],["gram",14],["dlg",14],["speak",9],["unit",10],["gram",16],["dlg",15],["read",13],["unit",11],["gram",17],["read",14],["unit",13],["speak",10],["unit",14],["read",15],["unit",15],["wr",8],["read",16],["unit",18],["speak",11],["wr",9],["read",17],["vocab",9],["wr",10],["read",18],["speak",12],["wr",11],["wr",12]],
+ sp:["تكلم دقيقة كاملة عن رأيك في موضوع (مثل العمل من البيت) واستخدم because وbut وif","احكِ قصة مشكلة حصلت لك وكيف حللتها (ماضٍ ومستقبل)","مثّل مقابلة العمل وحوار الشكوى بدون نظر في النص","اختلف مع شخص بأدب في 3 جمل مختلفة (I see your point, but...)"],wmin:60,wtask:"اكتب رأيك في موضوع تختاره، مع سببين ومثال (60 كلمة على الأقل)."}
+];
+
 /* ===== الحالة والتخزين ===== */
-const DEF={done:{},cards:{},streak:0,last:-1,rate:0.9,wr:{},dlg:{},gram:{},miss:[],start:0,pat:{},speak:{},wi:0,day:{d:-1,done:{}},voiceName:'',pitch:0.8};
+const DEF={done:{},cards:{},streak:0,last:-1,rate:0.9,wr:{},dlg:{},gram:{},miss:[],start:0,pat:{},speak:{},wi:0,day:{d:-1,done:{}},voiceName:'',pitch:0.8,lv:{},lw:{},read:{},vcat:{},snd:false};
 function load(){try{return Object.assign({},DEF,JSON.parse(localStorage.getItem('eng1')||'{}'))}catch(e){return Object.assign({},DEF)}}
 let S=load();
 function save(){try{localStorage.setItem('eng1',JSON.stringify(S))}catch(e){}}
@@ -1042,8 +1087,8 @@ const playK=(k,s)=>say(ALL[k].en,!!s);
 
 /* ===== التنقل ===== */
 let V={n:'home'};
-function go(n,o){V=Object.assign({n},o||{});try{speechSynthesis.cancel()}catch(e){}render();window.scrollTo(0,0)}
-function render(){({home,unit,sounds,voice,review,vocab,vcat,patList,pat,dlgList,dlg,gramList,gram,wrList,wr,dict,plan,day,wod,dictate,speakList,speak})[V.n]()}
+function go(n,o){if(!lvAllowed(n,o))return;V=Object.assign({n},o||{});try{speechSynthesis.cancel()}catch(e){}render();window.scrollTo(0,0)}
+function render(){({home,unit,sounds,voice,review,vocab,vcat,patList,pat,dlgList,dlg,gramList,gram,wrList,wr,dict,plan,day,wod,dictate,speakList,speak,levels,level,exam,readList,read})[V.n]()}
 const topbar=(t,back)=>`<div class="top"><button onclick="go('${back}')">→</button><div>${t}</div></div>`;
 
 /* ===== الرئيسية ===== */
@@ -1051,23 +1096,25 @@ function home(){
  const t=today(),due=dueCards().length;
  const dn=UNITS.filter(u=>S.done[u.id]).length,pct=Math.round(dn/UNITS.length*100);
  const st=S.last>=t-1?S.streak:0;
- const mi=Math.min(PLAN.length-1,Math.max(0,Math.floor((t-S.start)/30)));
+ const CL=curLevel(),CP=lvProgress(CL);
  app.innerHTML=`
  <div class="hd"><h1>إنجليزي بدون نت</h1><div class="chip">🔥 ${st} يوم</div></div>
  <div class="card hero">
   <div class="mut sm">جلسة اليوم (حوالي ساعة)</div>
-  <div class="big">${PLAN[mi].t}</div>
+  <div class="big">المستوى ${CL.id} (${CL.cefr}): ${CL.t}</div>
+  <div class="bar"><i style="width:${CP.pct}%"></i></div><div class="mut sm">دروس ${CP.done} من ${CP.total} • كلمات ${CP.w} من ${CP.wn}</div>
   <button class="btn pri" onclick="go('day')">ابدأ جلسة اليوم ▶</button>
+  <button class="btn" onclick="go('levels')">🏁 مستوياتي والاختبارات</button>
   ${due?`<button class="btn" onclick="go('review')">مراجعة اليوم (${due} جملة)</button>`:`<div class="mut sm">ما في جمل للمراجعة الآن</div>`}
  </div>
  <div class="card sm"><b>القاعدة الذهبية:</b> قُل الجملة بصوتك ولا تكتفِ بالقراءة. الكلام يطلع بالكلام.</div>
- <h2>تدرّب على الكلام</h2>
+ <h2>المكتبة: تدرّب حر (المستويات المفتوحة فقط)</h2>
  <div class="row2"><button class="btn" onclick="go('patList')">🧩 القوالب</button><button class="btn" onclick="go('dlgList')">🎭 الحوارات</button></div>
  <div class="row2"><button class="btn" onclick="go('gramList')">📖 القواعد</button><button class="btn" onclick="go('wrList')">✍️ الكتابة</button></div>
  <div class="row2"><button class="btn" onclick="go('speakList')">🎤 احكِ عن نفسك</button><button class="btn" onclick="go('dictate')">🎧 اسمع واكتب</button></div>
  <h2>ابحث وتعلّم</h2>
  <div class="row2"><button class="btn pri" onclick="go('dict')">🔤 القاموس الذكي</button><button class="btn" onclick="go('wod')">📅 كلمات اليوم</button></div>
- <div class="row2"><button class="btn" onclick="go('vocab')">📚 قاموس المواضيع</button><button class="btn" onclick="go('plan')">🗺 الخطة العامة</button></div>
+ <div class="row2"><button class="btn" onclick="go('vocab')">📚 قاموس المواضيع</button><button class="btn" onclick="go('readList')">📰 القراءة</button></div>
  <div class="row2"><button class="btn" onclick="go('sounds')">🔊 معمل الأصوات</button><button class="btn" onclick="go('voice')">⚙️ الصوت والنسخ الاحتياطي</button></div>
  <h2>الوحدات حسب المواضيع</h2>
  <div class="mut sm">تقدمك: ${dn} من ${UNITS.length} وحدات</div><div class="bar"><i style="width:${pct}%"></i></div>
@@ -1183,11 +1230,12 @@ function vcat(){
 }
 function vquiz(){
  const c=VOCAB[V.i],cs=ALL.filter(x=>x.u==='v'+c.id);
- runSpeak(shuf(cs),()=>{$('#body').innerHTML=`<div class="card hero"><div class="big">✅ خلصت اختبار ${c.t}</div><div>الكلمات اللي ما قدرت عليها بترجع لك في المراجعة.</div></div><button class="btn pri" onclick="go('vcat',{i:${V.i}})">رجوع للقائمة</button>`});
+ runSpeak(shuf(cs),()=>{S.vcat[c.id]=true;touch();save();$('#body').innerHTML=`<div class="card hero"><div class="big">✅ خلصت اختبار ${c.t}</div><div>الكلمات اللي ما قدرت عليها بترجع لك في المراجعة.</div></div><button class="btn pri" onclick="go('vcat',{i:${V.i}})">رجوع للقائمة</button>`});
 }
 
 /* ===== معمل الأصوات ===== */
 function sounds(){
+ S.snd=true;save();
  app.innerHTML=`${topbar('معمل الأصوات','home')}
  <div class="card sm">الأصوات اللي ما موجودة بالعربي هي أكبر سبب لسوء الفهم. اضغط على كل كلمة، استمع وكرّرها.</div>
  ${SOUNDS.map((g,gi)=>`<div class="card"><b>${g.t}</b><div class="sm mut" style="margin:6px 0">${g.tip}</div>
@@ -1382,43 +1430,301 @@ const currLabel=it=>it.t==='unit'?'الوحدة '+it.id+': '+UNITS.find(u=>u.id=
 const currGo=it=>it.t==='unit'?['unit',{id:it.id,step:0}]:it.t==='pat'?['pat',{i:it.i}]:it.t==='dlg'?['dlg',{i:it.i}]:['gram',{i:it.i}];
 function mk(k,n,o){S.day.done[k]=true;save();go(n,o)}
 function mkManual(k){S.day.done[k]=!S.day.done[k];save();day()}
+/* ===== المستويات ===== */
+const DC=ALL.filter(c=>c.u==='d');
+const isEn=s=>/^[\x20-\x7e]+$/.test(String(s));
+const wc=s=>(s||'').trim().split(/\s+/).filter(Boolean).length;
+const di=(en,pos)=>DICT.findIndex(e=>e[0]===en&&(!pos||e[3]===pos));
+const rng=(a,b)=>{const s=typeof a==='number'?a:di(a[0],a[1]),e=typeof b==='number'?b:di(b[0],b[1]);if(s<0||e<0||e<s){console.error('seg',a,b,s,e);return[]}const o=[];for(let i=s;i<=e;i++)o.push(i);return o};
+const LWM={l1end:['take care'],body:[['back'],['insurance']],clo:[['shirt'],['color']],hou:[['kitchen'],['switch','اسم']],food:[['egg'],['thirsty']],ppl:[['teacher'],['team']],
+ verb:[['add'],['wonder']],trn:[['bike'],['gate']],plc:[['sky'],['corner shop']],adj:[['wet'],['each']],
+ wrk:[['contract'],['commission']],tec:[['screen'],['feature']],con:[['truth'],['friendship']],phr:[['turn on'],['cheer up']],exp:[['good night'],['just kidding']],l3:[['achieve']]};
+let LWC=null;
+function LW(id){
+ if(!LWC)LWC={
+  1:[].concat(rng(0,di(LWM.l1end[0])),rng(LWM.body[0],LWM.body[1]),rng(LWM.clo[0],LWM.clo[1]),rng(LWM.hou[0],LWM.hou[1]),rng(LWM.food[0],LWM.food[1]),rng(LWM.ppl[0],LWM.ppl[1])),
+  2:[].concat(rng(LWM.verb[0],LWM.verb[1]),rng(LWM.trn[0],LWM.trn[1]),rng(LWM.plc[0],LWM.plc[1]),rng(LWM.adj[0],LWM.adj[1])),
+  3:[].concat(rng(LWM.wrk[0],LWM.wrk[1]),rng(LWM.tec[0],LWM.tec[1]),rng(LWM.con[0],LWM.con[1]),rng(LWM.phr[0],LWM.phr[1]),rng(LWM.exp[0],LWM.exp[1]),rng(LWM.l3[0],DICT.length-1))
+ };
+ return LWC[id]||[];
+}
+const lvOf=id=>LEVELS.find(l=>l.id===id);
+const lvPassed=id=>!!(S.lv[id]&&S.lv[id].passed);
+const lvOpen=id=>!!lvOf(id)&&(id===1||lvPassed(id-1));
+function curLevel(){return LEVELS.find(l=>!lvPassed(l.id))||LEVELS[LEVELS.length-1]}
+function lwPtr(id){if(S.lw[id]===undefined)S.lw[id]=id===1?Math.min(S.wi||0,LW(1).length):0;return S.lw[id]}
+function stepInfo(s){
+ const t=s[0],id=s[1];
+ if(t==='sounds')return{label:'معمل الأصوات',done:!!S.snd,go:['sounds',{}]};
+ if(t==='unit'){const u=UNITS.find(x=>x.id===id);return{label:'الوحدة '+id+': '+u.t,done:!!S.done[id],go:['unit',{id,step:0}]}}
+ if(t==='pat'){const i=PATTERNS.findIndex(x=>x.id===id);return{label:'قالب '+id+': '+PATTERNS[i].en,done:!!S.pat[id],go:['pat',{i}]}}
+ if(t==='gram'){const i=GRAMMAR.findIndex(x=>x.id===id);return{label:'قواعد: '+GRAMMAR[i].t,done:!!S.gram[id],go:['gram',{i}]}}
+ if(t==='dlg'){const i=DIALOGS.findIndex(x=>x.id===id);return{label:'حوار: '+DIALOGS[i].t,done:!!S.dlg[id],go:['dlg',{i}]}}
+ if(t==='wr'){const i=WRITING.findIndex(x=>x.id===id);return{label:'كتابة: '+WRITING[i].t,done:wc((S.wr[id]||{}).t)>=15,go:['wr',{i}]}}
+ if(t==='speak'){const i=SPEAK.findIndex(x=>x.id===id);return{label:'تحدّث: '+SPEAK[i].t,done:!!S.speak[id],go:['speak',{i}]}}
+ if(t==='read'){const i=READ.findIndex(x=>x.id===id);return{label:'قراءة: '+READ[i].t,done:!!S.read[id],go:['read',{i}]}}
+ if(t==='vocab'){const i=VOCAB.findIndex(x=>x.id===id);return{label:'مفردات: '+VOCAB[i].t,done:!!S.vcat[id],go:['vcat',{i}]}}
+ return{label:'؟',done:true,go:['home',{}]};
+}
+function lvProgress(L){
+ const total=L.steps.length,done=L.steps.filter(s=>stepInfo(s).done).length;
+ const wn=LW(L.id).length,w=Math.min(lwPtr(L.id),wn),need=Math.ceil(wn*0.7);
+ return{total,done,wn,w,need,pct:Math.round(done/total*100),ready:done===total&&w>=need};
+}
+/* قفل المحتوى حسب المستوى */
+let LVMAP=null;
+function itemLv(n,o){
+ if(!LVMAP){LVMAP={};LEVELS.forEach(L=>L.steps.forEach(s=>{if(s[0]!=='sounds')LVMAP[s[0]+':'+s[1]]=L.id}))}
+ o=o||{};
+ const m={unit:['unit',o.id],pat:['pat',(PATTERNS[o.i]||{}).id],gram:['gram',(GRAMMAR[o.i]||{}).id],dlg:['dlg',(DIALOGS[o.i]||{}).id],wr:['wr',(WRITING[o.i]||{}).id],speak:['speak',(SPEAK[o.i]||{}).id],vcat:['vocab',(VOCAB[o.i]||{}).id],vquiz:['vocab',(VOCAB[o.i]||{}).id],read:['read',(READ[o.i]||{}).id]}[n];
+ return m?(LVMAP[m[0]+':'+m[1]]||0):0;
+}
+function lvAllowed(n,o){
+ o=o||{};
+ let l=itemLv(n,o);
+ if(n==='level'||n==='exam')l=o.id;
+ if(n==='wod'&&o.lv)l=o.lv;
+ if(l&&!lvOpen(l)){toast('🔒 هذا من المستوى '+l+'. اجتز اختبار المستوى '+(l-1)+' أولاً');return false}
+ return true;
+}
+
+/* ===== شاشة المستويات ===== */
+function levels(){
+ app.innerHTML=`${topbar('مستوياتي','home')}
+ <div class="card sm">كل مستوى كامل: دروس + كلمات + قراءة + كلام + كتابة، وفي آخره اختبار. المستوى التالي يفتح فقط بعد اجتياز الاختبار (80% فأكثر، وتقدر تعيده بلا حد).</div>
+ ${LEVELS.map(L=>{const op=lvOpen(L.id),p=lvProgress(L),ps=lvPassed(L.id);
+  return `<div class="card" style="${ps?'border-color:var(--ac)':''}"><div class="mut sm">${L.cefr}</div><div style="font-size:19px;font-weight:700">المستوى ${L.id}: ${L.t} ${ps?'✅ مجتاز':op?'':'🔒'}</div>
+  <div class="bar"><i style="width:${op?p.pct:0}%"></i></div><div class="mut sm">دروس ${p.done} من ${p.total} • كلمات ${p.w} من ${p.wn}</div>
+  <button class="btn ${op&&!ps?'pri':''}" onclick="go('level',{id:${L.id}})">${op?(ps?'راجع المستوى':'افتح المستوى'):'🔒 مغلق'}</button></div>`}).join('')}
+ <div class="card sm">المستويات 4 إلى 6 (B2 وC1 وC2) تُضاف بعد ما تخلّص المستوى 3. وقتها قل لي ما ينقصك وأبنيها على قدر احتياجك.</div>`;
+}
+function level(){
+ const L=lvOf(V.id),p=lvProgress(L),lv=S.lv[L.id]||{},ni=L.steps.findIndex(s=>!stepInfo(s).done);
+ app.innerHTML=`${topbar('المستوى '+L.id+' • '+L.cefr+' • '+L.t,'levels')}
+ <div class="card hero"><b>بنهاية هذا المستوى تقدر:</b>${L.goal.map(g=>`<div class="sm" style="margin-top:5px">✔ ${g}</div>`).join('')}</div>
+ <h2>الدروس (${p.done} من ${p.total})</h2>
+ ${L.steps.map((s,i)=>{const f=stepInfo(s);return `<div class="u ${f.done?'done':''}" style="${i===ni?'border-color:var(--ac)':''}" onclick="goStep(${L.id},${i})"><span>${f.label}</span><span>${f.done?'✅':i===ni?'◀ التالي':'○'}</span></div>`}).join('')}
+ <h2>الكلمات</h2>
+ <div class="card"><div>تعلّمت ${p.w} من ${p.wn} كلمة (المطلوب ${p.need} قبل الاختبار)</div><div class="bar"><i style="width:${Math.round(p.w/p.wn*100)}%"></i></div>
+ <button class="btn" onclick="go('wod',{lv:${L.id}})">📅 كلمات هذا المستوى</button></div>
+ <h2>الاختبار</h2>
+ <div class="card">${lvPassed(L.id)?`<div class="ok">✅ اجتزت هذا المستوى${lv.best?' (أعلى نتيجة '+lv.best+'%)':''}</div>`:''}
+ ${lv.auto&&!lv.passed?`<div class="mut sm">اجتزت الجزء الآلي. بقي الكلام والكتابة.</div><button class="btn pri" onclick="go('exam',{id:${L.id}})">أكمل الجزء الأخير ▶</button>`
+  :p.ready?`<button class="btn pri" onclick="go('exam',{id:${L.id}})">🏁 ${lvPassed(L.id)?'أعد':'ابدأ'} اختبار المستوى</button>`
+  :`<div class="mut sm">يفتح الاختبار لما تخلّص كل الدروس أعلاه وتبلغ ${p.need} كلمة. المتبقي: ${p.total-p.done} درس${p.w<p.need?' و'+(p.need-p.w)+' كلمة':''}.</div><button class="btn" disabled>🔒 الاختبار مغلق</button>`}
+ ${lv.att?`<div class="mut sm">محاولاتك: ${lv.att}${lv.best!==undefined?' • أعلى نتيجة: '+lv.best+'%':''}</div>`:''}</div>`;
+}
+function goStep(lid,i){const f=stepInfo(lvOf(lid).steps[i]);go(f.go[0],f.go[1])}
+
+/* ===== جلسة اليوم (حسب المستوى) ===== */
+function nextStep(L,types){return L.steps.findIndex(s=>(!types||types.includes(s[0]))&&!stepInfo(s).done)}
 function day(){
  if(S.day.d!==today()){S.day={d:today(),done:{}};save()}
  V={n:'day'};
- const due=dueCards().length,nx=CURR.find(it=>!currDone(it));
- const spi=Math.max(0,SPEAK.findIndex(s=>!S.speak[s.id])),wrw=WRITING.findIndex(w=>!(S.wr[w.id]||{}).t);
- const doneCount=CURR.filter(currDone).length;
+ const L=curLevel(),p=lvProgress(L),due=dueCards().length;
+ const ni=nextStep(L),si=nextStep(L,['speak']),wi=nextStep(L,['wr']);
+ let nb;
+ if(ni>=0){const f=stepInfo(L.steps[ni]);nb={t:f.label,g:f.go}}
+ else nb=p.ready?{t:'جاهز! اختبار المستوى '+L.id,g:['level',{id:L.id}]}:{t:'خلصت الدروس. أكمل كلمات المستوى ('+p.w+' من '+p.need+') ثم الاختبار',g:['wod',{lv:L.id}]};
+ const spS=si>=0?stepInfo(L.steps[si]):null,wrS=wi>=0?stepInfo(L.steps[wi]):null;
  const B=[
   {k:'rev',t:'مراجعة جمل وكلمات اليوم'+(due?' ('+due+')':' (ما في شيء الآن)'),m:'10 د',g:['review',{}]},
-  {k:'new',t:nx?currLabel(nx):'خلصت كل الدروس! أعد القوالب والحوارات بدون نظر',m:'25 د',g:nx?currGo(nx):['patList',{}]},
-  {k:'wod',t:'كلمات اليوم (10 كلمات)',m:'10 د',g:['wod',{}]},
+  {k:'new',t:nb.t,m:'25 د',g:nb.g},
+  {k:'wod',t:'كلمات اليوم (10 كلمات)',m:'10 د',g:['wod',{lv:L.id}]},
   {k:'dk',t:'اسمع واكتب',m:'5 د',g:['dictate',{}]},
-  {k:'sp',t:'احكِ عن نفسك: '+SPEAK[spi].t,m:'10 د',g:['speak',{i:spi}]},
-  {k:'wr',t:'(اختياري) كتابة: '+(wrw>=0?WRITING[wrw].t:'أعد مهمة قديمة'),m:'10 د',g:['wr',{i:Math.max(0,wrw)}]}
+  {k:'sp',t:spS?spS.label:'احكِ عن موضوع قديم بدون نظر',m:'10 د',g:spS?spS.go:['speakList',{}]},
+  {k:'wr',t:'(اختياري) '+(wrS?wrS.label:'اكتب فقرة عن يومك'),m:'10 د',g:wrS?wrS.go:['wrList',{}]}
  ];
  const nd=B.filter(b=>S.day.done[b.k]).length;
  app.innerHTML=`${topbar('جلسة اليوم','home')}
  <div class="card hero"><div class="mut sm">أنجزت اليوم ${nd} من ${B.length+1}</div><div class="bar"><i style="width:${Math.round((nd+(S.day.done.real?1:0))/(B.length+1)*100)}%"></i></div>
- <div class="mut sm">الدروس الأساسية: ${doneCount} من ${CURR.length}</div></div>
+ <div class="mut sm">المستوى ${L.id} (${L.cefr}): دروس ${p.done} من ${p.total} • كلمات ${p.w} من ${p.wn}</div></div>
  ${B.map(b=>`<div class="card" style="${S.day.done[b.k]?'border-color:var(--ac)':''}"><div class="mut sm">${S.day.done[b.k]?'✅ ':''}${b.m}</div><div style="font-size:18px;font-weight:600;margin:4px 0">${b.t}</div><button class="btn ${S.day.done[b.k]?'':'pri'}" onclick='mk(${JSON.stringify(b.k)},${JSON.stringify(b.g[0])},${JSON.stringify(b.g[1])})'>${S.day.done[b.k]?'افتح مرة ثانية':'ابدأ ▶'}</button></div>`).join('')}
  <div class="card" style="${S.day.done.real?'border-color:var(--ac)':''}"><div class="mut sm">${S.day.done.real?'✅ ':''}5 د</div><div style="font-size:18px;font-weight:600;margin:4px 0">كلام حقيقي: قل 3 جمل إنجليزية لشخص حولك (حتى «How are you?»)، أو سجّل صوتك</div><button class="btn" onclick="mkManual('real')">${S.day.done.real?'تراجع':'تم ✓'}</button></div>
- <div class="card sm">الدرس الجديد يتغير تلقائياً لما تخلص اللي قبله. إذا عندك وقت زيادة، كرر الجلسة أو افتح أي قسم من الرئيسية.</div>`;
+ <div class="card sm">الدرس الجديد يتغير تلقائياً لما تخلص اللي قبله. إذا عندك وقت زيادة، كرر الجلسة.</div>`;
 }
 
-/* ===== كلمات اليوم ===== */
+/* ===== كلمات اليوم (حسب المستوى) ===== */
 function wod(){
- const n=10,start=S.wi,cs=ALL.filter(c=>c.u==='d').slice(start,start+n);
- app.innerHTML=`${topbar('كلمات اليوم','home')}<div id="body"></div>`;
- if(!cs.length){$('#body').innerHTML=`<div class="card hero"><div class="big">🎉 خلصت كل كلمات القاموس</div></div><button class="btn" onclick="go('home')">الرئيسية</button>`;return}
- $('#body').innerHTML=`<div class="card sm">تقدمك: ${start} من ${DICT.length} كلمة</div><div class="bar"><i style="width:${Math.round(start/DICT.length*100)}%"></i></div>
+ const L=lvOf(V.lv||curLevel().id),W=LW(L.id),n=10,start=lwPtr(L.id),cs=W.slice(start,start+n).map(i=>DC[i]);
+ app.innerHTML=`${topbar('كلمات المستوى '+L.id,'home')}<div id="body"></div>`;
+ if(!cs.length){$('#body').innerHTML=`<div class="card hero"><div class="big">🎉 خلصت كل كلمات المستوى ${L.id}</div><div>الكلمات الصعبة ترجع في المراجعة.</div></div><button class="btn" onclick="go('level',{id:${L.id}})">رجوع للمستوى</button>`;return}
+ V.lv=L.id;
+ $('#body').innerHTML=`<div class="card sm">تقدمك في كلمات المستوى ${L.id}: ${start} من ${W.length}</div><div class="bar"><i style="width:${Math.round(start/W.length*100)}%"></i></div>
  <div class="card sm">استمع لكل كلمة وكرّرها بصوتك، ثم اضغط «اختبرني».</div>${cs.map(cardHTML).join('')}
  <button class="btn pri" onclick="wodQuiz()">🎯 اختبرني على هذه الكلمات</button>`;
 }
 function wodQuiz(){
- const n=10,start=S.wi,cs=ALL.filter(c=>c.u==='d').slice(start,start+n);
- runSpeak(shuf(cs),()=>{S.wi=Math.min(DICT.length,start+n);touch();save();
-  $('#body').innerHTML=`<div class="card hero"><div class="big">✅ خلصت كلمات اليوم</div><div>تعلمت ${S.wi} كلمة. الكلمات الصعبة ترجع في المراجعة.</div></div><button class="btn pri" onclick="go('wod')">10 كلمات إضافية</button><button class="btn" onclick="go('home')">الرئيسية</button>`});
+ const L=lvOf(V.lv),W=LW(L.id),n=10,start=lwPtr(L.id),cs=W.slice(start,start+n).map(i=>DC[i]);
+ runSpeak(shuf(cs),()=>{S.lw[L.id]=Math.min(W.length,start+n);touch();save();
+  $('#body').innerHTML=`<div class="card hero"><div class="big">✅ خلصت كلمات اليوم</div><div>تعلمت ${S.lw[L.id]} من ${W.length} كلمة في المستوى ${L.id}. الصعبة ترجع في المراجعة.</div></div><button class="btn pri" onclick="go('wod',{lv:${L.id}})">10 كلمات إضافية</button><button class="btn" onclick="go('level',{id:${L.id}})">رجوع للمستوى</button>`});
 }
+
+/* ===== القراءة ===== */
+let RD={a:{}},sayTok=0;
+function sayLong(t,slow){const parts=t.split(/(?<=[.!?])\s+/).filter(Boolean),tok=++sayTok;let k=0;const nx=()=>{if(tok!==sayTok||k>=parts.length)return;say(parts[k++],slow,()=>setTimeout(nx,250))};nx()}
+function readList(){
+ app.innerHTML=`${topbar('القراءة','home')}<div class="card sm">اقرأ القطعة، استمع لها، ثم أجب عن الأسئلة. تحتاج إجابتين صحيحتين من ثلاث لتُحتسب.</div>
+ ${[1,2,3].map(l=>`<h2>المستوى ${l}</h2>`+READ.filter(r=>r.lv===l).map(r=>`<div class="u ${S.read[r.id]?'done':''}" onclick="go('read',{i:${READ.indexOf(r)}})"><span>${r.id}. ${r.t}</span><span>${S.read[r.id]?'✅':lvOpen(l)?'◀':'🔒'}</span></div>`).join('')).join('')}`;
+}
+function read(){
+ const r=READ[V.i];RD={a:{}};
+ app.innerHTML=`${topbar(r.t,'readList')}<div class="card"><div class="en" lang="en" style="font-size:18px;line-height:1.9;direction:ltr;text-align:left">${r.en}</div>
+ <div class="row2"><button class="btn" onclick="sayLong(READ[${V.i}].en)">▶ استمع</button><button class="btn" onclick="sayLong(READ[${V.i}].en,1)">🐢 بطيء</button></div>
+ <button class="btn" onclick="const e=$('#rar');e.style.display=e.style.display==='none'?'block':'none'">🌐 الترجمة</button><div id="rar" class="ar" style="display:none;margin-top:6px">${r.ar}</div></div><div id="rq"></div>`;
+ drawRQ();
+}
+function rdAns(q,j){if(RD.a[q]!==undefined)return;RD.a[q]=j;drawRQ()}
+function drawRQ(){
+ const r=READ[V.i],fin=Object.keys(RD.a).length===r.q.length;
+ let sc=0;r.q.forEach((x,i)=>{if(RD.a[i]===x[2])sc++});
+ if(fin&&sc>=2&&!S.read[r.id]){S.read[r.id]=true;touch();save()}
+ $('#rq').innerHTML=r.q.map((x,qi)=>{const a=RD.a[qi];return `<div class="card"><div class="${isEn(x[0])?'en':'ar'}" ${isEn(x[0])?'lang="en"':''} style="font-weight:600;margin-bottom:6px">${qi+1}. ${x[0]}</div>
+ ${x[1].map((o,oi)=>`<button class="btn ${a===undefined?'':oi===x[2]?'pri':a===oi?'bad':''}" ${a===undefined?'':'disabled'} ${isEn(o)?'lang="en" style="direction:ltr"':''} onclick="rdAns(${qi},${oi})">${o}</button>`).join('')}</div>`}).join('')
+ +(fin?`<div class="card hero"><div class="big">${sc>=2?'✅':'↻'} ${sc} من ${r.q.length}</div><div>${sc>=2?'تم احتساب القطعة.':'أعد قراءة القطعة وجرّب مرة ثانية.'}</div></div><button class="btn pri" onclick="go('read',{i:${V.i}})">${sc>=2?'أعد القطعة':'حاول مرة ثانية'}</button><button class="btn" onclick="go('readList')">القائمة</button>`:'');
+}
+
+/* ===== الاختبار ===== */
+const PN={A:'مفردات',B:'قواعد',C:'إملاء',D:'استماع',E:'قراءة'};
+let EX=null;
+function exLevelCards(L){
+ const us=new Set(),ps=new Set();
+ L.steps.forEach(s=>{if(s[0]==='unit')us.add(s[1]);if(s[0]==='pat')ps.add('p'+s[1])});
+ return ALL.filter(c=>(typeof c.u==='number'&&us.has(c.u))||ps.has(c.u));
+}
+function exWords(L){
+ const W=LW(L.id),ptr=Math.max(lwPtr(L.id),Math.ceil(W.length*0.7)),d=W.slice(0,ptr).map(i=>DC[i]);
+ const vs=ALL.filter(c=>L.steps.some(s=>s[0]==='vocab'&&c.u==='v'+s[1]));
+ return d.concat(vs);
+}
+function pickWrong(pool,correct,fn,n){
+ const out=[];for(const c of shuf(pool)){const v=fn(c);if(v!==fn(correct)&&!out.includes(v))out.push(v);if(out.length>=n)break}
+ return out;
+}
+function mkMcq(p,q,correct,wrongs,extra){const o=shuf([correct].concat(wrongs));return Object.assign({k:'mcq',p,q,o,a:o.indexOf(correct)},extra||{})}
+function exBuild(L){
+ const Q=[],W=exWords(L),sent=exLevelCards(L);
+ // A: مفردات 20
+ const wa=shuf(W).slice(0,20);
+ wa.forEach((c,i)=>{
+  if(i%2===0)Q.push(mkMcq('A',`<div class="mut sm">ما معنى هذه الكلمة؟</div><div class="en big" lang="en">${c.en}</div>`+sayBtn(c.en),c.ar,pickWrong(W,c,x=>x.ar,3),{ref:{t:'card',c}}));
+  else Q.push(mkMcq('A',`<div class="mut sm">كيف تقول هذه الكلمة بالإنجليزي؟</div><div class="ar big">${c.ar}</div>`,c.en,pickWrong(W,c,x=>x.en,3),{ref:{t:'card',c}}));
+ });
+ // B: قواعد 15
+ const gq=[];
+ L.steps.filter(s=>s[0]==='gram').forEach(s=>{const g=GRAMMAR.find(x=>x.id===s[1]);g.q.forEach(x=>gq.push({g,x}))});
+ shuf(gq).slice(0,15).forEach(({g,x})=>{const o=shuf(x[1]);Q.push({k:'mcq',p:'B',q:`<div class="mut sm">اختر الصحيح:</div><div class="en big" lang="en" style="direction:ltr">${x[0]}</div>`,o,a:o.indexOf(x[1][x[2]]),why:x[3],ref:{t:'gram',g}})});
+ // C: إملاء 6 + D: استماع 8
+ const ss=shuf(sent.filter(c=>c.en.split(' ').length>=2)),cs=ss.slice(0,6),ds=ss.slice(6,14).length>=8?ss.slice(6,14):shuf(ss).slice(0,8);
+ cs.forEach(c=>Q.push({k:'dict',p:'C',c,ref:{t:'card',c}}));
+ ds.forEach(c=>Q.push(mkMcq('D',`<div class="mut sm">استمع ثم اختر المعنى الصحيح:</div><div class="row2"><button class="btn" onclick="playK(${c.k})">▶ استمع</button><button class="btn" onclick="playK(${c.k},1)">🐢 بطيء</button></div>`,c.ar,pickWrong(sent,c,x=>x.ar,3),{ref:{t:'card',c},auto:c.k})));
+ // E: قراءة (قطعتان)
+ const rs=shuf(L.steps.filter(s=>s[0]==='read').map(s=>READ.find(r=>r.id===s[1]))).slice(0,2);
+ rs.forEach(r=>r.q.forEach(x=>{const o=shuf(x[1]);Q.push({k:'mcq',p:'E',ctx:r.en,q:`<div class="${isEn(x[0])?'en':'ar'}" ${isEn(x[0])?'lang="en"':''} style="font-weight:600">${x[0]}</div>`,o,a:o.indexOf(x[1][x[2]]),ref:{t:'read',r}})}));
+ return Q;
+}
+function exam(){
+ const L=lvOf(V.id),lv=S.lv[L.id]||{};
+ EX=null;
+ if(lv.auto&&!lv.passed){exF();return}
+ app.innerHTML=`${topbar('اختبار المستوى '+L.id,'level')}<div class="card hero"><div class="big">🏁 اختبار المستوى ${L.id} (${L.cefr})</div>
+ <div class="sm" style="margin-top:6px">الجزء الأول (آلي، حوالي 55 سؤال): مفردات 20 • قواعد 15 • إملاء 6 • استماع 8 • قراءة 6.</div>
+ <div class="sm">النجاح: 80% فأكثر. إذا ما نجحت، تظهر لك نقاط ضعفك وتتدرب عليها وتعيد الاختبار بأسئلة جديدة بلا حد.</div>
+ <div class="sm">الجزء الثاني (بعد النجاح): مهام كلام تقيّمها بصدق + كتابة ${L.wmin} كلمة على الأقل.</div></div>
+ <div class="card sm">جهّز سماعتك أو ارفع صوت الجوال. خذ وقتك ولا تستعجل.</div>
+ <button class="btn pri" onclick="exStart(${L.id})">ابدأ الاختبار ▶</button>`;
+}
+function exStart(id){
+ const L=lvOf(id);
+ EX={L,q:exBuild(L),i:0,sc:{A:0,B:0,C:0,D:0,E:0},tot:{A:0,B:0,C:0,D:0,E:0},wrong:[],res:null};
+ EX.q.forEach(x=>EX.tot[x.p]++);
+ app.innerHTML=`${topbar('اختبار المستوى '+L.id,'level')}<div id="body"></div>`;drawEx();
+}
+function drawEx(){
+ if(EX.i>=EX.q.length){exEnd();return}
+ const x=EX.q[EX.i],r=EX.res;
+ let h=`<div class="prog">${EX.i+1} / ${EX.q.length} • ${PN[x.p]}</div><div class="card focus">`;
+ if(x.ctx)h+=`<div class="card sm en" lang="en" style="direction:ltr;text-align:left;line-height:1.7">${x.ctx}</div>`;
+ if(x.k==='mcq'){
+  h+=x.q+x.o.map((o,j)=>`<button class="btn ${r===null?'':j===x.a?'pri':r.sel===j?'bad':''}" ${r===null?'':'disabled'} ${isEn(o)?'lang="en" style="direction:ltr"':''} onclick="exAns(${j})">${o}</button>`).join('');
+  if(r!==null&&x.why)h+=`<div class="sm mut">${x.why}</div>`;
+ }else{
+  const c=x.c;
+  h+=`<div class="mut sm">اسمع واكتب ما سمعته بالإنجليزي:</div><div class="row2"><button class="btn" onclick="playK(${c.k})">▶ استمع</button><button class="btn" onclick="playK(${c.k},1)">🐢 بطيء</button></div>
+  <input id="exdk" class="inp en" lang="en" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Type what you hear" ${r?'disabled value="'+ea(r.text)+'"':''}>`;
+  if(r===null)h+=`<button class="btn pri" onclick="exChk()">تحقق</button>`;
+  else h+=`<div class="${r.ok?'ok':'no'}">${r.ok?'✓ صحيح':'✗ الصحيح:'}</div><div class="en" lang="en" style="font-size:18px">${c.en}</div><div class="ar sm">${c.ar}</div>`;
+ }
+ if(r!==null)h+=`<button class="btn pri" onclick="exNext()">${EX.i+1>=EX.q.length?'إنهاء ▶':'التالي ←'}</button>`;
+ $('#body').innerHTML=h+'</div>';
+ if(x.auto!==undefined&&r===null)setTimeout(()=>playK(x.auto),300);
+ if(x.k==='dict'&&r===null)setTimeout(()=>playK(x.c.k),300);
+}
+function exAns(j){
+ if(EX.res!==null)return;
+ const x=EX.q[EX.i],ok=j===x.a;
+ EX.res={sel:j,ok};if(ok)EX.sc[x.p]++;else EX.wrong.push(x);
+ drawEx();
+}
+function exChk(){
+ if(EX.res!==null)return;
+ const x=EX.q[EX.i],norm=s=>s.toLowerCase().replace(/[^a-z0-9' ]/g,' ').replace(/\s+/g,' ').trim();
+ const txt=$('#exdk').value,a=norm(txt).split(' ').filter(Boolean),b=norm(x.c.en).split(' ').filter(Boolean);
+ const pool=a.slice();let hit=0;b.forEach(w=>{const k=pool.indexOf(w);if(k>=0){hit++;pool.splice(k,1)}});
+ const ok=hit/b.length>=0.8&&a.length<=b.length+2;
+ EX.res={ok,text:txt};if(ok)EX.sc.C++;else EX.wrong.push(x);
+ drawEx();
+}
+function exNext(){EX.i++;EX.res=null;drawEx()}
+function exEnd(){
+ const L=EX.L,tot=EX.q.length,sc=Object.values(EX.sc).reduce((a,b)=>a+b,0),pct=Math.round(sc/tot*100),pass=sc>=Math.ceil(tot*0.8);
+ const lv=S.lv[L.id]=Object.assign({att:0,best:0},S.lv[L.id]);
+ lv.att++;lv.best=Math.max(lv.best||0,pct);if(pass)lv.auto=true;
+ const cards=[],seen=new Set(),grams=new Map(),reads=new Map();
+ EX.wrong.forEach(x=>{
+  if(x.ref.t==='card'&&!seen.has(x.ref.c.id)){seen.add(x.ref.c.id);cards.push(x.ref.c);rate(x.ref.c.id,false)}
+  if(x.ref.t==='gram')grams.set(x.ref.g.id,x.ref.g);
+  if(x.ref.t==='read')reads.set(x.ref.r.id,x.ref.r);
+ });
+ EX.cards=cards;save();
+ const rows=Object.keys(PN).filter(k=>EX.tot[k]).map(k=>{const p=EX.sc[k]/EX.tot[k];return `<div class="u ${p>=0.8?'done':''}"><span>${PN[k]}</span><span>${EX.sc[k]} / ${EX.tot[k]} ${p>=0.8?'✅':'⚠️'}</span></div>`}).join('');
+ $('#body').innerHTML=`<div class="card hero"><div class="big">${pass?'🎉':'↻'} ${pct}%</div><div>${sc} من ${tot}. ${pass?'نجحت في الجزء الآلي (المطلوب 80%).':'المطلوب 80%. ما عليك، هذه خريطة ضعفك.'}</div></div>${rows}
+ ${grams.size?`<h2>قواعد تحتاج مراجعة</h2>${[...grams.values()].map(g=>`<div class="u" onclick="go('gram',{i:${GRAMMAR.indexOf(g)}})"><span>${g.t}</span><span>◀</span></div>`).join('')}`:''}
+ ${reads.size?`<h2>قطع تحتاج إعادة</h2>${[...reads.values()].map(r=>`<div class="u" onclick="go('read',{i:${READ.indexOf(r)}})"><span>${r.t}</span><span>◀</span></div>`).join('')}`:''}
+ ${cards.length?`<button class="btn" onclick="exRemedy()">🎯 تدرّب الآن على ${cards.length} كلمة/جملة أخطأت فيها</button><div class="mut sm">دخلت أيضاً في المراجعة الذكية.</div>`:''}
+ ${pass?`<button class="btn pri" onclick="go('exam',{id:${L.id}})">الجزء الأخير: الكلام والكتابة ▶</button>`:`<button class="btn pri" onclick="go('exam',{id:${L.id}})">أعد الاختبار (أسئلة جديدة)</button>`}
+ <button class="btn" onclick="go('level',{id:${L.id}})">رجوع للمستوى</button>`;
+}
+function exRemedy(){
+ const L=EX.L;
+ app.innerHTML=`${topbar('تدريب نقاط الضعف','level')}<div id="body"></div>`;
+ runSpeak(shuf(EX.cards),()=>{$('#body').innerHTML=`<div class="card hero"><div class="big">✅ أحسنت</div><div>جاهز تعيد الاختبار؟</div></div><button class="btn pri" onclick="go('exam',{id:${L.id}})">${(S.lv[L.id]||{}).auto?'الجزء الأخير ▶':'أعد الاختبار'}</button><button class="btn" onclick="go('level',{id:${L.id}})">رجوع للمستوى</button>`});
+}
+function exF(){
+ const L=lvOf(V.id),lv=S.lv[L.id]||{},sp=lv.sp||[];
+ app.innerHTML=`${topbar('الجزء الأخير • المستوى '+L.id,'level')}
+ <div class="card hero"><b>✅ نجحت في الجزء الآلي. بقي الكلام والكتابة.</b><div class="sm">قيّم نفسك بصدق: الاختبار لك أنت، والكذب يضيّع وقتك.</div></div>
+ <h2>مهام الكلام (سجّل نفسك إن أردت)</h2>
+ ${L.sp.map((t,i)=>`<label class="card" style="display:flex;gap:10px;align-items:flex-start"><input type="checkbox" class="exsp" ${sp[i]?'checked':''} onchange="exFUpd()" style="width:22px;height:22px;margin-top:4px"><span>${t}</span></label>`).join('')}
+ <h2>الكتابة</h2>
+ <div class="card">✍️ ${L.wtask}<textarea id="exwr" class="inp en" lang="en" rows="7" style="direction:ltr;margin-top:8px" oninput="exFUpd()" placeholder="Write here...">${escHtml(lv.wtext||'')}</textarea><div class="mut sm" id="exwc"></div>
+ <div class="mut sm">تقدر تلصق نصك في محادثة معي وأصحّح لك أخطاءك.</div></div>
+ <button class="btn pri" id="exfin" onclick="exFinish()" disabled>اعتمد المستوى ✓</button>`;
+ exFUpd();
+}
+function exFUpd(){
+ const L=lvOf(V.id),ch=[...document.querySelectorAll('.exsp')].map(e=>e.checked),n=wc($('#exwr').value);
+ const lv=S.lv[L.id]=Object.assign({},S.lv[L.id]);lv.sp=ch;lv.wtext=$('#exwr').value;save();
+ $('#exwc').textContent='عدد الكلمات: '+n+' من '+L.wmin;
+ $('#exfin').disabled=!(ch.every(Boolean)&&n>=L.wmin);
+}
+function exFinish(){
+ const L=lvOf(V.id),lv=S.lv[L.id];lv.passed=true;touch();save();
+ const nx=lvOf(L.id+1);
+ app.innerHTML=`${topbar('مبروك','levels')}<div class="card hero"><div class="big">🎉 اجتزت المستوى ${L.id} (${L.cefr})</div><div>${nx?'فتح لك المستوى '+nx.id+'. استمر.':'أنهيت المستويات الثلاثة. أخبرني بما ينقصك لأبني المستويات التالية.'}</div></div>
+ ${nx?`<button class="btn pri" onclick="go('level',{id:${nx.id}})">ابدأ المستوى ${nx.id} ▶</button>`:''}<button class="btn" onclick="go('levels')">مستوياتي</button>`;
+}
+
 
 /* ===== اسمع واكتب ===== */
 let DK={};
