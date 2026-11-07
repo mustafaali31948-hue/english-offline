@@ -1332,7 +1332,7 @@ addPack('a',[["zero", "صفر", "زِيرُو", "اسم", "The number is zero.",
 ["out of", "خارج", "أَوت أڤ", "حرف", "Get out of the car.", "انزل من السيارة."],
 ["toward", "باتجاه", "تُوُورد", "حرف", "He walks toward me.", "هو يمشي نحوي."],
 ["until", "حتى", "أَنتِل", "حرف", "Wait until Monday.", "انتظر حتى يوم الاثنين."],
-["since", "منذ", "سِنس", "حرف", "I live here since 2020.", "أسكن هنا منذ 2020."],
+["since", "منذ", "سِنس", "حرف", "I have lived here since 2020.", "أسكن هنا منذ 2020."],
 ["against", "ضد", "أَقِنست", "حرف", "We play against them.", "نلعب ضدهم."],
 ["except", "ما عدا", "إِكسِپت", "حرف", "Everyone came except Ali.", "الجميع جاء ما عدا علي."],
 ["like this", "مثل هذا", "لَايك ذِس", "عبارة", "Do it like this.", "افعلها هكذا."],
@@ -2757,9 +2757,10 @@ addPack('d',[["disagree", "يختلف في الرأي", "دِسأَقْري", "�
 ["regardless of", "بغض النظر عن", "رِقَارْدْلِس أَڤ", "ربط", "Regardless of cost, we must fix it.", "بغض النظر عن التكلفة، يجب إصلاحه."]]);
 
 /* ===== الحالة والتخزين ===== */
-const DEF={done:{},cards:{},streak:0,last:-1,rate:0.9,wr:{},dlg:{},gram:{},miss:[],start:0,pat:{},speak:{},wi:0,day:{d:-1,done:{}},voiceName:'',pitch:0.8,lv:{},lw:{},read:{},vcat:{},snd:false,fl:0};
+const DEF={done:{},cards:{},streak:0,last:-1,rate:0.9,wr:{},dlg:{},gram:{},miss:[],start:0,pat:{},speak:{},wi:0,day:{d:-1,done:{}},voiceName:'',pitch:0.8,lv:{},lw:{},read:{},vcat:{},snd:false,fl:0,mis:{},conn:{},sh:0,bk:-1};
 function load(){try{return Object.assign({},DEF,JSON.parse(localStorage.getItem('eng1')||'{}'))}catch(e){return Object.assign({},DEF)}}
 let S=load();
+try{navigator.storage&&navigator.storage.persist&&navigator.storage.persist()}catch(e){}
 function save(){try{localStorage.setItem('eng1',JSON.stringify(S))}catch(e){}}
 const today=()=>Math.floor((Date.now()-new Date().getTimezoneOffset()*60000)/864e5);
 function touch(){const t=today();if(S.last===t)return;S.streak=(S.last===t-1)?S.streak+1:1;S.last=t;save()}
@@ -2796,7 +2797,7 @@ const playK=(k,s)=>say(ALL[k].en,!!s);
 /* ===== التنقل ===== */
 let V={n:'home'};
 function go(n,o){if(!lvAllowed(n,o))return;V=Object.assign({n},o||{});try{speechSynthesis.cancel()}catch(e){}render();window.scrollTo(0,0)}
-function render(){({home,unit,sounds,voice,review,vocab,vcat,patList,pat,dlgList,dlg,gramList,gram,wrList,wr,dict,plan,day,wod,dictate,speakList,speak,levels,level,exam,readList,read,fluent,flrun})[V.n]()}
+function render(){({home,unit,sounds,voice,review,vocab,vcat,patList,pat,dlgList,dlg,gramList,gram,wrList,wr,dict,plan,day,wod,dictate,speakList,speak,levels,level,exam,readList,read,fluent,flrun,talk,shadow,conn})[V.n]()}
 const topbar=(t,back)=>`<div class="top"><button onclick="go('${back}')">→</button><div>${t}</div></div>`;
 
 /* ===== الرئيسية ===== */
@@ -2807,6 +2808,7 @@ function home(){
  const CL=curLevel(),CP=lvProgress(CL);
  app.innerHTML=`
  <div class="hd"><h1>إنجليزي بدون نت</h1><div class="chip">🔥 ${st} يوم</div></div>
+ ${S.cards&&Object.keys(S.cards).length>20&&(S.bk<0||t-S.bk>=7)?`<div class="card sm" style="border-color:var(--bad)" onclick="go('voice')">💾 ${S.bk<0?'لم تحفظ نسخة احتياطية بعد.':'مرّ '+(t-S.bk)+' يوم على آخر نسخة احتياطية.'} اضغط هنا وأنشئ كوداً واحفظه (لو انمسحت بيانات المتصفح ما يضيع تقدمك).</div>`:''}
  <div class="card hero">
   <div class="mut sm">جلسة اليوم (حوالي ساعة)</div>
   <div class="big">المستوى ${CL.id} (${CL.cefr}): ${CL.t}</div>
@@ -2819,6 +2821,7 @@ function home(){
  <h2>المكتبة: تدرّب حر (المستويات المفتوحة فقط)</h2>
  <div class="row2"><button class="btn" onclick="go('patList')">🧩 القوالب</button><button class="btn" onclick="go('dlgList')">🎭 الحوارات</button></div>
  <div class="row2"><button class="btn" onclick="go('gramList')">📖 القواعد</button><button class="btn" onclick="go('wrList')">✍️ الكتابة</button></div>
+ <div class="row2"><button class="btn pri" onclick="go('talk')">🗣 كلام حقيقي</button><button class="btn pri" onclick="go('shadow')">🎧 تقليد وتسجيل</button></div>
  <button class="btn pri" onclick="go('fluent')">⏱ طلاقة بالوقت (أهم تمرين للكلام)</button>
  <div class="row2"><button class="btn" onclick="go('speakList')">🎤 احكِ عن نفسك</button><button class="btn" onclick="go('dictate')">🎧 اسمع واكتب</button></div>
  <h2>ابحث وتعلّم</h2>
@@ -2916,10 +2919,11 @@ function drawSpeak(){
  :`<button class="btn pri" onclick="Q.rev=true;drawSpeak();playK(${c.k})">اكشف الجملة</button>`}</div>`;
 }
 function rateQ(ok){const c=Q.q[Q.i];rate(c.id,ok);if(!ok&&!Q.again[c.id]){Q.again[c.id]=1;Q.q.push(c)}Q.i++;Q.rev=false;drawSpeak()}
-function stepSpeak(u){runSpeak(shuf(byUnit(u.id)),()=>{S.done[u.id]=true;touch();save();
- const nx=UNITS.find(x=>!S.done[x.id]);
- $('#body').innerHTML=`<div class="card hero"><div class="big">🎉 خلصت الوحدة ${u.id}</div><div>الجمل دي دخلت في المراجعة الذكية. بترجع لك في الوقت المناسب.</div>
- ${nx?`<button class="btn pri" onclick="go('unit',{id:${nx.id},step:0})">الوحدة التالية ▶</button>`:''}<button class="btn" onclick="go('home')">الرئيسية</button></div>`})}
+function stepSpeak(u){runSpeak(shuf(byUnit(u.id)),()=>unitCheck(u))}
+function unitCheck(u){
+ miniCheck(byUnit(u.id),()=>{S.done[u.id]=true;touch();save();const L=curLevel(),ni=nextStep(L);
+  return `<div class="card hero"><div class="big">🎉 أتممت الوحدة ${u.id}</div><div>الجمل دخلت في المراجعة الذكية.</div></div>${ni>=0?`<button class="btn pri" onclick="goStep(${L.id},${ni})">الدرس التالي ▶</button>`:''}<button class="btn" onclick="go('level',{id:${L.id}})">صفحة المستوى</button><button class="btn" onclick="go('home')">الرئيسية</button>`},()=>unitCheck(u));
+}
 function review(){
  app.innerHTML=`${topbar('مراجعة اليوم','home')}<div id="body"></div>`;
  const cs=dueCards();
@@ -3017,7 +3021,11 @@ function pat(){
 }
 function patQuiz(){
  const p=PATTERNS[V.i],cs=ALL.filter(x=>x.u==='p'+p.id);
- runSpeak(shuf(cs),()=>{S.pat[p.id]=true;touch();save();$('#body').innerHTML=`<div class="card hero"><div class="big">✅ خلصت القالب ${p.id}</div><div>جرّب الآن تبدّل الكلمة بكلمة من عندك وقل الجملة بصوتك.</div></div><button class="btn pri" onclick="go('pat',{i:${V.i}})">رجوع</button><button class="btn" onclick="go('patList')">القوالب</button>`});
+ runSpeak(shuf(cs),()=>patCheck());
+}
+function patCheck(){
+ const p=PATTERNS[V.i],cs=ALL.filter(x=>x.u==='p'+p.id),i=V.i;
+ miniCheck(cs,()=>{S.pat[p.id]=true;touch();save();return `<div class="card hero"><div class="big">✅ خلصت القالب ${p.id}</div><div>جرّب الآن تبدّل الكلمة بكلمة من عندك وقل الجملة بصوتك.</div></div><button class="btn pri" onclick="go('pat',{i:${i}})">رجوع</button><button class="btn" onclick="go('patList')">القوالب</button>`},()=>patCheck());
 }
 
 /* ===== الحوارات ===== */
@@ -3070,7 +3078,7 @@ function gAns(qi,oi){
  $('#gf'+qi).innerHTML=`<div class="${ok?'ok':'no'}">${ok?'✓ صح':'✗ غلط'}: ${q[3]}</div>`;
  GQ.done++;if(GQ.done===g.q.length)$('#gscore').innerHTML=`<div class="card hero">نتيجتك: ${GQ.n} من ${g.q.length}</div>`;
 }
-function markGram(){S.gram[GRAMMAR[V.i].id]=true;touch();save();toast('تم ✅');go('gramList')}
+function markGram(){const g0=GRAMMAR[V.i];if(GQ.done<g0.q.length||GQ.n<Math.ceil(g0.q.length*0.75)){toast('أجب عن كل الأسئلة وأصب 3 من 4 على الأقل حتى يكتمل الدرس');return}S.gram[GRAMMAR[V.i].id]=true;touch();save();toast('تم ✅');go('gramList')}
 
 /* ===== الكتابة ===== */
 function wrList(){
@@ -3081,12 +3089,12 @@ function wr(){
  const w=WRITING[V.i],cur=(S.wr[w.id]||{}).t||'';
  app.innerHTML=`${topbar(w.id+'. '+w.t,'wrList')}<div class="card">✍️ ${w.task}</div>
  <textarea id="wt" class="inp en" lang="en" rows="7" placeholder="Write here in English...">${escHtml(cur)}</textarea>
- <div class="row2"><button class="btn pri" onclick="wrSave()">حفظ</button><button class="btn" onclick="wrCopy()">نسخ لإرسالها لي</button></div>
+ <div class="row2"><button class="btn pri" onclick="wrSave()">حفظ</button><button class="btn" onclick="wrCopy()">📋 انسخ مع طلب التصحيح</button></div>
  <div class="card sm"><b>قائمة التحقق (قارن كتابتك):</b>${w.ck.map(c=>`<div>☐ ${c}</div>`).join('')}</div>
  <button class="btn" onclick="wrModel()">أرني النموذج</button><div id="wm"></div>`;
 }
 function wrSave(){const w=WRITING[V.i];S.wr[w.id]={t:$('#wt').value,d:today()};touch();save();toast('تم الحفظ ✅')}
-function wrCopy(){const w=WRITING[V.i];copyText('الكتابة ('+w.t+'):\n'+w.task+'\n\n'+$('#wt').value)}
+function wrCopy(){const w=WRITING[V.i],l=itemLv('wr',{i:V.i});copyText(corrPrompt($('#wt').value,(lvOf(l)||curLevel()).cefr,w.task))}
 function wrModel(){const w=WRITING[V.i];$('#wm').innerHTML=`<div class="card"><div class="mut sm">نموذج (لا تنسخه، كتب بأسلوبك):</div><div class="en" lang="en" style="font-size:18px;margin:6px 0">${w.en}</div>${sayBtn(w.en)}${sayBtn(w.en,1)}<div class="ar sm" style="margin-top:6px">${w.ar}</div></div>`}
 
 /* ===== القاموس الذكي ===== */
@@ -3157,6 +3165,7 @@ function LW(id){
  };
  return LWC[id]||[];
 }
+LEVELS[0].steps.splice(8,0,['conn',1]);LEVELS[1].steps.splice(6,0,['conn',2]);
 const lvOf=id=>LEVELS.find(l=>l.id===id);
 const lvPassed=id=>!!(S.lv[id]&&S.lv[id].passed);
 const lvOpen=id=>!!lvOf(id)&&(id===1||lvPassed(id-1));
@@ -3172,6 +3181,7 @@ function stepInfo(s){
  if(t==='wr'){const i=WRITING.findIndex(x=>x.id===id);return{label:'كتابة: '+WRITING[i].t,done:wc((S.wr[id]||{}).t)>=15,go:['wr',{i}]}}
  if(t==='speak'){const i=SPEAK.findIndex(x=>x.id===id);return{label:'تحدّث: '+SPEAK[i].t,done:!!S.speak[id],go:['speak',{i}]}}
  if(t==='read'){const i=READ.findIndex(x=>x.id===id);return{label:'قراءة: '+READ[i].t,done:!!S.read[id],go:['read',{i}]}}
+ if(t==='conn')return{label:id===1?'نبر الكلمات والجملة':'الكلام المتصل (gonna, wanna...)',done:!!S.conn[id],go:['conn',{id}]};
  if(t==='vocab'){const i=VOCAB.findIndex(x=>x.id===id);return{label:'مفردات: '+VOCAB[i].t,done:!!S.vcat[id],go:['vcat',{i}]}}
  return{label:'؟',done:true,go:['home',{}]};
 }
@@ -3185,7 +3195,7 @@ let LVMAP=null;
 function itemLv(n,o){
  if(!LVMAP){LVMAP={};LEVELS.forEach(L=>L.steps.forEach(s=>{if(s[0]!=='sounds')LVMAP[s[0]+':'+s[1]]=L.id}))}
  o=o||{};
- const m={unit:['unit',o.id],pat:['pat',(PATTERNS[o.i]||{}).id],gram:['gram',(GRAMMAR[o.i]||{}).id],dlg:['dlg',(DIALOGS[o.i]||{}).id],wr:['wr',(WRITING[o.i]||{}).id],speak:['speak',(SPEAK[o.i]||{}).id],flrun:['speak',(SPEAK[o.i]||{}).id],vcat:['vocab',(VOCAB[o.i]||{}).id],vquiz:['vocab',(VOCAB[o.i]||{}).id],read:['read',(READ[o.i]||{}).id]}[n];
+ const m={unit:['unit',o.id],pat:['pat',(PATTERNS[o.i]||{}).id],gram:['gram',(GRAMMAR[o.i]||{}).id],dlg:['dlg',(DIALOGS[o.i]||{}).id],wr:['wr',(WRITING[o.i]||{}).id],speak:['speak',(SPEAK[o.i]||{}).id],flrun:['speak',(SPEAK[o.i]||{}).id],vcat:['vocab',(VOCAB[o.i]||{}).id],vquiz:['vocab',(VOCAB[o.i]||{}).id],read:['read',(READ[o.i]||{}).id],conn:['conn',o.id]}[n];
  return m?(LVMAP[m[0]+':'+m[1]]||0):0;
 }
 function lvAllowed(n,o){
@@ -3201,6 +3211,7 @@ function lvAllowed(n,o){
 function levels(){
  app.innerHTML=`${topbar('مستوياتي','home')}
  <div class="card sm">كل مستوى كامل: دروس + كلمات + قراءة + كلام + كتابة، وفي آخره اختبار. المستوى التالي يفتح فقط بعد اجتياز الاختبار (80% فأكثر، وتقدر تعيده بلا حد).</div>
+ <div class="card sm">⏱ <b>كم يحتاج؟ (تقدير وليس وعداً)</b><br>محتوى المستويات الثلاثة يكفي نحو 6 أشهر بساعة يومياً أو 3 أشهر بساعتين. لكن الكلام الحقيقي لا يُكتسب من التطبيق وحده: تحتاج أيضاً استماعاً للإنجليزية الأصلية وكلاماً مع بشر. هدفك (التعامل مع الناس) متوقع تقريباً عند نهاية المستوى 2، أما B1 المريح فيحتاج عادةً 8 إلى 12 شهراً. التطبيق جزء من الجهد، والباقي كلام واستماع حقيقيان.</div>
  ${LEVELS.map(L=>{const op=lvOpen(L.id),p=lvProgress(L),ps=lvPassed(L.id);
   return `<div class="card" style="${ps?'border-color:var(--ac)':''}"><div class="mut sm">${L.cefr}</div><div style="font-size:19px;font-weight:700">المستوى ${L.id}: ${L.t} ${ps?'✅ مجتاز':op?'':'🔒'}</div>
   <div class="bar"><i style="width:${op?p.pct:0}%"></i></div><div class="mut sm">دروس ${p.done} من ${p.total} • كلمات ${p.w} من ${p.wn}</div>
@@ -3242,6 +3253,7 @@ function day(){
   {k:'wod',t:'كلمات اليوم (15 كلمة)',m:'10 د',g:['wod',{lv:L.id}]},
   {k:'wod2',t:'(إضافي) 15 كلمة أخرى',m:'10 د',g:['wod',{lv:L.id}]},
   {k:'dk',t:'اسمع واكتب',m:'5 د',g:['dictate',{}]},
+  {k:'sh',t:'تقليد وتسجيل صوتك (قلّد النطق والإيقاع)',m:'10 د',g:['shadow',{}]},
   {k:'fl',t:'طلاقة بالوقت: كرّر موضوعاً 3 مرات بوقت أقل',m:'15 د',g:spS?['flrun',{i:SPEAK.findIndex(x=>x.id===L.steps[si][1])}]:['fluent',{}]},
   {k:'sp',t:spS?spS.label:'احكِ عن موضوع قديم بدون نظر',m:'10 د',g:spS?spS.go:['speakList',{}]},
   {k:'wr',t:'(اختياري) '+(wrS?wrS.label:'اكتب فقرة عن يومك'),m:'10 د',g:wrS?wrS.go:['wrList',{}]}
@@ -3251,7 +3263,7 @@ function day(){
  <div class="card hero"><div class="mut sm">أنجزت اليوم ${nd} من ${B.length+1}</div><div class="bar"><i style="width:${Math.round((nd+(S.day.done.real?1:0))/(B.length+1)*100)}%"></i></div>
  <div class="mut sm">المستوى ${L.id} (${L.cefr}): دروس ${p.done} من ${p.total} • كلمات ${p.w} من ${p.wn}</div></div>
  ${B.map(b=>`<div class="card" style="${S.day.done[b.k]?'border-color:var(--ac)':''}"><div class="mut sm">${S.day.done[b.k]?'✅ ':''}${b.m}</div><div style="font-size:18px;font-weight:600;margin:4px 0">${b.t}</div><button class="btn ${S.day.done[b.k]?'':'pri'}" onclick='mk(${JSON.stringify(b.k)},${JSON.stringify(b.g[0])},${JSON.stringify(b.g[1])})'>${S.day.done[b.k]?'افتح مرة ثانية':'ابدأ ▶'}</button></div>`).join('')}
- <div class="card" style="${S.day.done.real?'border-color:var(--ac)':''}"><div class="mut sm">${S.day.done.real?'✅ ':''}5 د</div><div style="font-size:18px;font-weight:600;margin:4px 0">كلام حقيقي: قل 3 جمل إنجليزية لشخص حولك (حتى «How are you?»)، أو سجّل صوتك</div><button class="btn" onclick="mkManual('real')">${S.day.done.real?'تراجع':'تم ✓'}</button></div>
+ <div class="card" style="${S.day.done.real?'border-color:var(--ac)':''}"><div class="mut sm">${S.day.done.real?'✅ ':''}5 د</div><div style="font-size:18px;font-weight:600;margin:4px 0">كلام حقيقي: قل 3 جمل إنجليزية لشخص حولك (حتى «How are you?»)، أو سجّل صوتك</div><button class="btn" onclick="mkManual('real')">${S.day.done.real?'تراجع':'تم ✓'}</button><button class="btn" onclick="go('talk')">🗣 سيناريوهات ومهام جاهزة</button></div>
  <div class="card sm">الدرس الجديد يتغير تلقائياً لما تخلص اللي قبله. إذا عندك وقت زيادة، كرر الجلسة.</div>`;
 }
 
@@ -3296,7 +3308,7 @@ function drawRQ(){
 }
 
 /* ===== الاختبار ===== */
-const PN={A:'مفردات',B:'قواعد',C:'إملاء',D:'استماع',E:'قراءة'};
+const PN={A:'مفردات',B:'قواعد',C:'إملاء',D:'استماع',E:'قراءة',G:'ترتيب'};
 let EX=null;
 function exLevelCards(L){
  const us=new Set(),ps=new Set();
@@ -3332,6 +3344,8 @@ function exBuild(L){
  // E: قراءة (قطعتان)
  const rs=shuf(L.steps.filter(s=>s[0]==='read').map(s=>READ.find(r=>r.id===s[1]))).slice(0,2);
  rs.forEach(r=>r.q.forEach(x=>{const o=shuf(x[1]);Q.push({k:'mcq',p:'E',ctx:r.en,q:`<div class="${isEn(x[0])?'en':'ar'}" ${isEn(x[0])?'lang="en"':''} style="font-weight:600">${x[0]}</div>`,o,a:o.indexOf(x[1][x[2]]),ref:{t:'read',r}})}));
+ // G: ترتيب كلمات 6
+ shuf(sent.filter(c=>{const n=c.en.split(' ').length;return n>=3&&n<=8})).slice(0,6).forEach(c=>Q.push({k:'ord',p:'G',c,w:shuf(c.en.split(' ')),ref:{t:'card',c}}));
  return Q;
 }
 function exam(){
@@ -3339,7 +3353,7 @@ function exam(){
  EX=null;
  if(lv.auto&&!lv.passed){exF();return}
  app.innerHTML=`${topbar('اختبار المستوى '+L.id,'level')}<div class="card hero"><div class="big">🏁 اختبار المستوى ${L.id} (${L.cefr})</div>
- <div class="sm" style="margin-top:6px">الجزء الأول (آلي، حوالي 55 سؤال): مفردات 20 • قواعد 15 • إملاء 6 • استماع 8 • قراءة 6.</div>
+ <div class="sm" style="margin-top:6px">الجزء الأول (آلي، حوالي 61 سؤال): مفردات 20 • قواعد 15 • إملاء 6 • استماع 8 • قراءة 6 • ترتيب جمل 6.</div>
  <div class="sm">النجاح: 80% فأكثر. إذا ما نجحت، تظهر لك نقاط ضعفك وتتدرب عليها وتعيد الاختبار بأسئلة جديدة بلا حد.</div>
  <div class="sm">الجزء الثاني (بعد النجاح): مهام كلام تقيّمها بصدق + كتابة ${L.wmin} كلمة على الأقل.</div></div>
  <div class="card sm">جهّز سماعتك أو ارفع صوت الجوال. خذ وقتك ولا تستعجل.</div>
@@ -3347,18 +3361,23 @@ function exam(){
 }
 function exStart(id){
  const L=lvOf(id);
- EX={L,q:exBuild(L),i:0,sc:{A:0,B:0,C:0,D:0,E:0},tot:{A:0,B:0,C:0,D:0,E:0},wrong:[],res:null};
+ EX={L,q:exBuild(L),i:0,sc:{A:0,B:0,C:0,D:0,E:0,G:0},tot:{A:0,B:0,C:0,D:0,E:0,G:0},wrong:[],res:null};
  EX.q.forEach(x=>EX.tot[x.p]++);
  app.innerHTML=`${topbar('اختبار المستوى '+L.id,'level')}<div id="body"></div>`;drawEx();
 }
 function drawEx(){
- if(EX.i>=EX.q.length){exEnd();return}
+ if(EX.i>=EX.q.length){EX.mini?miniEnd():exEnd();return}
  const x=EX.q[EX.i],r=EX.res;
  let h=`<div class="prog">${EX.i+1} / ${EX.q.length} • ${PN[x.p]}</div><div class="card focus">`;
  if(x.ctx)h+=`<div class="card sm en" lang="en" style="direction:ltr;text-align:left;line-height:1.7">${x.ctx}</div>`;
  if(x.k==='mcq'){
   h+=x.q+x.o.map((o,j)=>`<button class="btn ${r===null?'':j===x.a?'pri':r.sel===j?'bad':''}" ${r===null?'':'disabled'} ${isEn(o)?'lang="en" style="direction:ltr"':''} onclick="exAns(${j})">${o}</button>`).join('');
   if(r!==null&&x.why)h+=`<div class="sm mut">${x.why}</div>`;
+ }else if(x.k==='ord'){
+  const c=x.c,pick=EX.ord||[];
+  h+=`<div class="mut sm">رتّب الكلمات لتكوّن الجملة:</div><div class="ar big">${c.ar}</div><div class="card en" lang="en" style="direction:ltr;min-height:48px">${(r?c.en:pick.map(i=>x.w[i]).join(' '))||'…'}</div>`;
+  if(r===null)h+=`<div style="direction:ltr">${x.w.map((w,i)=>`<button class="btn" style="display:inline-block;width:auto;margin:4px" ${pick.includes(i)?'disabled':''} onclick="exOrd(${i})">${w}</button>`).join('')}</div><div class="row2"><button class="btn" onclick="EX.ord=[];drawEx()">مسح</button><button class="btn pri" onclick="exOrdChk()">تحقق</button></div>`;
+  else h+=`<div class="${r.ok?'ok':'no'}">${r.ok?'✓ صحيح':'✗ الجملة الصحيحة أعلاه'}</div>`;
  }else{
   const c=x.c;
   h+=`<div class="mut sm">اسمع واكتب ما سمعته بالإنجليزي:</div><div class="row2"><button class="btn" onclick="playK(${c.k})">▶ استمع</button><button class="btn" onclick="playK(${c.k},1)">🐢 بطيء</button></div>
@@ -3386,7 +3405,16 @@ function exChk(){
  EX.res={ok,text:txt};if(ok)EX.sc.C++;else EX.wrong.push(x);
  drawEx();
 }
-function exNext(){EX.i++;EX.res=null;drawEx()}
+function exNext(){EX.i++;EX.res=null;EX.ord=[];drawEx()}
+function exOrd(i){EX.ord=(EX.ord||[]).concat(i);drawEx()}
+function exOrdChk(){
+ if(EX.res!==null)return;
+ const x=EX.q[EX.i],pick=EX.ord||[];
+ if(pick.length<x.w.length){toast('رتّب كل الكلمات أولاً');return}
+ const ok=pick.map(i=>x.w[i]).join(' ')===x.c.en;
+ EX.res={ok};if(ok)EX.sc.G++;else EX.wrong.push(x);
+ drawEx();
+}
 function exEnd(){
  const L=EX.L,tot=EX.q.length,sc=Object.values(EX.sc).reduce((a,b)=>a+b,0),pct=Math.round(sc/tot*100),pass=sc>=Math.ceil(tot*0.8);
  const lv=S.lv[L.id]=Object.assign({att:0,best:0},S.lv[L.id]);
@@ -3419,7 +3447,7 @@ function exF(){
  ${L.sp.map((t,i)=>`<label class="card" style="display:flex;gap:10px;align-items:flex-start"><input type="checkbox" class="exsp" ${sp[i]?'checked':''} onchange="exFUpd()" style="width:22px;height:22px;margin-top:4px"><span>${t}</span></label>`).join('')}
  <h2>الكتابة</h2>
  <div class="card">✍️ ${L.wtask}<textarea id="exwr" class="inp en" lang="en" rows="7" style="direction:ltr;margin-top:8px" oninput="exFUpd()" placeholder="Write here...">${escHtml(lv.wtext||'')}</textarea><div class="mut sm" id="exwc"></div>
- <div class="mut sm">تقدر تلصق نصك في محادثة معي وأصحّح لك أخطاءك.</div></div>
+ <button class="btn" onclick="copyText(corrPrompt($('#exwr').value,lvOf(V.id).cefr,lvOf(V.id).wtask))">📋 انسخ نصك مع طلب التصحيح (الصقه في Claude أو أي ذكاء اصطناعي)</button></div>
  <button class="btn pri" id="exfin" onclick="exFinish()" disabled>اعتمد المستوى ✓</button>`;
  exFUpd();
 }
@@ -3465,6 +3493,83 @@ function flStart(){
    if(FL.r>=3){S.fl=(S.fl||0)+1;touch();save();$('#flm').textContent='🎉 خلصت الجولات الثلاث';$('#fltm').textContent='✓';$('#flb').textContent='موضوع آخر';$('#flb').disabled=false;$('#flb').onclick=()=>go('fluent')}
    else{$('#flm').textContent='ممتاز! الجولة القادمة أقصر: '+FL.t[FL.r]+' ثانية، نفس الأفكار';$('#fltm').textContent='—';$('#flb').textContent='ابدأ الجولة '+(FL.r+1)+' ('+FL.t[FL.r]+' ثانية)';$('#flb').disabled=false}}
  },1000);
+}
+
+/* ===== فحص مصغّر: لا يكتمل الدرس بالتخطي ===== */
+function miniCheck(cs,passFn,againFn){
+ const pool=cs.length>=4?cs:ALL.filter(c=>typeof c.u==='number'||/^p/.test(String(c.u)));
+ const s=shuf(cs),l=s.slice(0,3),d=s.length>=6?s.slice(3,6):s.slice(0,3),Q=[];
+ l.forEach(c=>Q.push(mkMcq('D',`<div class="mut sm">استمع ثم اختر المعنى:</div><div class="row2"><button class="btn" onclick="playK(${c.k})">▶ استمع</button><button class="btn" onclick="playK(${c.k},1)">🐢 بطيء</button></div>`,c.ar,pickWrong(pool,c,x=>x.ar,3),{ref:{t:'card',c},auto:c.k})));
+ d.forEach(c=>Q.push({k:'dict',p:'C',c,ref:{t:'card',c}}));
+ EX={L:null,q:Q,i:0,sc:{A:0,B:0,C:0,D:0,E:0,G:0},tot:{},wrong:[],res:null,ord:[],mini:{passFn,againFn}};
+ drawEx();
+}
+function miniEnd(){
+ const tot=EX.q.length,sc=Object.values(EX.sc).reduce((a,b)=>a+b,0),pass=sc>=Math.ceil(tot*0.67),seen=new Set();
+ EX.wrong.forEach(x=>{if(!seen.has(x.ref.c.id)){seen.add(x.ref.c.id);rate(x.ref.c.id,false)}});
+ const extra=pass?EX.mini.passFn():'';save();
+ $('#body').innerHTML=`<div class="card hero"><div class="big">${pass?'✅':'↻'} ${sc} من ${tot}</div><div>${pass?'اجتزت فحص الدرس (3 استماع + 3 إملاء).':'لم يكتمل الدرس بعد: المطلوب 4 من 6 على الأقل. ارجع للاستماع والترديد ثم أعد الفحص.'}</div></div>${pass?extra:`<button class="btn pri" onclick="EX.mini.againFn()">أعد الفحص</button>`}`;
+}
+const corrPrompt=(t,cefr,task)=>`I'm an Arabic-speaking English learner at CEFR ${cefr} level.\nTask: ${task}\n\nMy text:\n${t}\n\nPlease: 1) list each mistake with the corrected phrase and a one-line explanation in Arabic, 2) give a corrected version of my whole text, 3) tell me the 3 most important things to practice next. Keep your English simple.`;
+
+/* ===== كلام حقيقي: ذكاء اصطناعي + مهام مع بشر ===== */
+const MIS=["قل «Hello, how are you?» لشخص حقيقي وانتظر ردّه","اطلب شيئاً بالإنجليزي من كاشير أو مطعم (Can I have...?)","اسأل شخصاً: What's your name? Where are you from?","اسأل عن سعر شيء: How much is this?","قل لشخص: Could you repeat that, please? (لما ما تفهم)","احكِ لشخص ما فعلته أمس بـ 3 جمل إنجليزية","اشرح عملك لأجنبي بجملتين","أرسل رسالة صوتية بالإنجليزي لشخص تعرفه","دلّ أحداً على مكان بالإنجليزي (Go straight, turn left)","تكلم 5 دقائق متواصلة مع شخص (صديق، زميل، شريك لغة أو معلم)"];
+const SCEN={1:[["في المقهى","a friendly barista; I order a coffee and a sandwich"],["تعارف","a new coworker; we introduce ourselves"],["اتجاهات","a stranger on the street; I ask where the pharmacy is"],["تسوق","a shop assistant; I ask about price and size"]],2:[["عند الطبيب","a doctor; I explain my pain and symptoms"],["إيجار شقة","a landlord; I ask about rent, bills and rules"],["حجز في مطعم","a restaurant host; I book a table and ask about the menu"],["مكالمة هاتف","a customer service agent; I solve a simple problem"]],3:[["مقابلة عمل","a hiring manager interviewing me for a job"],["شكوى منتج","a store manager; I complain about a broken product and ask for a refund"],["نقاش رأي","a friend; we discuss working from home and I give my opinion with reasons"],["مندوب توصيل","a customer; I am a courier explaining a delivery delay"],["تقرير محاسبة","a manager; I explain a simple monthly expense report"]]};
+const aiPrompt=(sc,cefr)=>`Act as an English conversation partner for an Arabic-speaking learner at CEFR ${cefr} level. Scenario: you are ${sc}.\nRules: speak slowly with short simple sentences; ask me ONE question at a time and wait for my answer; if I make a mistake, first answer naturally, then show my corrected sentence in one line and explain the mistake in Arabic in one short sentence; after 8 exchanges, give me a short summary of my 3 most common mistakes. Start now.`;
+function talk(){
+ const L=curLevel(),sc=SCEN[L.id]||SCEN[1],n=MIS.filter((m,i)=>S.mis[i]).length;
+ app.innerHTML=`${topbar('كلام حقيقي','home')}
+ <div class="card hero"><b>ليش هذا القسم؟</b><div class="sm" style="margin-top:6px">التطبيق يدرّبك لوحدك، لكن الطلاقة تأتي من الكلام مع طرف يرد عليك. هنا طريقتان: ذكاء اصطناعي بالصوت (يحتاج نت)، ومهام مع بشر حقيقيين (ما تحتاج نت).</div></div>
+ <h2>1) تكلّم مع ذكاء اصطناعي (مستواك ${L.cefr})</h2>
+ <div class="card sm">اضغط سيناريو ليُنسخ طلب جاهز، ثم افتح Claude أو ChatGPT أو Gemini، فعّل وضع الصوت، والصق الطلب وابدأ الكلام. سيصحّح لك أخطاءك ويشرحها بالعربي.</div>
+ ${sc.map((s,i)=>`<button class="btn" onclick="talkCopy(${i})">📋 ${s[0]}</button>`).join('')}
+ <h2>2) مهام مع بشر حقيقيين (${n} من ${MIS.length})</h2>
+ ${MIS.map((m,i)=>`<label class="card" style="display:flex;gap:10px;align-items:flex-start"><input type="checkbox" ${S.mis[i]?'checked':''} onchange="S.mis[${i}]=this.checked;touch();save()" style="width:22px;height:22px;margin-top:4px"><span>${m}</span></label>`).join('')}
+ <h2>3) صحّح كتابتك</h2>
+ <div class="card"><textarea id="tw" class="inp en" lang="en" rows="5" style="direction:ltr" placeholder="Paste or write your English text here..."></textarea><button class="btn pri" onclick="copyText(corrPrompt($('#tw').value,'${L.cefr}','free writing'))">📋 انسخ مع طلب التصحيح</button><div class="mut sm">الصق الناتج في Claude أو أي ذكاء اصطناعي.</div></div>`;
+}
+function talkCopy(i){const L=curLevel();copyText(aiPrompt((SCEN[L.id]||SCEN[1])[i][1],L.cefr))}
+
+/* ===== تقليد وتسجيل (shadowing) ===== */
+let SH={};
+function shadow(){
+ SH={cs:shuf(exLevelCards(curLevel())).slice(0,6),i:0,url:null,rec:false,mr:null};
+ app.innerHTML=`${topbar('تقليد وتسجيل','home')}<div id="body"></div>`;drawSh();
+}
+function drawSh(){
+ if(SH.i>=SH.cs.length){S.sh=(S.sh||0)+1;touch();save();$('#body').innerHTML=`<div class="card hero"><div class="big">✅ خلصت الجولة</div><div>كرّرها كل يوم بجمل جديدة. الأذن تتدرّب قبل اللسان.</div></div><button class="btn pri" onclick="go('shadow')">جولة جديدة</button><button class="btn" onclick="go('home')">الرئيسية</button>`;return}
+ const c=SH.cs[SH.i];
+ $('#body').innerHTML=`<div class="prog">${SH.i+1} / ${SH.cs.length}</div><div class="card focus"><div class="en big" lang="en">${c.en}</div><div class="pr" style="text-align:center">${c.pr}</div><div class="ar" style="text-align:center">${c.ar}</div>
+ <div class="row2"><button class="btn" onclick="playK(${c.k})">▶ النموذج</button><button class="btn" onclick="playK(${c.k},1)">🐢 بطيء</button></div>
+ <div class="mut sm">1) استمع للنموذج 2) سجّل نفسك وأنت تقلّد الإيقاع والنبرة وليس الكلمات فقط 3) استمع لتسجيلك وقارن، ثم أعد.</div>
+ <button class="btn ${SH.rec?'bad':'pri'}" onclick="shRec()">${SH.rec?'⏹ إيقاف':'🎙 سجّل صوتك'}</button>${SH.url?`<audio controls src="${SH.url}" style="width:100%"></audio>`:''}
+ <button class="btn" onclick="SH.i++;SH.url=null;drawSh()">التالية ←</button></div>`;
+ if(!SH.url&&!SH.rec)setTimeout(()=>playK(c.k),300);
+}
+async function shRec(){
+ if(SH.rec&&SH.mr){SH.mr.stop();return}
+ try{const st=await navigator.mediaDevices.getUserMedia({audio:true}),mr=new MediaRecorder(st),ch=[];SH.mr=mr;
+  mr.ondataavailable=e=>ch.push(e.data);
+  mr.onstop=()=>{SH.url=URL.createObjectURL(new Blob(ch,{type:mr.mimeType||'audio/webm'}));st.getTracks().forEach(t=>t.stop());SH.rec=false;drawSh()};
+  mr.start();SH.rec=true;drawSh();
+ }catch(e){toast('التسجيل غير متاح. اسمح للميكروفون في Chrome.')}
+}
+
+/* ===== النبر والكلام المتصل ===== */
+const STRESS=[["table","TA-ble","طاولة"],["doctor","DOC-tor","دكتور"],["water","WA-ter","ماء"],["hotel","ho-TEL","فندق"],["police","po-LICE","شرطة"],["today","to-DAY","اليوم"],["between","be-TWEEN","بين"],["banana","ba-NA-na","موز"],["computer","com-PU-ter","كمبيوتر"],["important","im-POR-tant","مهم"],["tomorrow","to-MOR-row","غداً"],["interesting","IN-ter-est-ing","ممتع"],["restaurant","RES-tau-rant","مطعم"],["family","FAM-i-ly","عائلة"],["comfortable","COM-fort-a-ble","مريح"],["different","DIF-frent","مختلف"],["information","in-for-MA-tion","معلومات"],["delivery","de-LIV-er-y","توصيل"],["insurance","in-SUR-ance","تأمين"],["vegetable","VEG-ta-ble","خضار"]];
+const SSENT=[["I WANT a COFfee.","نرفع الكلمات المهمة (want, coffee) ونمرّ بسرعة على a."],["Where is the BANK?","الكلمة المهمة هي bank، والباقي سريع وخفيف."],["I can't GO today.","في النفي نبرز الفعل go، وتسمع can't أوضح من can."],["She LIVES in RIyadh.","النبر على الفعل واسم المكان."],["How MUCH is it?","السؤال عن السعر ينبر much."]];
+const REDUCE=[["going to","gonna","I'm gonna call him.","سأتصل به."],["want to","wanna","I wanna go home.","أريد الذهاب للبيت."],["got to / have to","gotta","I gotta go now.","لازم أروح الآن."],["give me","gimme","Gimme a minute.","أعطني دقيقة."],["let me","lemme","Lemme check.","دعني أتأكد."],["kind of","kinda","It's kinda cold.","الجو بارد نوعاً ما."],["a lot of","a lotta","I have a lotta work.","عندي شغل كثير."],["don't know","dunno","I dunno.","ما أدري."],["What are you","whatcha","Whatcha doing?","ماذا تفعل؟"],["Did you","didja","Didja eat?","هل أكلت؟"],["out of","outta","We're outta time.","انتهى الوقت."],["isn't it / right","right?","It's cheap, right?","رخيص، صح؟"]];
+const LINKS=[["an apple","a-napple","an apple"],["turn it off","tur-ni-toff","Turn it off."],["pick it up","pi-ki-tup","Pick it up."],["not at all","no-ta-tall","Not at all."],["check it out","che-ki-tout","Check it out."]];
+function conn(){
+ const id=V.id;
+ if(id===1)app.innerHTML=`${topbar('نبر الكلمات والجملة','home')}<div class="card hero"><b>النبر أهم من الحرف</b><div class="sm" style="margin-top:6px">في كل كلمة طويلة مقطع واحد أقوى وأطول وأعلى. لو غلطت في موضعه يصعب فهمك حتى لو نطقت كل الحروف صح. الحروف الكبيرة هنا هي المقطع المنبور. استمع وكرّر.</div></div>
+ <h2>نبر الكلمة</h2>${STRESS.map(s=>`<div class="sc"><div class="en" lang="en">${s[1]}</div><div class="ar">${s[2]}</div><div class="r">${sayBtn(s[0])}${sayBtn(s[0],1)}</div></div>`).join('')}
+ <h2>نبر الجملة</h2><div class="card sm">نرفع الكلمات المهمة (الأفعال والأسماء) ونمرّ سريعاً على الكلمات الصغيرة.</div>${SSENT.map(s=>`<div class="sc"><div class="en" lang="en">${s[0]}</div><div class="ar">${s[1]}</div><div class="r">${sayBtn(s[0].toLowerCase())}</div></div>`).join('')}
+ <button class="btn pri" onclick="S.conn[1]=true;touch();save();toast('تم ✅');go('home')">خلصت ✓</button>`;
+ else app.innerHTML=`${topbar('الكلام المتصل','home')}<div class="card hero"><b>ليش لا تفهم الناس؟</b><div class="sm" style="margin-top:6px">الناس لا تنطق كل كلمة منفصلة: تدمجها وتختصرها. استمع للشكل المكتوب أولاً ثم الدمج. الصوت الاصطناعي قد يقرأها بشكل رسمي أكثر من الواقع، فاستمع لإنجليزية حقيقية قدر الإمكان.</div></div>
+ <h2>اختصارات الكلام اليومي</h2>${REDUCE.map(r=>`<div class="sc"><div class="en" lang="en">${r[0]} → <b>${r[1]}</b></div><div class="en" lang="en" style="font-size:17px">${r[2]}</div><div class="ar">${r[3]}</div><div class="r">${sayBtn(r[2])}${sayBtn(r[2],1)}</div></div>`).join('')}
+ <h2>الربط بين الكلمات</h2><div class="card sm">الحرف الأخير الساكن في كلمة يرتبط بأول حرف صوتي في التالية.</div>${LINKS.map(r=>`<div class="sc"><div class="en" lang="en">${r[0]} → <b>${r[1]}</b></div><div class="r">${sayBtn(r[2])}${sayBtn(r[2],1)}</div></div>`).join('')}
+ <button class="btn pri" onclick="S.conn[2]=true;touch();save();toast('تم ✅');go('home')">خلصت ✓</button>`;
 }
 
 /* ===== اسمع واكتب ===== */
@@ -3526,7 +3631,7 @@ async function spRec(){
 function spModel(){const s=SPEAK[V.i];$('#spm').innerHTML=`<div class="card"><div class="mut sm">نموذج (قارن، ولا تحفظه حرفياً):</div><div class="en" lang="en" style="font-size:18px;margin:6px 0">${s.en}</div>${sayBtn(s.en)}${sayBtn(s.en,1)}<div class="ar sm" style="margin-top:6px">${s.ar}</div></div>`}
 
 /* ===== نسخة احتياطية ===== */
-function bkMake(){try{$('#bk').value='ENG1.'+btoa(unescape(encodeURIComponent(JSON.stringify(S))));toast('تم. انسخ الكود واحفظه')}catch(e){toast('تعذّر إنشاء الكود')}}
+function bkMake(){S.bk=today();save();try{$('#bk').value='ENG1.'+btoa(unescape(encodeURIComponent(JSON.stringify(S))));toast('تم. انسخ الكود واحفظه')}catch(e){toast('تعذّر إنشاء الكود')}}
 function bkCopy(){const t=$('#bk');if(!t.value){toast('اضغط إنشاء كود أولاً');return}t.select();try{navigator.clipboard.writeText(t.value).then(()=>toast('تم النسخ'),()=>{document.execCommand('copy');toast('تم النسخ')})}catch(e){try{document.execCommand('copy');toast('تم النسخ')}catch(_){toast('انسخه يدوياً')}}}
 function bkRestore(){
  const v=($('#bk').value||'').trim();
